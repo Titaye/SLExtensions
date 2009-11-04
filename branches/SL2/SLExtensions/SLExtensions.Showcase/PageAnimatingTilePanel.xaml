@@ -1,0 +1,26 @@
+﻿<UserControl x:Class="SLExtensions.Showcase.PageAnimatingTilePanel"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+    xmlns:slec="clr-namespace:SLExtensions.Controls;assembly=SLExtensions.Controls"
+    xmlns:ext="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls"
+    >
+    <Grid x:Name="LayoutRoot" Background="White">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width="1*" />
+        </Grid.ColumnDefinitions>
+        <TextBlock Text="Animated flow layout. Resize columns to see animation" Grid.ColumnSpan="2"/>
+        <ItemsControl Grid.Row="1" ItemsSource="azertyuiopsdfghjklazertyuiopsdfghjklazertyuiopsdfghjklazertyuiopsdfghjklazertyuiopsdfghjklazertyuiopsdfghjklazertyuiopsdfghjklazertyuiopsdfghjkl" >
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <slec:AnimatingTilePanel />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+        </ItemsControl>
+        <ext:GridSplitter Grid.Row="1" Grid.Column="0" VerticalAlignment="Stretch" HorizontalAlignment="Right"/>
+    </Grid>
+</UserControl>

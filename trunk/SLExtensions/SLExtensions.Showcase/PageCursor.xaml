@@ -1,0 +1,19 @@
+﻿<UserControl x:Class="SLExtensions.Showcase.PageCursor"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+    xmlns:slec="clr-namespace:SLExtensions.Controls;assembly=SLExtensions.Controls"
+    >
+    <Grid x:Name="LayoutRoot" >
+        <Grid Width="200" Height="200" Background="Red">
+            <slec:CursorService.Cursor>
+                <Canvas Width="50" Height="50" Background="Yellow" />
+            </slec:CursorService.Cursor>
+            
+            <Grid Width="200" Height="100" Background="Beige">
+                <slec:CursorService.Cursor>
+                    <Ellipse Width="20" Height="20" Fill="Blue" />
+                </slec:CursorService.Cursor>
+            </Grid>
+        </Grid>
+    </Grid>
+</UserControl>

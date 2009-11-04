@@ -1,0 +1,31 @@
+﻿<UserControl x:Class="SLExtensions.Showcase.PageDecoratorAndSeparator"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:sle="clr-namespace:SLExtensions.Controls;assembly=SLExtensions.Controls">
+    <Grid Background="White">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        
+        <sle:Decorator x:Name="LeftMenu" HorizontalAlignment="Left">
+            <StackPanel >
+                <Button Content="1st button"/>
+                <sle:Separator Margin="0,2,0,2"/>
+                <Button Content="2nd button"/>
+                <sle:Separator Margin="0,2,0,2"/>
+                <Button Content="3rd button"/>
+                <sle:Separator Margin="0,2,0,2"/>
+                <Button Content="4th button"/>
+            </StackPanel>
+        </sle:Decorator>
+        
+        <sle:Decorator x:Name="StatusBar" Grid.Row="1" VerticalAlignment="Bottom">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="First item" />
+                <sle:Separator Margin="2,0,2,0"/>
+                <TextBlock Text="SecondItem" />
+            </StackPanel>
+        </sle:Decorator> 
+    </Grid>
+</UserControl>

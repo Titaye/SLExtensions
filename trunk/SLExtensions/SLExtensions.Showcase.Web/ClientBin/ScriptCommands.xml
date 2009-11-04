@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ScriptCommands>
+  <ScriptCommand
+    Type="Pub"
+    Time="00:00:01.3380000"
+    Command="Pubs/Pub1.xaml|00:00:02" />
+  <ScriptCommand
+    Type="Link"
+    Time="00:00:02.0450000"
+    Command="http://www.live.com|00:00:05" />
+  <ScriptCommand
+    Type="Log"
+    Time="00:00:03.0000000"
+    Command="http://geekementcorrect.com/log.php?id=1" />
+  <ScriptCommand
+    Type="Pub"
+    Time="00:00:04.2600000"
+    Command="Pubs/Pub2.xaml|00:00:02" />
+  <ScriptCommand
+    Type="Link"
+    Time="00:00:05.2680000"
+    Command="http://www.geekementcorrect.com|00:00:05" />
+  <ScriptCommand
+    Type="Pub"
+    Time="00:01:08.9000000"
+    Command="Pubs/Pub1.xaml|00:00:02" />
+</ScriptCommands>

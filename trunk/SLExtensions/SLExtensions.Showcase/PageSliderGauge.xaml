@@ -1,0 +1,149 @@
+﻿<UserControl x:Class="SLExtensions.Showcase.PageSliderGauge"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+    xmlns:local="clr-namespace:SLExtensions.Controls;assembly=SLExtensions.Controls">
+    <StackPanel x:Name="LayoutRoot">
+        <StackPanel.Resources>
+            <SolidColorBrush x:Key="textColour" Color="Black" />
+            <Style x:Key="ProgressBarStyle" TargetType="local:SliderGauge">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="local:SliderGauge">
+                            <Grid>
+                                <Rectangle Stretch="Fill" Stroke="#FF6C6C6C" StrokeThickness="3" RadiusX="6" RadiusY="6">
+                                    <Rectangle.Fill>
+                                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                            <GradientStop Color="#FF000000" Offset="1"/>
+                                            <GradientStop Color="#FF4D4D4D" Offset="0"/>
+                                        </LinearGradientBrush>
+                                    </Rectangle.Fill>
+                                </Rectangle>
+                                <Rectangle x:Name="HighlightElement" Stretch="Fill" Stroke="#FF1D7401" StrokeThickness="3" RadiusX="6" RadiusY="6">
+                                    <Rectangle.Fill>
+                                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                            <GradientStop Color="#FF0B2D00" Offset="1"/>
+                                            <GradientStop Color="#FF39E200" Offset="0"/>
+                                        </LinearGradientBrush>
+                                    </Rectangle.Fill>
+                                </Rectangle>
+                            </Grid>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style x:Key="HeartStyle" TargetType="local:SliderGauge">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="local:SliderGauge">
+                            <Grid x:Name="RootElement">
+
+                                <VisualStateManager.VisualStateGroups>
+                                    <VisualStateGroup x:Name="CommonStates">
+                                        <VisualStateGroup.Transitions>
+                                            <VisualTransition GeneratedDuration="0:0:0.3" />
+                                        </VisualStateGroup.Transitions>
+                                        <VisualState x:Name="Normal" />
+                                        <VisualState x:Name="MouseDown">
+                                            <Storyboard>
+                                                <DoubleAnimation Storyboard.TargetName="PercentageTextBlock" Storyboard.TargetProperty="Opacity" To="1" />
+                                            </Storyboard>
+                                        </VisualState>
+                                    </VisualStateGroup>
+                                </VisualStateManager.VisualStateGroups>
+
+                                <Path Stretch="Fill" 
+                                                  Data="F1 M 109.944,372.167C 99.3368,363.667 78.1215,346.667 62.1806,330.667C 46.2396,314.667 35.5729,299.667 32.7396,283.667C 29.9063,267.667 34.9063,250.667 42.4063,240C 49.9063,229.333 59.9063,225 69.4063,224C 78.9063,223 87.9063,225.333 95.2396,229.333C 102.573,233.333 108.24,239 112.24,243.61C 116.24,248.22 118.573,251.773 119.74,253.372C 120.906,254.972 120.906,254.618 121.74,252.847C 122.573,251.077 124.24,247.89 128.24,243.457C 132.24,239.025 138.573,233.346 146.073,229.34C 153.573,225.333 162.24,223 171.906,224C 181.573,225 192.24,229.333 199.906,240C 207.573,250.667 212.24,267.667 209.24,283.667C 206.24,299.667 195.573,314.667 179.573,330.667C 163.573,346.667 142.24,363.667 131.514,372.167C 120.788,380.667 120.67,380.667 120.611,380.667C 120.552,380.667 120.552,380.667 109.944,372.167 Z " 
+                                                  StrokeThickness="3" StrokeLineJoin="Round">
+                                    <Path.Stroke>
+                                        <RadialGradientBrush RadiusX="0.5" RadiusY="0.5" Center="0.5,0.5" GradientOrigin="0.5,0.5">
+                                            <RadialGradientBrush.GradientStops>
+                                                <GradientStop Color="#FFDDDDDD" Offset="0"/>
+                                                <GradientStop Color="#FF8B8B8B" Offset="0.995763"/>
+                                            </RadialGradientBrush.GradientStops>
+                                        </RadialGradientBrush>
+                                    </Path.Stroke>
+                                    <Path.Fill>
+                                        <RadialGradientBrush RadiusX="0.525" RadiusY="0.525" Center="0.5,0.5" GradientOrigin="0.5,0.5">
+                                            <RadialGradientBrush.GradientStops>
+                                                <GradientStop Color="#FFF1F1F1" Offset="0"/>
+                                                <GradientStop Color="#FFA8A8A8" Offset="1"/>
+                                            </RadialGradientBrush.GradientStops>
+                                        </RadialGradientBrush>
+                                    </Path.Fill>
+                                </Path>
+
+
+                                <Path x:Name="HighlightElement" Stretch="Fill" 
+                                                  Data="F1 M 109.944,372.167C 99.3368,363.667 78.1215,346.667 62.1806,330.667C 46.2396,314.667 35.5729,299.667 32.7396,283.667C 29.9063,267.667 34.9063,250.667 42.4063,240C 49.9063,229.333 59.9063,225 69.4063,224C 78.9063,223 87.9063,225.333 95.2396,229.333C 102.573,233.333 108.24,239 112.24,243.61C 116.24,248.22 118.573,251.773 119.74,253.372C 120.906,254.972 120.906,254.618 121.74,252.847C 122.573,251.077 124.24,247.89 128.24,243.457C 132.24,239.025 138.573,233.346 146.073,229.34C 153.573,225.333 162.24,223 171.906,224C 181.573,225 192.24,229.333 199.906,240C 207.573,250.667 212.24,267.667 209.24,283.667C 206.24,299.667 195.573,314.667 179.573,330.667C 163.573,346.667 142.24,363.667 131.514,372.167C 120.788,380.667 120.67,380.667 120.611,380.667C 120.552,380.667 120.552,380.667 109.944,372.167 Z " 
+                                                  StrokeThickness="3" StrokeLineJoin="Round">
+                                    <Path.Stroke>
+                                        <RadialGradientBrush RadiusX="0.5" RadiusY="0.5" Center="0.5,0.5" GradientOrigin="0.5,0.5">
+                                            <RadialGradientBrush.GradientStops>
+                                                <GradientStop Color="#FFDDDDDD" Offset="0"/>
+                                                <GradientStop Color="#FF641088" Offset="0.995763"/>
+                                            </RadialGradientBrush.GradientStops>
+                                        </RadialGradientBrush>
+                                    </Path.Stroke>
+                                    <Path.Fill>
+                                        <RadialGradientBrush RadiusX="0.525" RadiusY="0.525" Center="0.5,0.5" GradientOrigin="0.5,0.5">
+                                            <RadialGradientBrush.GradientStops>
+                                                <GradientStop Color="#FFF1F1F1" Offset="0"/>
+                                                <GradientStop Color="#FFE933EE" Offset="1"/>
+                                            </RadialGradientBrush.GradientStops>
+                                        </RadialGradientBrush>
+                                    </Path.Fill>
+                                </Path>
+
+                                <TextBlock x:Name="PercentageTextBlock" 
+                                   Foreground="{TemplateBinding FontColor}" 
+                                   Opacity="0" 
+                                   Visibility="Collapsed" 
+                                   FontFamily="Arial" 
+                                   HorizontalAlignment="Center" 
+                                   VerticalAlignment="Center" />
+
+                            </Grid>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+        </StackPanel.Resources>
+
+        <local:SliderGauge x:Name="slider1" 
+                        Margin="10" Height="50" 
+                        FontSize="30" 
+                        Width="200" 
+                        Percentage="0.9" 
+                        PercentChanged="SliderGauge_PercentChanged1" />
+        <TextBlock HorizontalAlignment="Center" Margin="10" x:Name="txtPercent1" Foreground="{StaticResource textColour}" />
+
+        <local:SliderGauge x:Name="slider2" 
+                        Margin="10" 
+                        Height="160" Width="180" 
+                        FontColor="#FF641088" FontSize="20" 
+                        Style="{StaticResource HeartStyle}" 
+                        Percentage="0.75" 
+                        ShowPercentageTextOnChange="True"
+                        PercentChanged="SliderGauge_PercentChanged2" />
+        <TextBlock HorizontalAlignment="Center" Margin="10" x:Name="txtPercent2" Foreground="{StaticResource textColour}" />
+
+        <local:SliderGauge x:Name="slider3" 
+                        Height="100" Width="50" 
+                        Percentage="0.3" 
+                        Orientation="Vertical" 
+                        Margin="15" 
+                        RenderTransformOrigin="0.5,0.5" 
+                        PercentChanged="SliderGauge_PercentChanged3" >
+            <local:SliderGauge.Foreground>
+                <LinearGradientBrush EndPoint="0,1">
+                    <GradientStop Color="#FFFFFFFF"/>
+                    <GradientStop Color="#FFCE26B0" Offset="1"/>
+                </LinearGradientBrush>
+            </local:SliderGauge.Foreground>
+        </local:SliderGauge>
+        <TextBlock HorizontalAlignment="Center" Margin="10" x:Name="txtPercent3" Foreground="{StaticResource textColour}" />
+
+    </StackPanel>
+</UserControl>

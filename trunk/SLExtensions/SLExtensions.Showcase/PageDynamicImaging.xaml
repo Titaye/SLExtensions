@@ -1,0 +1,9 @@
+﻿<UserControl x:Class="SLExtensions.Showcase.PageDynamicImaging"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+    xmlns:local="clr-namespace:SLExtensions.Showcase;assembly=SLExtensions.Showcase">
+    <StackPanel x:Name="LayoutRoot" Background="White">
+        <TextBlock Text="Dynamically Generated Gradient Image" Margin="3" />
+        <Image x:Name="imgTesting" Height="100" Width="100" />
+    </StackPanel>
+</UserControl>

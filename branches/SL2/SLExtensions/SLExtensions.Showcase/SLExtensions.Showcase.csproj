@@ -1,0 +1,411 @@
+﻿<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{997C0F08-47C4-4027-88A4-1BCE1E65D1D4}</ProjectGuid>
+    <ProjectTypeGuids>{A1591282-1198-4647-A2B1-27E5FF5F6F3B};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>SLExtensions.Showcase</RootNamespace>
+    <AssemblyName>SLExtensions.Showcase</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <SilverlightApplication>true</SilverlightApplication>
+    <XapOutputs>true</XapOutputs>
+    <GenerateSilverlightManifest>true</GenerateSilverlightManifest>
+    <XapFilename>SLExtensions.Showcase.xap</XapFilename>
+    <SilverlightManifestTemplate>Properties\AppManifest.xml</SilverlightManifestTemplate>
+    <SilverlightAppEntry>SLExtensions.Showcase.App</SilverlightAppEntry>
+    <TestPageFileName>TestPage.html</TestPageFileName>
+    <CreateTestPage>true</CreateTestPage>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <ValidateXaml>true</ValidateXaml>
+    <ThrowErrorsInValidation>false</ThrowErrorsInValidation>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>ClientBin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;SILVERLIGHT</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>ClientBin\</OutputPath>
+    <DefineConstants>TRACE;SILVERLIGHT</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System.Net" />
+    <Reference Include="System.Windows" />
+    <Reference Include="mscorlib" />
+    <Reference Include="system" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Windows.Controls, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Windows.Controls.Data, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Windows.Browser" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Commands.cs" />
+    <Compile Include="Controllers\PageDoubleSliderController.cs" />
+    <Compile Include="Controllers\PageFixedComboBoxController.cs" />
+    <Compile Include="Controllers\PageAnimatingFillPanelController.cs" />
+    <Compile Include="Controllers\PageCommandController.cs" />
+    <Compile Include="Controllers\PageHtmlConverterController.cs" />
+    <Compile Include="Controllers\PageSwappableContentController.cs" />
+    <Compile Include="Controllers\PageViewboxController.cs" />
+    <Compile Include="Controllers\PasswordBindingContext.cs" />
+    <Compile Include="Controllers\ShowcaseController.cs" />
+    <Compile Include="PageAnimZIndex.xaml.cs">
+      <DependentUpon>PageAnimZIndex.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="PageColorPicker.xaml.cs">
+      <DependentUpon>PageColorPicker.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="PageCursor.xaml.cs">
+      <DependentUpon>PageCursor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="PageDecoratorAndSeparator.xaml.cs">
+      <DependentUpon>PageDecoratorAndSeparator.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="PageDoubleSlider.xaml.cs">
+      <DependentUpon>PageDoubleSlider.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="PageDraggableExtensions.xaml.cs">
+      <DependentUpon>PageDraggableExtensions.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="PageHtmlConverter.xaml.cs">
+      <DependentUpon>PageHtmlConverter.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="PagePasswordBoxBinding.xaml.cs">
+      <DependentUpon>PagePasswordBoxBinding.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="PagePlayerVideoSmoothHD.xaml.cs">
+      <DependentUpon>PagePlayerVideoSmoothHD.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="PagePlayerDeepZoom.xaml.cs">
+      <DependentUpon>PagePlayerDeepZoom.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="PagePlayerPhoto.xaml.cs">
+      <DependentUpon>PagePlayerPhoto.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="PageBindingComparer.xaml.cs">
+      <DependentUpon>PageBindingComparer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="PageAnimatingFillPanel.xaml.cs">
+      <DependentUpon>PageAnimatingFillPanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="PageAnimatingTilePanel.xaml.cs">
+      <DependentUpon>PageAnimatingTilePanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="PageAnimation.xaml.cs">
+      <DependentUpon>PageAnimation.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="PageChangeTracker.xaml.cs">
+      <DependentUpon>PageChangeTracker.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="PageCommand.xaml.cs">
+      <DependentUpon>PageCommand.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="PageAlternateConverter.xaml.cs">
+      <DependentUpon>PageAlternateConverter.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="PageDeepZoom.xaml.cs">
+      <DependentUpon>PageDeepZoom.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="PageDockPanel.xaml.cs">
+      <DependentUpon>PageDockPanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="PageFixedComboBox.xaml.cs">
+      <DependentUpon>PageFixedComboBox.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="PageFlowLayoutPanel.xaml.cs">
+      <DependentUpon>PageFlowLayoutPanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="PageGridPageLayout.xaml.cs">
+      <DependentUpon>PageGridPageLayout.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="PageHtmlEditor.xaml.cs">
+      <DependentUpon>PageHtmlEditor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="PagePlayerVideo.xaml.cs">
+      <DependentUpon>PagePlayerVideo.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="PageRecaptcha.xaml.cs">
+      <DependentUpon>PageRecaptcha.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="PageSwappableContent.xaml.cs">
+      <DependentUpon>PageSwappableContent.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="PageTreeView.xaml.cs">
+      <DependentUpon>PageTreeView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="PageViewbox.xaml.cs">
+      <DependentUpon>PageViewbox.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="PageVirtualizedStackPanel.xaml.cs">
+      <DependentUpon>PageVirtualizedStackPanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="PageWebClient.xaml.cs">
+      <DependentUpon>PageWebClient.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PageResourceSelector.xaml.cs">
+      <DependentUpon>PageResourceSelector.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ShowcaseHost.xaml.cs">
+      <DependentUpon>ShowcaseHost.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="PageLayers.xaml.cs">
+      <DependentUpon>PageLayers.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="IsInVisualTree.xaml.cs">
+      <DependentUpon>IsInVisualTree.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ShowcaseItem.cs" />
+    <Compile Include="ShowcaseLink.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+    </ApplicationDefinition>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Eurostile.ttf" />
+    <None Include="Properties\AppManifest.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SLExtensions.Controls.Extended\SLExtensions.Controls.Extended.csproj">
+      <Project>{7678B820-2E1F-4ABA-BBF4-A1DBC250CE11}</Project>
+      <Name>SLExtensions.Controls.Extended</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SLExtensions.Controls\SLExtensions.Controls.csproj">
+      <Project>{6ED2B488-1E6B-4A7D-9599-F787FE2FB208}</Project>
+      <Name>SLExtensions.Controls</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SLExtensions.Data\SLExtensions.Data.csproj">
+      <Project>{5F8DB48F-06D4-4985-BEF6-DC7E146BC0EF}</Project>
+      <Name>SLExtensions.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SLExtensions.DeepZoom\SLExtensions.DeepZoom.csproj">
+      <Project>{E665548B-4784-4339-A580-41C259042214}</Project>
+      <Name>SLExtensions.DeepZoom</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SLExtensions.Interactivity\SLExtensions.Interactivity.csproj">
+      <Project>{8DC01715-6DAB-4081-86B3-87E59EF0B2CE}</Project>
+      <Name>SLExtensions.Interactivity</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SLExtensions.Player\SLExtensions.Player.csproj">
+      <Project>{66D58D46-3966-4DD9-94F5-75A051CBC881}</Project>
+      <Name>SLExtensions.Player</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SLExtensions\SLExtensions.csproj">
+      <Project>{A6D5DC26-6631-4780-ADB9-87C1F5E405DD}</Project>
+      <Name>SLExtensions</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SLMedia.Core\SLMedia.Core.csproj">
+      <Project>{AC559E1F-FEE6-4452-9047-D1A286B74C32}</Project>
+      <Name>SLMedia.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SLMedia.Deepzoom\SLMedia.Deepzoom.csproj">
+      <Project>{EB6122F5-6C44-45CD-8FA8-693D1C12625C}</Project>
+      <Name>SLMedia.Deepzoom</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SLMedia.Picture\SLMedia.Picture.csproj">
+      <Project>{C6CDE891-49A2-4876-99C6-32708B9414C6}</Project>
+      <Name>SLMedia.Picture</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SLMedia.PlaylistProvider.MediaRSS\SLMedia.PlaylistProvider.MediaRSS.csproj">
+      <Project>{63B0B9CE-AA6D-4D59-BDDC-567D8219AFF9}</Project>
+      <Name>SLMedia.PlaylistProvider.MediaRSS</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SLMedia.PlaylistProvider.MSNVideo\SLMedia.PlaylistProvider.MSNVideo.csproj">
+      <Project>{A1495C4C-48A9-48D5-911A-B4FF9A2302EE}</Project>
+      <Name>SLMedia.PlaylistProvider.MSNVideo</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SLMedia.Video\SLMedia.Video.csproj">
+      <Project>{B7D8B158-A489-4D4F-A24E-773EE1D5FDE7}</Project>
+      <Name>SLMedia.Video</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="PageLayers.xaml">
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="PageCommand.xaml">
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="PageAnimZIndex.xaml">
+      <SubType>Page</SubType>
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+    </Page>
+    <Page Include="PageColorPicker.xaml">
+      <SubType>Page</SubType>
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+    </Page>
+    <Page Include="PageCursor.xaml">
+      <SubType>Page</SubType>
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+    </Page>
+    <Page Include="PageDecoratorAndSeparator.xaml">
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="PageDoubleSlider.xaml">
+      <SubType>Page</SubType>
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+    </Page>
+    <Page Include="PageDraggableExtensions.xaml">
+      <SubType>Page</SubType>
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+    </Page>
+    <Page Include="PageHtmlConverter.xaml">
+      <SubType>Page</SubType>
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+    </Page>
+    <Page Include="PagePasswordBoxBinding.xaml">
+      <SubType>Page</SubType>
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+    </Page>
+    <Page Include="PagePlayerVideoSmoothHD.xaml">
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="PagePlayerDeepZoom.xaml">
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="PagePlayerPhoto.xaml">
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="PageBindingComparer.xaml">
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="PageAnimatingFillPanel.xaml">
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="PageAnimatingTilePanel.xaml">
+      <SubType>Page</SubType>
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+    </Page>
+    <Page Include="PageAnimation.xaml">
+      <SubType>Page</SubType>
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+    </Page>
+    <Page Include="PageChangeTracker.xaml">
+      <SubType>Page</SubType>
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+    </Page>
+    <Page Include="PageAlternateConverter.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+    </Page>
+    <Page Include="PageDeepZoom.xaml">
+      <SubType>Page</SubType>
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+    </Page>
+    <Page Include="PageDockPanel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+    </Page>
+    <Page Include="PageFixedComboBox.xaml">
+      <SubType>Page</SubType>
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+    </Page>
+    <Page Include="PageFlowLayoutPanel.xaml">
+      <SubType>Page</SubType>
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+    </Page>
+    <Page Include="PageGridPageLayout.xaml">
+      <SubType>Page</SubType>
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+    </Page>
+    <Page Include="PageHtmlEditor.xaml">
+      <SubType>Page</SubType>
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+    </Page>
+    <Page Include="PagePlayerVideo.xaml">
+      <SubType>Page</SubType>
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+    </Page>
+    <Page Include="PageRecaptcha.xaml">
+      <SubType>Page</SubType>
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+    </Page>
+    <Page Include="PageSwappableContent.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+    </Page>
+    <Page Include="PageTreeView.xaml">
+      <SubType>Page</SubType>
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+    </Page>
+    <Page Include="PageViewbox.xaml">
+      <SubType>Page</SubType>
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+    </Page>
+    <Page Include="PageVirtualizedStackPanel.xaml">
+      <SubType>Page</SubType>
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+    </Page>
+    <Page Include="PageWebClient.xaml">
+      <SubType>Page</SubType>
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+    </Page>
+    <Page Include="PageResourceSelector.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+    </Page>
+    <Page Include="ShowcaseHost.xaml">
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+    </Page>
+    <Page Include="IsInVisualTree.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\logo.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\iconDownload.png" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\Silverlight\v2.0\Microsoft.Silverlight.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{A1591282-1198-4647-A2B1-27E5FF5F6F3B}">
+        <SilverlightProjectProperties />
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>

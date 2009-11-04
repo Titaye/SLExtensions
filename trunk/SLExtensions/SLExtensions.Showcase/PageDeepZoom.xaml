@@ -1,0 +1,24 @@
+﻿<UserControl x:Class="SLExtensions.Showcase.PageDeepZoom"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+    xmlns:sledz="clr-namespace:SLExtensions.DeepZoom;assembly=SLExtensions.DeepZoom"
+    >
+    <Grid x:Name="LayoutRoot" Background="White">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        
+        <StackPanel Orientation="Horizontal">
+            <Button Content="Next" Click="Next_Click"/>
+            <Button Content="Previous" Click="Previous_Click"/>
+            <Button Content="All" Click="All_Click"/>
+        </StackPanel>
+        
+        <MultiScaleImage  x:Name="msi" Source="http://labs.ucaya.com/dznantes/dzc_output.xml" 
+                          Grid.Row="1"
+                          sledz:DZExtensions.ArrangeOnFirstMotionFinished="True"
+                          sledz:DZExtensions.IsMousePanEnabled="True"
+                          sledz:DZExtensions.IsMouseWheelEnabled="True"/>
+    </Grid>
+</UserControl>

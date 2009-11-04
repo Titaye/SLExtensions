@@ -1,0 +1,30 @@
+﻿<UserControl x:Class="SLExtensions.Showcase.PageWebClient"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+    xmlns:sld="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Data"
+    >
+    <StackPanel x:Name="LayoutRoot" Background="White">
+        <StackPanel>
+            <TextBlock Text="Forms data"/>
+            <sld:DataGrid x:Name="postDataGrid">
+
+            </sld:DataGrid>
+            <StackPanel Orientation="Horizontal" >
+                <Button Content="Add new row" Click="Add_Click"/>
+                <Button Content="Send data" Click="Send_Click"/>
+            </StackPanel>
+            <TextBlock x:Name="result">
+                
+            </TextBlock>
+        </StackPanel>
+        
+        <StackPanel Background="Beige">
+            <TextBlock Text="File upload"/>
+            <TextBlock x:Name="progress" Text="Progress : " />
+            <Button Content="upload file" Click="upload_Click" />
+            <TextBlock x:Name="result2">
+                
+            </TextBlock>
+        </StackPanel>
+    </StackPanel>
+</UserControl>

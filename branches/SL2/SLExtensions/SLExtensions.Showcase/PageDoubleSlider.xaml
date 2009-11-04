@@ -1,0 +1,33 @@
+﻿<UserControl x:Class="SLExtensions.Showcase.PageDoubleSlider"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+     xmlns:slec="clr-namespace:SLExtensions.Controls;assembly=SLExtensions.Controls"
+     xmlns:sled="clr-namespace:SLExtensions.Data;assembly=SLExtensions.Data"
+     xmlns:controllers="clr-namespace:SLExtensions.Showcase.Controllers"
+   >
+    <UserControl.Resources>
+        <controllers:PageDoubleSliderController x:Key="controller" />
+        <sled:StringFormatConverter x:Key="formatConverter" />
+    </UserControl.Resources>
+    <Grid x:Name="LayoutRoot" >
+
+        <StackPanel Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="200"/>
+                </Grid.ColumnDefinitions>
+                <slec:DoubleSlider Orientation="Horizontal" x:Name="DoubleSliderHTest" Minimum="1" Maximum="100" SmallChange="1" Width="200" Height="30"
+                                   MinValue="{Binding MinValue, Source={StaticResource controller}, Mode=TwoWay}"
+                                   MaxValue="{Binding MaxValue, Source={StaticResource controller}, Mode=TwoWay}"
+                                   />
+                <StackPanel Grid.Column="1">
+                    <TextBlock Text="{Binding MinValue, Source={StaticResource controller}, Converter={StaticResource formatConverter}, ConverterParameter='{0:N2} €'}" />
+                    <TextBlock Text="{Binding MaxValue, Source={StaticResource controller}, Converter={StaticResource formatConverter}, ConverterParameter='{0:N2} €'}" />
+
+                </StackPanel>
+            </Grid>
+            <TextBlock TextWrapping="Wrap" Text="Example : &lt;slec:DoubleSlider Orientation=&quot;Horizontal&quot; x:Name=&quot;DoubleSliderHTest&quot; Minimum=&quot;1&quot; Maximum=&quot;100&quot; SmallChange=&quot;1&quot; MaxValue=&quot;100&quot; MinValue=&quot;1&quot; Unit=&quot;€&quot; Width=&quot;200&quot; Height=&quot;30&quot;&gt;" />
+        </StackPanel>
+    </Grid>
+</UserControl>

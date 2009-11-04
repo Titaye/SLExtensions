@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<CodeSnippets  xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+	<CodeSnippet Format="1.0.0">
+		<Header>
+			<Title>evt</Title>
+			<Shortcut>evt</Shortcut>
+			<Description>Code snippet for event and raise function</Description>
+			<Author>Ucaya</Author>
+			<SnippetTypes>
+				<SnippetType>Expansion</SnippetType>
+			</SnippetTypes>
+		</Header>
+		<Snippet>
+			<Declarations>
+				<Literal>
+					<ID>type</ID>
+					<ToolTip>Event type</ToolTip>
+					<Default>EventHandler</Default>
+				</Literal>
+				<Literal>
+					<ID>event</ID>
+					<ToolTip>Event name</ToolTip>
+					<Default>MyEvent</Default>
+				</Literal>
+			</Declarations>
+			<Code Language="csharp"><![CDATA[public event  $type$ $event$;
+
+        protected virtual void On$event$()
+        {
+            if ($event$ != null)
+            {
+                $event$(this, EventArgs.Empty);
+            }
+        }
+
+	$end$]]>
+			</Code>
+		</Snippet>
+	</CodeSnippet>
+</CodeSnippets>

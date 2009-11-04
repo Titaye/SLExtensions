@@ -1,0 +1,9 @@
+﻿<UserControl x:Class="SLExtensions.Showcase.PageHtmlEditor"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+    xmlns:slec="clr-namespace:SLExtensions.Controls;assembly=SLExtensions.Controls"         
+    >
+    <Grid x:Name="LayoutRoot" Background="White">
+        <slec:HtmlEditor x:Name="he" Background="LightBlue" />
+    </Grid>
+</UserControl>

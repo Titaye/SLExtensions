@@ -1,0 +1,23 @@
+﻿<UserControl x:Class="SLExtensions.Showcase.PageChangeTracker"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+             xmlns:slec="clr-namespace:SLExtensions.Controls;assembly=SLExtensions.Controls"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+    >
+    <Grid x:Name="LayoutRoot" Background="White">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <TextBlock Text="Change tracker. Detects changes on a INotifyPropertyChanged binding source."/>
+        <ItemsControl x:Name="itemsControl" Grid.Row="1" Width="200" Height="200" VerticalAlignment="Top">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBox Text="{Binding Value, Mode=TwoWay}"/>
+                        <slec:ChangeTracker />
+                    </StackPanel>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+    </Grid>
+</UserControl>

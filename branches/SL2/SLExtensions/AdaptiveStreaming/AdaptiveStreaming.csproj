@@ -1,0 +1,112 @@
+﻿<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{4643C932-F918-4EFA-A079-79D3ED7752FC}</ProjectGuid>
+    <ProjectTypeGuids>{A1591282-1198-4647-A2B1-27E5FF5F6F3B};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Microsoft.Expression.Encoder.AdaptiveStreaming</RootNamespace>
+    <AssemblyName>AdaptiveStreaming</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <SilverlightApplication>false</SilverlightApplication>
+    <ValidateXaml>true</ValidateXaml>
+    <ThrowErrorsInValidation>false</ThrowErrorsInValidation>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>Bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;TRACE;SILVERLIGHT</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>Bin\Release</OutputPath>
+    <DefineConstants>TRACE;SILVERLIGHT</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System.Windows" />
+    <Reference Include="mscorlib" />
+    <Reference Include="system" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Net" />
+    <Reference Include="System.Windows.Browser" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AdaptiveStreamingEventArgs.cs" />
+    <Compile Include="AdInsertionPoint.cs" />
+    <Compile Include="Advertising\AdInsertionPoints.cs" />
+    <Compile Include="BandwidthCalculator.cs" />
+    <Compile Include="ChunkInfo.cs" />
+    <Compile Include="AdaptiveStreamingSource.cs" />
+    <Compile Include="AdaptiveStreamingException.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Heuristics.cs" />
+    <Compile Include="Heuristics\FrameRateHeuristicsImpl.cs" />
+    <Compile Include="Heuristics\FrameRateMediaInfo.cs" />
+    <Compile Include="Heuristics\HeuristicsImpl.cs" />
+    <Compile Include="Heuristics\NetworkHeuristicsHelper.cs" />
+    <Compile Include="Heuristics\NetworkHeuristicsImpl.cs" />
+    <Compile Include="Heuristics\NetworkHeuristicsParams.cs" />
+    <Compile Include="IChunkParser.cs" />
+    <Compile Include="IChunkParserFactory.cs" />
+    <Compile Include="IManifestParser.cs" />
+    <Compile Include="IUrlGenerator.cs" />
+    <Compile Include="Logging\Tracer.cs" />
+    <Compile Include="ManifestInfo.cs" />
+    <Compile Include="Manifest\ManifestParserImpl.cs" />
+    <Compile Include="Network\Downloader.cs" />
+    <Compile Include="Network\NetworkMediaInfo.cs" />
+    <Compile Include="Parsing\ChunkParserFactoryImpl.cs" />
+    <Compile Include="Parsing\FragmentedMp4ParserImpl.cs" />
+    <Compile Include="PlaybackInfo.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StreamInfo.cs" />
+    <Compile Include="Url\UrlGeneratorImpl.cs" />
+    <Compile Include="Utilities\BitRateInfo.cs" />
+    <Compile Include="Utilities\ChunkNotParsedException.cs" />
+    <Compile Include="Utilities\Configuration.cs" />
+    <Compile Include="Utilities\ConfigurationLoader.cs" />
+    <Compile Include="Utilities\Errors.cs" />
+    <Compile Include="Utilities\MediaChunk.cs" />
+    <Compile Include="Utilities\MediaChunkQueue.cs" />
+    <Compile Include="Utilities\SlidingWindow.cs" />
+    <Compile Include="Utilities\SlidingWindowSimple.cs" />
+    <Compile Include="Utilities\UIDispatcher.cs" />
+    <Compile Include="Utilities\WorkQueue.cs" />
+    <Compile Include="Utilities\WorkQueueElement.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\Silverlight\v2.0\Microsoft.Silverlight.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{A1591282-1198-4647-A2B1-27E5FF5F6F3B}">
+        <SilverlightProjectProperties />
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>

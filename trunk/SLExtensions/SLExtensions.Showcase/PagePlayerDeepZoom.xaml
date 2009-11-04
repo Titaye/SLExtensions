@@ -1,0 +1,14 @@
+﻿<UserControl x:Class="SLExtensions.Showcase.PagePlayerDeepZoom"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+   xmlns:player="clr-namespace:SLExtensions.Player;assembly=SLExtensions.Player"
+     Foreground="White"
+     Height="Auto" Width="Auto" RenderTransformOrigin="0.5,0.5" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d"
+     xmlns:vsm="clr-namespace:System.Windows;assembly=System.Windows"
+     d:DesignHeight="828" d:DesignWidth="949"
+             >
+	
+	<Grid x:Name="LayoutRoot" >
+        <player:DeepZoomPlayer x:Name="player" />
+    </Grid>
+</UserControl>

@@ -1,0 +1,34 @@
+﻿<UserControl x:Class="SLExtensions.Showcase.PageDynamicTextBlock"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+             xmlns:sl="clr-namespace:SLExtensions.Controls;assembly=SLExtensions.Controls"
+             FontFamily="Verdana"
+             FontSize="14">
+  <Grid x:Name="LayoutRoot" Background="White">
+    <StackPanel VerticalAlignment="Top" Margin="8" Width="400">
+      <TextBlock FontWeight="Bold" Margin="0,4">Original Text:</TextBlock>
+      <TextBox x:Name="original"
+             Height="100" 
+             AcceptsReturn="True" 
+             TextWrapping="Wrap" 
+             Text="You can type your story here and watch as it wraps:  Once upon a time there was a boy who loved Silverlight very much. He spent all day writing Silverlight code but never had an elegant solution for TextBlock truncation. Now he has one! The end." />
+      <TextBlock FontWeight="Bold" Margin="0,4">DynamicTextBlock (TextWrapping="NoWrap")</TextBlock>
+      <Border BorderBrush="LightGray" 
+              BorderThickness="1">
+        <sl:DynamicTextBlock Text="{Binding Text, ElementName=original}" 
+                             FontFamily="Fonts/Fonts.zip#Love Ya Like A Sister"
+                             FontSize="18"
+                             TextWrapping="NoWrap" />
+      </Border>
+      <TextBlock FontWeight="Bold" Margin="0,4">DynamicTextBlock (TextWrapping="Wrap")</TextBlock>
+      <Border BorderBrush="LightGray" 
+              BorderThickness="1">
+        <sl:DynamicTextBlock Height="150"
+                             FontFamily="Fonts/Fonts.zip#Love Ya Like A Sister"
+                             FontSize="18"
+                             Text="{Binding Text, ElementName=original}" 
+                             TextWrapping="Wrap" />
+      </Border>
+    </StackPanel>
+  </Grid>
+</UserControl>

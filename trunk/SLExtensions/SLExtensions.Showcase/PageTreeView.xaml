@@ -1,0 +1,49 @@
+﻿<UserControl x:Class="SLExtensions.Showcase.PageTreeView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+    xmlns:sle="clr-namespace:SLExtensions.Controls;assembly=SLExtensions.Controls"
+    xmlns:local="clr-namespace:SLExtensions.Showcase;assembly=SLExtensions.Showcase"
+    >
+    <UserControl.Resources>
+        <local:CustomTemplateSelector x:Name="selector">
+            <local:ItemCustomTemplateSelector ItemName="RootNode">
+                <DataTemplate>
+                    <sle:TreeViewItem ItemsSource="{Binding Nodes}">
+                        <sle:TreeViewItem.Header>
+                            <TextBlock Text="{Binding Path=Data}"/>
+                        </sle:TreeViewItem.Header>
+                    </sle:TreeViewItem>
+                </DataTemplate>
+            </local:ItemCustomTemplateSelector>
+            <local:ItemCustomTemplateSelector ItemName="Child1Node">
+                <DataTemplate>
+                    <sle:TreeViewItem ItemsSource="{Binding Nodes}">
+                        <sle:TreeViewItem.Header>
+                            <TextBlock Text="{Binding Path=Id}"/>
+                        </sle:TreeViewItem.Header>
+                    </sle:TreeViewItem>
+                </DataTemplate>
+            </local:ItemCustomTemplateSelector>
+            <local:ItemCustomTemplateSelector ItemName="Child2Node">
+                <DataTemplate>
+                    <sle:TreeViewItem>
+                        <sle:TreeViewItem.Header>
+                            <TextBlock Text="{Binding Path=Name}"/>
+                        </sle:TreeViewItem.Header>
+                    </sle:TreeViewItem>
+                </DataTemplate>
+            </local:ItemCustomTemplateSelector>
+        </local:CustomTemplateSelector>
+    </UserControl.Resources>
+    <Grid x:Name="LayoutRoot" Background="White">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition />
+        </Grid.RowDefinitions>
+            <TextBlock Text="Databound treeview"/>
+        <sle:TreeView x:Name="tv" TemplateSelector="{StaticResource selector}" Grid.Row="1">
+
+
+        </sle:TreeView>
+    </Grid>
+</UserControl>

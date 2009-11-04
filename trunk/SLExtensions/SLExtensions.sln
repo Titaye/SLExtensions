@@ -1,0 +1,309 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SLExtensions", "SLExtensions\SLExtensions.csproj", "{A6D5DC26-6631-4780-ADB9-87C1F5E405DD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SLExtensions.Test", "SLExtensions.Test\SLExtensions.Test.csproj", "{28AA322A-C78B-49CC-8186-EE24C28263C8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SLExtensions.Controls", "SLExtensions.Controls\SLExtensions.Controls.csproj", "{6ED2B488-1E6B-4A7D-9599-F787FE2FB208}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SLExtensions.Showcase", "SLExtensions.Showcase\SLExtensions.Showcase.csproj", "{997C0F08-47C4-4027-88A4-1BCE1E65D1D4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SLExtensions.Showcase.Web", "SLExtensions.Showcase.Web\SLExtensions.Showcase.Web.csproj", "{E246EAE5-2D6F-4281-B33D-0C3A704D044C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SLExtensions.DeepZoom", "SLExtensions.DeepZoom\SLExtensions.DeepZoom.csproj", "{E665548B-4784-4339-A580-41C259042214}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SLExtensions.Bootstrapping", "SLExtensions.Bootstrapping\SLExtensions.Bootstrapping.csproj", "{23934005-F7EB-4DCB-85A1-1B1C4AB66AF6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Bootstrapping", "Bootstrapping", "{7AF3BB48-A294-4583-9BC6-08979A58A621}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SLExtensions.BootstrappingSample", "SLExtensions.BootstrappingSample\SLExtensions.BootstrappingSample.csproj", "{7EE24371-7FDA-4135-B237-369EE129E107}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SLExtensions.BootstrappingSample.Web", "SLExtensions.BootstrappingSample.Web\SLExtensions.BootstrappingSample.Web.csproj", "{5D8D670B-C49B-4DF1-97E0-758757E67E3C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApplicationWithCommonAndLocalizedResources", "ApplicationWithCommonAndLocalizedResources\ApplicationWithCommonAndLocalizedResources.csproj", "{3A5B93B6-8088-4978-8BAA-765D0D197937}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LocalizationSample", "LocalizationSample\LocalizationSample.csproj", "{AEA9D548-9289-4905-93DB-25BEAA839DED}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SLMedia", "SLMedia", "{8E1776ED-A9DD-4C15-8F18-A16DC35466EA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SLMedia.Core", "SLMedia.Core\SLMedia.Core.csproj", "{AC559E1F-FEE6-4452-9047-D1A286B74C32}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SLMedia.PlaylistProvider.MediaRSS", "SLMedia.PlaylistProvider.MediaRSS\SLMedia.PlaylistProvider.MediaRSS.csproj", "{63B0B9CE-AA6D-4D59-BDDC-567D8219AFF9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SLMedia.PlaylistProvider.MSNVideo", "SLMedia.PlaylistProvider.MSNVideo\SLMedia.PlaylistProvider.MSNVideo.csproj", "{A1495C4C-48A9-48D5-911A-B4FF9A2302EE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Showcase", "Showcase", "{29DA7BF7-99D7-499A-AC03-1B412C6658FC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SLExtensions.Player", "SLExtensions.Player\SLExtensions.Player.csproj", "{66D58D46-3966-4DD9-94F5-75A051CBC881}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Network", "Network", "{DF464C02-5E39-46AF-BBA3-DF161C2D917E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SLExtensions.SocketServer", "SLExtensions.SocketServer\SLExtensions.SocketServer.csproj", "{2DB5D55A-3A7C-416A-B4EB-F0889C19AE76}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SLExtensions.SocketClient", "SLExtensions.SocketClient\SLExtensions.SocketClient.csproj", "{56AEEC92-7FB2-4DA0-9B0C-22827D4C8774}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SLExtensions.Controls.Extended", "SLExtensions.Controls.Extended\SLExtensions.Controls.Extended.csproj", "{7678B820-2E1F-4ABA-BBF4-A1DBC250CE11}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SLExtensions.Data", "SLExtensions.Data\SLExtensions.Data.csproj", "{5F8DB48F-06D4-4985-BEF6-DC7E146BC0EF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SLMedia.Video", "SLMedia.Video\SLMedia.Video.csproj", "{B7D8B158-A489-4D4F-A24E-773EE1D5FDE7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SLMedia.Deepzoom", "SLMedia.Deepzoom\SLMedia.Deepzoom.csproj", "{EB6122F5-6C44-45CD-8FA8-693D1C12625C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SLExtensions.Interactivity", "SLExtensions.Interactivity\SLExtensions.Interactivity.csproj", "{8DC01715-6DAB-4081-86B3-87E59EF0B2CE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SLMedia.Picture", "SLMedia.Picture\SLMedia.Picture.csproj", "{C6CDE891-49A2-4876-99C6-32708B9414C6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SLMedia.SmoothStreaming", "SLMedia.AdaptiveStreaming\SLMedia.SmoothStreaming.csproj", "{FBA7B006-28E0-45A6-B033-210B12A3E919}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PlaylistProviders", "PlaylistProviders", "{BEB01CEA-6E70-4EF1-88EA-55A32EF80D44}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SLExtensions.Data.Services", "SLExtensions.Data.Services\SLExtensions.Data.Services.csproj", "{E42CE8E7-74BA-46E0-B981-9AF39D8619CA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SLExtensions.Sharepoint", "SLExtensions.Sharepoint\SLExtensions.Sharepoint.csproj", "{7FBA8B02-E862-49BF-AC16-8F0697D63296}"
+EndProject
+Global
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 29
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = https://tfs07.codeplex.com/
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = SLExtensions\\SLExtensions.csproj
+		SccProjectName1 = SLExtensions
+		SccLocalPath1 = SLExtensions
+		SccProjectUniqueName2 = SLExtensions.Test\\SLExtensions.Test.csproj
+		SccProjectName2 = SLExtensions.Test
+		SccLocalPath2 = SLExtensions.Test
+		SccProjectUniqueName3 = SLExtensions.Controls\\SLExtensions.Controls.csproj
+		SccProjectName3 = SLExtensions.Controls
+		SccLocalPath3 = SLExtensions.Controls
+		SccProjectUniqueName4 = SLExtensions.Showcase\\SLExtensions.Showcase.csproj
+		SccProjectTopLevelParentUniqueName4 = SLExtensions.sln
+		SccProjectName4 = SLExtensions.Showcase
+		SccLocalPath4 = SLExtensions.Showcase
+		SccProjectUniqueName5 = SLExtensions.Showcase.Web\\SLExtensions.Showcase.Web.csproj
+		SccProjectTopLevelParentUniqueName5 = SLExtensions.sln
+		SccProjectName5 = SLExtensions.Showcase.Web
+		SccLocalPath5 = SLExtensions.Showcase.Web
+		SccProjectUniqueName6 = SLExtensions.DeepZoom\\SLExtensions.DeepZoom.csproj
+		SccProjectName6 = SLExtensions.DeepZoom
+		SccLocalPath6 = SLExtensions.DeepZoom
+		SccProjectUniqueName7 = SLExtensions.Bootstrapping\\SLExtensions.Bootstrapping.csproj
+		SccProjectTopLevelParentUniqueName7 = SLExtensions.sln
+		SccProjectName7 = SLExtensions.Bootstrapping
+		SccLocalPath7 = SLExtensions.Bootstrapping
+		SccProjectUniqueName8 = SLExtensions.BootstrappingSample\\SLExtensions.BootstrappingSample.csproj
+		SccProjectTopLevelParentUniqueName8 = SLExtensions.sln
+		SccProjectName8 = SLExtensions.BootstrappingSample
+		SccLocalPath8 = SLExtensions.BootstrappingSample
+		SccProjectUniqueName9 = SLExtensions.BootstrappingSample.Web\\SLExtensions.BootstrappingSample.Web.csproj
+		SccProjectTopLevelParentUniqueName9 = SLExtensions.sln
+		SccProjectName9 = SLExtensions.BootstrappingSample.Web
+		SccLocalPath9 = SLExtensions.BootstrappingSample.Web
+		SccProjectUniqueName10 = ApplicationWithCommonAndLocalizedResources\\ApplicationWithCommonAndLocalizedResources.csproj
+		SccProjectTopLevelParentUniqueName10 = SLExtensions.sln
+		SccProjectName10 = ApplicationWithCommonAndLocalizedResources
+		SccLocalPath10 = ApplicationWithCommonAndLocalizedResources
+		SccProjectUniqueName11 = LocalizationSample\\LocalizationSample.csproj
+		SccProjectTopLevelParentUniqueName11 = SLExtensions.sln
+		SccProjectName11 = LocalizationSample
+		SccLocalPath11 = LocalizationSample
+		SccProjectUniqueName12 = SLMedia.Core\\SLMedia.Core.csproj
+		SccProjectTopLevelParentUniqueName12 = SLExtensions.sln
+		SccProjectName12 = SLMedia.Core
+		SccLocalPath12 = SLMedia.Core
+		SccProjectUniqueName13 = SLMedia.PlaylistProvider.MediaRSS\\SLMedia.PlaylistProvider.MediaRSS.csproj
+		SccProjectTopLevelParentUniqueName13 = SLExtensions.sln
+		SccProjectName13 = SLMedia.PlaylistProvider.MediaRSS
+		SccLocalPath13 = SLMedia.PlaylistProvider.MediaRSS
+		SccProjectUniqueName14 = SLMedia.PlaylistProvider.MSNVideo\\SLMedia.PlaylistProvider.MSNVideo.csproj
+		SccProjectTopLevelParentUniqueName14 = SLExtensions.sln
+		SccProjectName14 = SLMedia.PlaylistProvider.MSNVideo
+		SccLocalPath14 = SLMedia.PlaylistProvider.MSNVideo
+		SccProjectUniqueName15 = AdaptiveStreaming\\AdaptiveStreaming.csproj
+		SccProjectTopLevelParentUniqueName15 = SLExtensions.sln
+		SccProjectName15 = AdaptiveStreaming
+		SccLocalPath15 = AdaptiveStreaming
+		SccProjectUniqueName16 = MediaPlayer\\MediaPlayer.csproj
+		SccProjectTopLevelParentUniqueName16 = SLExtensions.sln
+		SccProjectName16 = MediaPlayer
+		SccLocalPath16 = MediaPlayer
+		SccProjectUniqueName17 = SLExtensions.Player\\SLExtensions.Player.csproj
+		SccProjectTopLevelParentUniqueName17 = SLExtensions.sln
+		SccProjectName17 = SLExtensions.Player
+		SccLocalPath17 = SLExtensions.Player
+		SccProjectUniqueName18 = SLExtensions.SocketServer\\SLExtensions.SocketServer.csproj
+		SccProjectTopLevelParentUniqueName18 = SLExtensions.sln
+		SccProjectName18 = SLExtensions.SocketServer
+		SccLocalPath18 = SLExtensions.SocketServer
+		SccProjectUniqueName19 = SLExtensions.SocketClient\\SLExtensions.SocketClient.csproj
+		SccProjectTopLevelParentUniqueName19 = SLExtensions.sln
+		SccProjectName19 = SLExtensions.SocketClient
+		SccLocalPath19 = SLExtensions.SocketClient
+		SccProjectUniqueName20 = SLExtensions.Controls.Extended\\SLExtensions.Controls.Extended.csproj
+		SccProjectName20 = SLExtensions.Controls.Extended
+		SccLocalPath20 = SLExtensions.Controls.Extended
+		SccProjectUniqueName21 = SLExtensions.Interactivity\\SLExtensions.Interactivity.csproj
+		SccProjectName21 = SLExtensions.Interactivity
+		SccLocalPath21 = SLExtensions.Interactivity
+		SccProjectUniqueName22 = SLExtensions.Data\\SLExtensions.Data.csproj
+		SccProjectName22 = SLExtensions.Data
+		SccLocalPath22 = SLExtensions.Data
+		SccProjectUniqueName23 = SLMedia.Video\\SLMedia.Video.csproj
+		SccProjectTopLevelParentUniqueName23 = SLExtensions.sln
+		SccProjectName23 = SLMedia.Video
+		SccLocalPath23 = SLMedia.Video
+		SccProjectUniqueName24 = SLMedia.Deepzoom\\SLMedia.Deepzoom.csproj
+		SccProjectTopLevelParentUniqueName24 = SLExtensions.sln
+		SccProjectName24 = SLMedia.Deepzoom
+		SccLocalPath24 = SLMedia.Deepzoom
+		SccProjectUniqueName25 = SLMedia.Picture\\SLMedia.Picture.csproj
+		SccProjectTopLevelParentUniqueName25 = SLExtensions.sln
+		SccProjectName25 = SLMedia.Picture
+		SccLocalPath25 = SLMedia.Picture
+		SccProjectUniqueName26 = SLMedia.AdaptiveStreaming\\SLMedia.SmoothStreaming.csproj
+		SccProjectTopLevelParentUniqueName26 = SLExtensions.sln
+		SccProjectName26 = SLMedia.AdaptiveStreaming
+		SccLocalPath26 = SLMedia.AdaptiveStreaming
+		SccProjectUniqueName27 = SLExtensions.Data.Services\\SLExtensions.Data.Services.csproj
+		SccProjectName27 = SLExtensions.Data.Services
+		SccLocalPath27 = SLExtensions.Data.Services
+		SccProjectUniqueName28 = SLExtensions.Sharepoint\\SLExtensions.Sharepoint.csproj
+		SccProjectName28 = SLExtensions.Sharepoint
+		SccLocalPath28 = SLExtensions.Sharepoint
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A6D5DC26-6631-4780-ADB9-87C1F5E405DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A6D5DC26-6631-4780-ADB9-87C1F5E405DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A6D5DC26-6631-4780-ADB9-87C1F5E405DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A6D5DC26-6631-4780-ADB9-87C1F5E405DD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{28AA322A-C78B-49CC-8186-EE24C28263C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{28AA322A-C78B-49CC-8186-EE24C28263C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{28AA322A-C78B-49CC-8186-EE24C28263C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{28AA322A-C78B-49CC-8186-EE24C28263C8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6ED2B488-1E6B-4A7D-9599-F787FE2FB208}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6ED2B488-1E6B-4A7D-9599-F787FE2FB208}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6ED2B488-1E6B-4A7D-9599-F787FE2FB208}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6ED2B488-1E6B-4A7D-9599-F787FE2FB208}.Release|Any CPU.Build.0 = Release|Any CPU
+		{997C0F08-47C4-4027-88A4-1BCE1E65D1D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{997C0F08-47C4-4027-88A4-1BCE1E65D1D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{997C0F08-47C4-4027-88A4-1BCE1E65D1D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{997C0F08-47C4-4027-88A4-1BCE1E65D1D4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E246EAE5-2D6F-4281-B33D-0C3A704D044C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E246EAE5-2D6F-4281-B33D-0C3A704D044C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E246EAE5-2D6F-4281-B33D-0C3A704D044C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E246EAE5-2D6F-4281-B33D-0C3A704D044C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E665548B-4784-4339-A580-41C259042214}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E665548B-4784-4339-A580-41C259042214}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E665548B-4784-4339-A580-41C259042214}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E665548B-4784-4339-A580-41C259042214}.Release|Any CPU.Build.0 = Release|Any CPU
+		{23934005-F7EB-4DCB-85A1-1B1C4AB66AF6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{23934005-F7EB-4DCB-85A1-1B1C4AB66AF6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{23934005-F7EB-4DCB-85A1-1B1C4AB66AF6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{23934005-F7EB-4DCB-85A1-1B1C4AB66AF6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7EE24371-7FDA-4135-B237-369EE129E107}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7EE24371-7FDA-4135-B237-369EE129E107}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7EE24371-7FDA-4135-B237-369EE129E107}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7EE24371-7FDA-4135-B237-369EE129E107}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5D8D670B-C49B-4DF1-97E0-758757E67E3C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5D8D670B-C49B-4DF1-97E0-758757E67E3C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5D8D670B-C49B-4DF1-97E0-758757E67E3C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5D8D670B-C49B-4DF1-97E0-758757E67E3C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3A5B93B6-8088-4978-8BAA-765D0D197937}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3A5B93B6-8088-4978-8BAA-765D0D197937}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3A5B93B6-8088-4978-8BAA-765D0D197937}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3A5B93B6-8088-4978-8BAA-765D0D197937}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AEA9D548-9289-4905-93DB-25BEAA839DED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AEA9D548-9289-4905-93DB-25BEAA839DED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AEA9D548-9289-4905-93DB-25BEAA839DED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AEA9D548-9289-4905-93DB-25BEAA839DED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AC559E1F-FEE6-4452-9047-D1A286B74C32}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AC559E1F-FEE6-4452-9047-D1A286B74C32}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AC559E1F-FEE6-4452-9047-D1A286B74C32}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AC559E1F-FEE6-4452-9047-D1A286B74C32}.Release|Any CPU.Build.0 = Release|Any CPU
+		{63B0B9CE-AA6D-4D59-BDDC-567D8219AFF9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{63B0B9CE-AA6D-4D59-BDDC-567D8219AFF9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{63B0B9CE-AA6D-4D59-BDDC-567D8219AFF9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{63B0B9CE-AA6D-4D59-BDDC-567D8219AFF9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A1495C4C-48A9-48D5-911A-B4FF9A2302EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A1495C4C-48A9-48D5-911A-B4FF9A2302EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A1495C4C-48A9-48D5-911A-B4FF9A2302EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A1495C4C-48A9-48D5-911A-B4FF9A2302EE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{66D58D46-3966-4DD9-94F5-75A051CBC881}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{66D58D46-3966-4DD9-94F5-75A051CBC881}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{66D58D46-3966-4DD9-94F5-75A051CBC881}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{66D58D46-3966-4DD9-94F5-75A051CBC881}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2DB5D55A-3A7C-416A-B4EB-F0889C19AE76}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2DB5D55A-3A7C-416A-B4EB-F0889C19AE76}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2DB5D55A-3A7C-416A-B4EB-F0889C19AE76}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2DB5D55A-3A7C-416A-B4EB-F0889C19AE76}.Release|Any CPU.Build.0 = Release|Any CPU
+		{56AEEC92-7FB2-4DA0-9B0C-22827D4C8774}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{56AEEC92-7FB2-4DA0-9B0C-22827D4C8774}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{56AEEC92-7FB2-4DA0-9B0C-22827D4C8774}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{56AEEC92-7FB2-4DA0-9B0C-22827D4C8774}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7678B820-2E1F-4ABA-BBF4-A1DBC250CE11}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7678B820-2E1F-4ABA-BBF4-A1DBC250CE11}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7678B820-2E1F-4ABA-BBF4-A1DBC250CE11}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7678B820-2E1F-4ABA-BBF4-A1DBC250CE11}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5F8DB48F-06D4-4985-BEF6-DC7E146BC0EF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5F8DB48F-06D4-4985-BEF6-DC7E146BC0EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5F8DB48F-06D4-4985-BEF6-DC7E146BC0EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5F8DB48F-06D4-4985-BEF6-DC7E146BC0EF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B7D8B158-A489-4D4F-A24E-773EE1D5FDE7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B7D8B158-A489-4D4F-A24E-773EE1D5FDE7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B7D8B158-A489-4D4F-A24E-773EE1D5FDE7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B7D8B158-A489-4D4F-A24E-773EE1D5FDE7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EB6122F5-6C44-45CD-8FA8-693D1C12625C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EB6122F5-6C44-45CD-8FA8-693D1C12625C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EB6122F5-6C44-45CD-8FA8-693D1C12625C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EB6122F5-6C44-45CD-8FA8-693D1C12625C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8DC01715-6DAB-4081-86B3-87E59EF0B2CE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8DC01715-6DAB-4081-86B3-87E59EF0B2CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8DC01715-6DAB-4081-86B3-87E59EF0B2CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8DC01715-6DAB-4081-86B3-87E59EF0B2CE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C6CDE891-49A2-4876-99C6-32708B9414C6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C6CDE891-49A2-4876-99C6-32708B9414C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C6CDE891-49A2-4876-99C6-32708B9414C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C6CDE891-49A2-4876-99C6-32708B9414C6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FBA7B006-28E0-45A6-B033-210B12A3E919}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FBA7B006-28E0-45A6-B033-210B12A3E919}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FBA7B006-28E0-45A6-B033-210B12A3E919}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FBA7B006-28E0-45A6-B033-210B12A3E919}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E42CE8E7-74BA-46E0-B981-9AF39D8619CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E42CE8E7-74BA-46E0-B981-9AF39D8619CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E42CE8E7-74BA-46E0-B981-9AF39D8619CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E42CE8E7-74BA-46E0-B981-9AF39D8619CA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7FBA8B02-E862-49BF-AC16-8F0697D63296}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7FBA8B02-E862-49BF-AC16-8F0697D63296}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7FBA8B02-E862-49BF-AC16-8F0697D63296}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7FBA8B02-E862-49BF-AC16-8F0697D63296}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{E246EAE5-2D6F-4281-B33D-0C3A704D044C} = {29DA7BF7-99D7-499A-AC03-1B412C6658FC}
+		{997C0F08-47C4-4027-88A4-1BCE1E65D1D4} = {29DA7BF7-99D7-499A-AC03-1B412C6658FC}
+		{66D58D46-3966-4DD9-94F5-75A051CBC881} = {29DA7BF7-99D7-499A-AC03-1B412C6658FC}
+		{23934005-F7EB-4DCB-85A1-1B1C4AB66AF6} = {7AF3BB48-A294-4583-9BC6-08979A58A621}
+		{7EE24371-7FDA-4135-B237-369EE129E107} = {7AF3BB48-A294-4583-9BC6-08979A58A621}
+		{5D8D670B-C49B-4DF1-97E0-758757E67E3C} = {7AF3BB48-A294-4583-9BC6-08979A58A621}
+		{3A5B93B6-8088-4978-8BAA-765D0D197937} = {7AF3BB48-A294-4583-9BC6-08979A58A621}
+		{AEA9D548-9289-4905-93DB-25BEAA839DED} = {7AF3BB48-A294-4583-9BC6-08979A58A621}
+		{AC559E1F-FEE6-4452-9047-D1A286B74C32} = {8E1776ED-A9DD-4C15-8F18-A16DC35466EA}
+		{BEB01CEA-6E70-4EF1-88EA-55A32EF80D44} = {8E1776ED-A9DD-4C15-8F18-A16DC35466EA}
+		{B7D8B158-A489-4D4F-A24E-773EE1D5FDE7} = {8E1776ED-A9DD-4C15-8F18-A16DC35466EA}
+		{EB6122F5-6C44-45CD-8FA8-693D1C12625C} = {8E1776ED-A9DD-4C15-8F18-A16DC35466EA}
+		{C6CDE891-49A2-4876-99C6-32708B9414C6} = {8E1776ED-A9DD-4C15-8F18-A16DC35466EA}
+		{FBA7B006-28E0-45A6-B033-210B12A3E919} = {8E1776ED-A9DD-4C15-8F18-A16DC35466EA}
+		{A1495C4C-48A9-48D5-911A-B4FF9A2302EE} = {BEB01CEA-6E70-4EF1-88EA-55A32EF80D44}
+		{63B0B9CE-AA6D-4D59-BDDC-567D8219AFF9} = {BEB01CEA-6E70-4EF1-88EA-55A32EF80D44}
+		{2DB5D55A-3A7C-416A-B4EB-F0889C19AE76} = {DF464C02-5E39-46AF-BBA3-DF161C2D917E}
+		{56AEEC92-7FB2-4DA0-9B0C-22827D4C8774} = {DF464C02-5E39-46AF-BBA3-DF161C2D917E}
+	EndGlobalSection
+EndGlobal

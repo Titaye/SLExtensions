@@ -1,0 +1,13 @@
+﻿<UserControl x:Class="SLExtensions.Showcase.PageRecaptcha"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+    xmlns:slec="clr-namespace:SLExtensions.Controls;assembly=SLExtensions.Controls"
+    Width="400" Height="300">
+    <StackPanel x:Name="LayoutRoot" Background="White">
+        <slec:ReCaptcha x:Name="captcha" PublicKey="6LcRugMAAAAAAKjKsixgS0UcqGkMFAQBKnzCumHG" HorizontalAlignment="Center" VerticalAlignment="Center" >
+            <slec:ReCaptcha.Verifier>
+                <slec:ReCaptchaHttpPostVerifier Url="/VerifyCaptcha.aspx" Success="ReCaptchaHttpPostVerifier_Success" Failed="ReCaptchaHttpPostVerifier_Failed"/>
+            </slec:ReCaptcha.Verifier>
+        </slec:ReCaptcha>
+    </StackPanel>
+</UserControl>

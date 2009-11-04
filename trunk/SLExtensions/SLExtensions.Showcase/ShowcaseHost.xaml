@@ -1,0 +1,429 @@
+﻿<UserControl x:Class="SLExtensions.Showcase.ShowcaseHost"
+    xmlns="http://schemas.microsoft.com/client/2007" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+    xmlns:scControllers="clr-namespace:SLExtensions.Showcase.Controllers;assembly=SLExtensions.Showcase"
+    xmlns:local="clr-namespace:SLExtensions.Showcase"
+    xmlns:slec="clr-namespace:SLExtensions.Controls;assembly=SLExtensions.Controls"
+    xmlns:slei="clr-namespace:SLExtensions.Input;assembly=SLExtensions"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+    MinWidth="400" MinHeight="300"
+             Loaded="UserControl_Loaded"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d" d:DesignWidth="910" d:DesignHeight="711"
+			 xmlns:vsm="clr-namespace:System.Windows;assembly=System.Windows"
+             >
+    <UserControl.Resources>
+        <scControllers:ShowcaseController x:Name="controller">
+            <scControllers:ShowcaseController.Items>
+                <local:ShowcaseItem Title="1  - Layers - Map sample" Page="SLExtensions.Showcase.PageLayers" />
+                <local:ShowcaseItem Title="2  - CommandService" Page="SLExtensions.Showcase.PageCommand" />
+                <local:ShowcaseItem Title="3  - TreeView" Page="SLExtensions.Showcase.PageTreeView" />
+                <local:ShowcaseItem Title="4  - IsInVisualTree" Page="SLExtensions.Showcase.IsInVisualTree" />
+                <local:ShowcaseItem Title="5  - Web client extension methods" Page="SLExtensions.Showcase.PageWebClient" />
+                <local:ShowcaseItem Title="6  - Virtualized Stack Panel" Page="SLExtensions.Showcase.PageVirtualizedStackPanel" />
+                <local:ShowcaseItem Title="7  - Animation" Page="SLExtensions.Showcase.PageAnimation" />
+                <local:ShowcaseItem Title="8  - Animating Tile Panel" Page="SLExtensions.Showcase.PageAnimatingTilePanel" />
+                <local:ShowcaseItem Title="9  - Dock Panel" Page="SLExtensions.Showcase.PageDockPanel" />
+                <local:ShowcaseItem Title="10 - Alternate Converter" Page="SLExtensions.Showcase.PageAlternateConverter" />
+                <local:ShowcaseItem Title="11 - Deepzoom" Page="SLExtensions.Showcase.PageDeepZoom" />
+                <local:ShowcaseItem Title="12 - Swappable content control" Page="SLExtensions.Showcase.PageSwappableContent" />
+                <local:ShowcaseItem Title="13 - viewbox" Page="SLExtensions.Showcase.PageViewbox" />
+                <local:ShowcaseItem Title="14 - Flow layout" Page="SLExtensions.Showcase.PageFlowLayoutPanel" />
+                <local:ShowcaseItem Title="15 - Change tracker" Page="SLExtensions.Showcase.PageChangeTracker" />
+                <local:ShowcaseItem Title="16 - Grid page layout" Page="SLExtensions.Showcase.PageGridPageLayout" />
+                <local:ShowcaseItem Title="17 - Recaptcha control" Page="SLExtensions.Showcase.PageRecaptcha" />
+                <local:ShowcaseItem Title="18 - Binding Comparer" Page="SLExtensions.Showcase.PageBindingComparer" />
+                <local:ShowcaseItem Title="19 - Fixed ComboBox" Page="SLExtensions.Showcase.PageFixedComboBox"/>
+                <local:ShowcaseItem Title="20 - Resource Selector" Page="SLExtensions.Showcase.PageResourceSelector" />
+                <local:ShowcaseItem Title="21 - Html Editor" Page="SLExtensions.Showcase.PageHtmlEditor" />
+				<local:ShowcaseItem Title="22 - Player Photo" Page="SLExtensions.Showcase.PagePlayerPhoto" />
+				<local:ShowcaseItem Title="23 - Player Video" Page="SLExtensions.Showcase.PagePlayerVideo" />
+				<local:ShowcaseItem Title="24 - Player DeepZoom" Page="SLExtensions.Showcase.PagePlayerDeepZoom" />
+				<local:ShowcaseItem Title="25 - Player SmoothHD" Page="SLExtensions.Showcase.PagePlayerVideoSmoothHD" />
+				<!--<local:ShowcaseItem Title="26 - Player ExpressionEncoder" Page="SLExtensions.Showcase.PageExpressionPlayerVideo" />-->
+                <local:ShowcaseItem Title="26 - Double Slider" Page="SLExtensions.Showcase.PageDoubleSlider" />
+                <local:ShowcaseItem Title="27 - ZIndex anim" Page="SLExtensions.Showcase.PageAnimZIndex" />
+                <local:ShowcaseItem Title="28 - Decorator and Separator" Page="SLExtensions.Showcase.PageDecoratorAndSeparator" />
+                <local:ShowcaseItem Title="29 - DoubleSlider" Page="SLExtensions.Showcase.PageDoubleSlider" />
+                <local:ShowcaseItem Title="30 - Html converters" Page="SLExtensions.Showcase.PageHtmlConverter" />
+                <local:ShowcaseItem Title="31 - Custom cursors" Page="SLExtensions.Showcase.PageCursor" />
+                <local:ShowcaseItem Title="32 - PasswordBox binding" Page="SLExtensions.Showcase.PagePasswordBoxBinding" />
+                <local:ShowcaseItem Title="33 - Draggable Extensions" Page="SLExtensions.Showcase.PageDraggableExtensions" />
+                <local:ShowcaseItem Title="34 - Color Picker" Page="SLExtensions.Showcase.PageColorPicker" />
+                <local:ShowcaseItem Title="35 - Slider Gauge" Page="SLExtensions.Showcase.PageSliderGauge" />
+                <local:ShowcaseItem Title="36 - Star Selector" Page="SLExtensions.Showcase.PageStarSelector" />
+                <local:ShowcaseItem Title="37 - Dynamic Imaging" Page="SLExtensions.Showcase.PageDynamicImaging" />
+                <local:ShowcaseItem Title="38 - Cool Menu" Page="SLExtensions.Showcase.PageCoolMenu" />
+        <local:ShowcaseItem Title="39 - Dynamic TextBlock" Page="SLExtensions.Showcase.PageDynamicTextBlock" />
+      </scControllers:ShowcaseController.Items> 
+
+
+            <scControllers:ShowcaseController.Contributors>
+                <sys:String>Thierry Bouquain</sys:String>
+                <sys:String>Pierre Lagarde</sys:String>
+                <sys:String>Simon Ferquel</sys:String>
+                <sys:String>Romuald Boulanger</sys:String>
+            </scControllers:ShowcaseController.Contributors>
+            <scControllers:ShowcaseController.LastAdditions>
+                <sys:String>HTML Editor</sys:String>
+                <sys:String>Resource Selector</sys:String>
+                <sys:String>Binding comparer</sys:String>
+                <sys:String>Captcha</sys:String>
+                <sys:String>RTW Compatibility</sys:String>
+            </scControllers:ShowcaseController.LastAdditions>
+            <scControllers:ShowcaseController.Links>
+                <local:ShowcaseLink Title="Codeplex project" Url="http://www.codeplex.com/SLExtensions"/>
+                <local:ShowcaseLink Title="Discussions" Url="http://www.codeplex.com/SLExtensions/Thread/List.aspx"/>
+                <local:ShowcaseLink Title="SLExtensions at Ucaya (french)" Url="http://www.ucaya.com/blog/SearchView.aspx?q=slextensions" />
+            </scControllers:ShowcaseController.Links>
+
+        </scControllers:ShowcaseController>
+
+        <Style x:Key="downloadButtonStyle" TargetType="HyperlinkButton">
+            <Setter Property="Foreground" Value="#FF73A9D8"/>
+            <Setter Property="Padding" Value="2,0,2,0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="VerticalContentAlignment" Value="Top"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="HyperlinkButton">
+                        <Grid Cursor="{TemplateBinding Cursor}" Background="{TemplateBinding Background}">
+                            <vsm:VisualStateManager.VisualStateGroups>
+                                <vsm:VisualStateGroup x:Name="CommonStates">
+                                    <vsm:VisualState x:Name="Normal"/>
+                                    <vsm:VisualState x:Name="MouseOver">
+                                        <Storyboard/>
+                                    </vsm:VisualState>
+                                    <vsm:VisualState x:Name="Pressed">
+                                        <Storyboard/>
+                                    </vsm:VisualState>
+                                    <vsm:VisualState x:Name="Disabled">
+                                        <Storyboard/>
+                                    </vsm:VisualState>
+                                </vsm:VisualStateGroup>
+                                <vsm:VisualStateGroup x:Name="FocusStates">
+                                    <vsm:VisualState x:Name="Focused">
+                                        <Storyboard>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="FocusVisualElement" Storyboard.TargetProperty="Opacity">
+                                                <SplineDoubleKeyFrame KeyTime="0" Value="1"/>
+                                            </DoubleAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </vsm:VisualState>
+                                    <vsm:VisualState x:Name="Unfocused"/>
+                                </vsm:VisualStateGroup>
+                            </vsm:VisualStateManager.VisualStateGroups>
+                            <Rectangle HorizontalAlignment="Stretch" Width="Auto" Stroke="{x:Null}" RadiusX="10" RadiusY="10">
+                                <Rectangle.Fill>
+                                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                        <GradientStop Color="#50FFFFFF"/>
+                                        <GradientStop Color="#10FFFFFF" Offset="1"/>
+                                    </LinearGradientBrush>
+                                </Rectangle.Fill>
+                            </Rectangle>
+                            <Rectangle HorizontalAlignment="Stretch" Width="Auto" Stroke="{x:Null}" RadiusX="10" RadiusY="10" Margin="2,2,2,2">
+                                <Rectangle.Fill>
+                                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                        <GradientStop Color="#00FFFFFF" Offset="0.17"/>
+                                        <GradientStop Color="#D0FFFFFF" Offset="0"/>
+                                    </LinearGradientBrush>
+                                </Rectangle.Fill>
+                            </Rectangle>
+                            <Image Height="72" HorizontalAlignment="Left" Margin="10,0,0,0" Width="54" Source="Assets/iconDownload.png" Stretch="None"/>
+                            <StackPanel Margin="70,10,10,10">
+                                <TextBlock Width="Auto" Text="Download SLExtensions" TextWrapping="Wrap" d:LayoutOverrides="Height" FontFamily="./Eurostile.ttf#Eurostile" Foreground="#FFFFFFFF" FontSize="22"/>
+                            </StackPanel>
+                            <Rectangle x:Name="FocusVisualElement" IsHitTestVisible="false" Opacity="0" Stroke="#FF6DBDD1" StrokeThickness="1"/>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Width" Value="282"/>
+            <Setter Property="Height" Value="96"/>
+        </Style>
+
+        <Style x:Key="TextblockStyle2" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#989A99"/>
+            <Setter Property="FontFamily" Value="./Eurostile.ttf#Eurostile"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+        </Style>
+        
+        <Style x:Key="linkStyle" TargetType="HyperlinkButton">
+            <Setter Property="Foreground" Value="#989A99"/>
+            <Setter Property="FontFamily" Value="./Eurostile.ttf#Eurostile"/>
+            <Setter Property="FontSize" Value="14"/>
+        </Style>
+
+        <Style x:Key="HyperlinkButtonStyle1" TargetType="HyperlinkButton">
+            
+            <Setter Property="Foreground" Value="#FFFFFFFF"/>
+            <Setter Property="Padding" Value="2,0,2,0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="VerticalContentAlignment" Value="Top"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="HyperlinkButton">
+                        <Grid Cursor="{TemplateBinding Cursor}" Background="{TemplateBinding Background}">
+                            <vsm:VisualStateManager.VisualStateGroups>
+                                <vsm:VisualStateGroup x:Name="CommonStates">
+                                    <vsm:VisualStateGroup.Transitions>
+                                        <vsm:VisualTransition GeneratedDuration="00:00:00.2000000"/>
+                                    </vsm:VisualStateGroup.Transitions>
+                                    <vsm:VisualState x:Name="Normal"/>
+                                    <vsm:VisualState x:Name="MouseOver">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Duration="0" Storyboard.TargetName="UnderlineTextBlock" Storyboard.TargetProperty="Visibility">
+                                                <DiscreteObjectKeyFrame KeyTime="0">
+                                                    <DiscreteObjectKeyFrame.Value>
+                                                        <Visibility>Visible</Visibility>
+                                                    </DiscreteObjectKeyFrame.Value>
+                                                </DiscreteObjectKeyFrame>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Duration="00:00:00.0010000" Storyboard.TargetName="bkg" Storyboard.TargetProperty="(UIElement.Opacity)">
+                                                <SplineDoubleKeyFrame KeyTime="00:00:00" Value="1"/>
+                                            </DoubleAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </vsm:VisualState>
+                                    <vsm:VisualState x:Name="Pressed">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Duration="0" Storyboard.TargetName="UnderlineTextBlock" Storyboard.TargetProperty="Visibility">
+                                                <DiscreteObjectKeyFrame KeyTime="0">
+                                                    <DiscreteObjectKeyFrame.Value>
+                                                        <Visibility>Visible</Visibility>
+                                                    </DiscreteObjectKeyFrame.Value>
+                                                </DiscreteObjectKeyFrame>
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </vsm:VisualState>
+                                    <vsm:VisualState x:Name="Disabled">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Duration="0" Storyboard.TargetName="DisabledOverlay" Storyboard.TargetProperty="Visibility">
+                                                <DiscreteObjectKeyFrame KeyTime="0">
+                                                    <DiscreteObjectKeyFrame.Value>
+                                                        <Visibility>Visible</Visibility>
+                                                    </DiscreteObjectKeyFrame.Value>
+                                                </DiscreteObjectKeyFrame>
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </vsm:VisualState>
+                                </vsm:VisualStateGroup>
+                                <vsm:VisualStateGroup x:Name="FocusStates">
+                                    <vsm:VisualState x:Name="Focused">
+                                        <Storyboard>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="FocusVisualElement" Storyboard.TargetProperty="Opacity">
+                                                <SplineDoubleKeyFrame KeyTime="0" Value="1"/>
+                                            </DoubleAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </vsm:VisualState>
+                                    <vsm:VisualState x:Name="Unfocused"/>
+                                </vsm:VisualStateGroup>
+                            </vsm:VisualStateManager.VisualStateGroups>
+                            <Rectangle Fill="#65FFFFFF" x:Name="bkg" Opacity="0"/>
+                            <TextBlock HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" x:Name="UnderlineTextBlock" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" Visibility="Collapsed" Text="{TemplateBinding Content}" TextDecorations="Underline"/>
+                            <TextBlock HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" x:Name="DisabledOverlay" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" Visibility="Collapsed" Canvas.ZIndex="1" Foreground="#FFAAAAAA" Text="{TemplateBinding Content}"/>
+                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" x:Name="contentPresenter" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}"/>
+                            <Rectangle x:Name="FocusVisualElement" IsHitTestVisible="false" Opacity="0" Stroke="#FF6DBDD1" StrokeThickness="1"/>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="TextBlockStyleHeader" TargetType="TextBlock">
+            <Setter Property="FontFamily" Value="./Eurostile.ttf#Eurostile"/>
+            <Setter Property="Foreground" Value="#FF02548C"/>
+            <Setter Property="FontSize" Value="22"/>
+        </Style>
+        <ControlTemplate x:Key="HyperlinkButtonControlTemplate1" TargetType="HyperlinkButton">
+        	<Grid Cursor="{TemplateBinding Cursor}" Background="{TemplateBinding Background}">
+        		<vsm:VisualStateManager.VisualStateGroups>
+        			<vsm:VisualStateGroup x:Name="CommonStates">
+        				<vsm:VisualState x:Name="Normal"/>
+        				<vsm:VisualState x:Name="MouseOver">
+        					<Storyboard/>
+        				</vsm:VisualState>
+        				<vsm:VisualState x:Name="Pressed">
+        					<Storyboard/>
+        				</vsm:VisualState>
+        				<vsm:VisualState x:Name="Disabled">
+        					<Storyboard>
+        						<ObjectAnimationUsingKeyFrames Storyboard.TargetName="DisabledOverlay" Storyboard.TargetProperty="Visibility" Duration="0">
+        							<DiscreteObjectKeyFrame KeyTime="0">
+        								<DiscreteObjectKeyFrame.Value>
+        									<Visibility>Visible</Visibility>
+        								</DiscreteObjectKeyFrame.Value>
+        							</DiscreteObjectKeyFrame>
+        						</ObjectAnimationUsingKeyFrames>
+        					</Storyboard>
+        				</vsm:VisualState>
+        			</vsm:VisualStateGroup>
+        			<vsm:VisualStateGroup x:Name="FocusStates">
+        				<vsm:VisualState x:Name="Focused">
+        					<Storyboard>
+        						<DoubleAnimationUsingKeyFrames Storyboard.TargetName="FocusVisualElement" Storyboard.TargetProperty="Opacity">
+        							<SplineDoubleKeyFrame KeyTime="0" Value="1"/>
+        						</DoubleAnimationUsingKeyFrames>
+        					</Storyboard>
+        				</vsm:VisualState>
+        				<vsm:VisualState x:Name="Unfocused"/>
+        			</vsm:VisualStateGroup>
+        		</vsm:VisualStateManager.VisualStateGroups>
+        		<TextBlock Canvas.ZIndex="1"
+        			x:Name="DisabledOverlay"
+        			Text="{TemplateBinding Content}"
+        			Foreground="#FFAAAAAA"
+        			HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+        			VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+        			Margin="{TemplateBinding Padding}"
+        			Visibility="Collapsed"/>
+        		<ContentPresenter 
+        			x:Name="contentPresenter"
+        			Content="{TemplateBinding Content}"
+        			ContentTemplate="{TemplateBinding ContentTemplate}"
+        			VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+        			HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+        			Margin="{TemplateBinding Padding}"/>
+        		<Rectangle x:Name="FocusVisualElement" Stroke="#FF6DBDD1" StrokeThickness="1" Opacity="0" IsHitTestVisible="false" />
+        	</Grid>
+        </ControlTemplate>
+        <DataTemplate x:Key="DataTemplate1">
+        	<TextBlock TextWrapping="Wrap" Text="{Binding}"/>
+        </DataTemplate>
+    </UserControl.Resources>
+    <Grid Height="Auto" Width="Auto">
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid Background="#FF000000">
+            <Grid.ColumnDefinitions>
+            </Grid.ColumnDefinitions>
+            <Rectangle Height="Auto" Margin="0,208,0,0" VerticalAlignment="Stretch" Grid.ColumnSpan="2" Stroke="{x:Null}">
+                <Rectangle.Fill>
+                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0.42">
+                        <GradientStop Color="#FF000000"/>
+                        <GradientStop Color="#FF0171BB" Offset="1"/>
+                    </LinearGradientBrush>
+                </Rectangle.Fill>
+            </Rectangle>
+            <Image HorizontalAlignment="Center" VerticalAlignment="Top" Grid.ColumnSpan="2" Source="Assets/logo.jpg" Stretch="None"/>
+            <Border HorizontalAlignment="Left" VerticalAlignment="Stretch" CornerRadius="10,10,10,10" Padding="2,2,2,2" Margin="28,157.5,0,91.5" Height="Auto" Width="240">
+                <Border.Background>
+                    <LinearGradientBrush EndPoint="99,77.004" StartPoint="99,0" MappingMode="Absolute">
+                        <GradientStop Color="#50FFFFFF"/>
+                        <GradientStop Color="#10FFFFFF" Offset="1"/>
+                    </LinearGradientBrush>
+                </Border.Background>
+                <Border CornerRadius="8,8,8,8" >
+                    <Border.Background>
+                        <LinearGradientBrush EndPoint="97,56.99" StartPoint="97,0" MappingMode="Absolute">
+                            <GradientStop Color="#00FFFFFF" Offset="0.17"/>
+                            <GradientStop Color="#D0FFFFFF" Offset="0"/>
+                        </LinearGradientBrush>
+                    </Border.Background>
+                    <ScrollViewer Height="Auto" Width="Auto" VerticalContentAlignment="Stretch">
+                        <ItemsControl ItemsSource="{Binding Path=Items, Source={StaticResource controller}}" Height="Auto" Width="Auto" VerticalContentAlignment="Top">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <HyperlinkButton slei:CommandService.Command="Navigate" slei:CommandService.CommandParameter="{Binding}" Style="{StaticResource HyperlinkButtonStyle1}" >
+                                        <TextBlock Text="{Binding Path=Title}" TextWrapping="Wrap"/>
+                                    </HyperlinkButton>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </Border>
+            </Border>
+            <Border CornerRadius="10,10,10,10" Padding="2,2,2,2" Margin="298,157,25,20">
+                <Border.Background>
+                    <LinearGradientBrush EndPoint="99,77.004" StartPoint="99,0" MappingMode="Absolute">
+                        <GradientStop Color="#50FFFFFF"/>
+                        <GradientStop Color="#10FFFFFF" Offset="1"/>
+                    </LinearGradientBrush>
+                </Border.Background>
+                <Border CornerRadius="8,8,8,8" Padding="4,4,4,4" >
+                    <Border.Background>
+                        <LinearGradientBrush EndPoint="97,56.99" StartPoint="97,0" MappingMode="Absolute">
+                            <GradientStop Color="#00FFFFFF" Offset="0.17"/>
+                            <GradientStop Color="#D0FFFFFF" Offset="0"/>
+                        </LinearGradientBrush>
+                    </Border.Background>
+                    <Border Height="Auto" Width="Auto" Background="#65FFFFFF">
+                        <ContentPresenter Content="{Binding Path=CurrentPage, Source={StaticResource controller}}" 
+                                          d:LayoutOverrides="GridBox" 
+                                          Height="Auto" Width="Auto"/>
+                    </Border>
+                </Border>
+            </Border>
+            <HyperlinkButton Height="63" HorizontalAlignment="Left" Margin="28,0,0,20" VerticalAlignment="Bottom" Width="240" Content="Download SLExtensions" Style="{StaticResource downloadButtonStyle}" NavigateUri="http://www.codeplex.com/SLExtensions/Release/ProjectReleases.aspx#ReleaseFiles"/>
+        </Grid>
+        <Grid Height="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Top" Width="Auto" Grid.Row="1" Grid.ColumnSpan="2" MinHeight="120" Background="#FF002339">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="10"/>
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <Rectangle Grid.ColumnSpan="4" VerticalAlignment="Top" Height="10" Grid.Row="0">
+                <Rectangle.Fill>
+                    <LinearGradientBrush EndPoint="0.505,0.5" StartPoint="0,1">
+                        <GradientStop Color="#FF0171BB"/>
+                        <GradientStop Color="#FF000000" Offset="1"/>
+                    </LinearGradientBrush>
+                </Rectangle.Fill>
+            </Rectangle>
+            <StackPanel HorizontalAlignment="Center" Width="Auto" Grid.Row="1" MaxWidth="200">
+                <TextBlock Text="About" TextWrapping="Wrap" Style="{StaticResource TextBlockStyleHeader}"/>
+                <Grid >
+                    <Rectangle Width="6" Height="6" Fill="#0070AC" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                    <TextBlock Text="Free control library released on MS-PL license" Margin="20,0,0,0" Style="{StaticResource TextblockStyle2}"/>
+                </Grid>
+            </StackPanel>
+            <StackPanel HorizontalAlignment="Center" Width="Auto" Grid.Column="1" Grid.Row="1" MaxWidth="200">
+                <TextBlock Text="Last additions" TextWrapping="Wrap" Style="{StaticResource TextBlockStyleHeader}"/>
+                <ItemsControl ItemsSource="{Binding Path=LastAdditions, Source={StaticResource controller}}" Height="Auto" Width="Auto" VerticalContentAlignment="Top">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Grid >
+                                <Rectangle Width="6" Height="6" Fill="#0070AC" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                                <TextBlock Text="{Binding}" Style="{StaticResource TextblockStyle2}" Margin="20,0,0,0" />
+                            </Grid>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+            <StackPanel HorizontalAlignment="Center" Width="Auto" Grid.Column="2" Grid.Row="1" MaxWidth="200">
+                <TextBlock Text="Contributors" TextWrapping="Wrap" Style="{StaticResource TextBlockStyleHeader}"/>
+                <ItemsControl ItemsSource="{Binding Path=Contributors, Source={StaticResource controller}}" Height="Auto" Width="Auto" VerticalContentAlignment="Top">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Grid >
+                                <Rectangle Width="6" Height="6" Fill="#0070AC" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                                <TextBlock Text="{Binding}" Style="{StaticResource TextblockStyle2}" Margin="20,0,0,0" />
+                            </Grid>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+            <StackPanel HorizontalAlignment="Center" Width="Auto" Grid.Column="3" Grid.Row="1" MaxWidth="200">
+                <TextBlock Text="Links" TextWrapping="Wrap" Style="{StaticResource TextBlockStyleHeader}"/>
+                <ItemsControl ItemsSource="{Binding Path=Links, Source={StaticResource controller}}" Height="Auto" Width="Auto" VerticalContentAlignment="Top">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Grid >
+                                <Rectangle Width="6" Height="6" Fill="#0070AC" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                                <HyperlinkButton Content="{Binding Title}"  NavigateUri="{Binding Url}" Style="{StaticResource linkStyle}" Margin="20,0,0,0" Template="{StaticResource HyperlinkButtonControlTemplate1}" ContentTemplate="{StaticResource DataTemplate1}" />
+                            </Grid>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</UserControl>
