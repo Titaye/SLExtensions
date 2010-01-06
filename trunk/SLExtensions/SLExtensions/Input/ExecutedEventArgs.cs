@@ -14,9 +14,6 @@ namespace SLExtensions.Input
     using System.Windows.Media.Animation;
     using System.Windows.Shapes;
 
-    /// <summary>
-    /// Provides data for the System.Windows.Input.CommandManager.Executed and System.Windows.Input.CommandManager.PreviewExecuted routed events.
-    /// </summary>
     public class ExecutedEventArgs : EventArgs
     {
         #region Constructors
@@ -27,21 +24,9 @@ namespace SLExtensions.Input
         /// <param name="command">The command.</param>
         /// <param name="parameter">The parameter.</param>
         internal ExecutedEventArgs(Command command, object parameter)
-            : this(command, parameter, null)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ExecutedEventArgs"/> class.
-        /// </summary>
-        /// <param name="command">The command.</param>
-        /// <param name="parameter">The parameter.</param>
-        /// <param name="source">The event source.</param>
-        internal ExecutedEventArgs(Command command, object parameter, object source)
         {
             this.Command = command;
             this.Parameter = parameter;
-            this.Source = source;
         }
 
         #endregion Constructors
@@ -63,6 +48,60 @@ namespace SLExtensions.Input
         /// </summary>
         /// <value>The command data. The default value is null.</value>
         public object Parameter
+        {
+            get;
+            private set;
+        }
+
+        #endregion Properties
+    }
+
+    public class ExecutedEventArgs<T> : EventArgs
+    {
+        #region Constructors
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ExecutedEventArgs"/> class.
+        /// </summary>
+        /// <param name="command">The command.</param>
+        /// <param name="parameter">The parameter.</param>
+        internal ExecutedEventArgs(Command<T> command, T parameter)
+            : this(command, parameter, null)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ExecutedEventArgs"/> class.
+        /// </summary>
+        /// <param name="command">The command.</param>
+        /// <param name="parameter">The parameter.</param>
+        /// <param name="source">The event source.</param>
+        internal ExecutedEventArgs(Command<T> command, T parameter, object source)
+        {
+            this.Command = command;
+            this.Parameter = parameter;
+            this.Source = source;
+        }
+
+        #endregion Constructors
+
+        #region Properties
+
+        /// <summary>
+        /// Gets the command that was invoked.
+        /// </summary>
+        /// <value>The command associated with this event.</value>
+        public Command<T> Command
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// Gets data parameter of the command.
+        /// </summary>
+        /// <value>The command data. The default value is null.</value>
+        public T Parameter
         {
             get;
             private set;

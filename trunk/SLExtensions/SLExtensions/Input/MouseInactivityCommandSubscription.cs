@@ -28,9 +28,9 @@
         /// Initializes a new instance of the <see cref="MouseLeaveCommandSubscription"/> class.
         /// </summary>
         /// <param name="element">The element attached to the command.</param>
-        /// <param name="commandName">Name of the command.</param>
-        public MouseInactivityCommandSubscription(FrameworkElement element, string commandName)
-            : base(element, commandName)
+        /// <param name="command">The command attached to the element.</param>
+        public MouseInactivityCommandSubscription(FrameworkElement element, ICommand command)
+            : base(element, command)
         {
             timer = new DispatcherTimer();
             timer.Tick += new EventHandler(timer_Tick);
@@ -57,18 +57,18 @@
                     {
                         if (value)
                         {
-                            Command cmd = CommandService.FindCommand(commandParameter.ActiveCommandName);
+                            ICommand cmd = CommandService.FindCommand(commandParameter.ActiveCommandName);
                             if (cmd != null)
                             {
-                                cmd.Execute(commandParameter.ActiveCommandParameter, Element);
+                                cmd.Execute(commandParameter.ActiveCommandParameter);
                             }
                         }
                         else
                         {
-                            Command cmd = CommandService.FindCommand(commandParameter.InActiveCommandName);
+                            ICommand cmd = CommandService.FindCommand(commandParameter.InActiveCommandName);
                             if (cmd != null)
                             {
-                                cmd.Execute(commandParameter.InActiveCommandParameter, Element);
+                                cmd.Execute(commandParameter.InActiveCommandParameter);
                             }
                         }
                     }

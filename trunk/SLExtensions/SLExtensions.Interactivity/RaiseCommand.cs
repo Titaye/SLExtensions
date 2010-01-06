@@ -17,7 +17,7 @@ namespace SLExtensions.Interactivity
     [DefaultTrigger(typeof(ButtonBase), typeof(System.Windows.Interactivity.EventTrigger), new object[] { "Click" })]
     [DefaultTrigger(typeof(UIElement), typeof(System.Windows.Interactivity.EventTrigger), new object[] { "MouseLeftButtonDown" })]
     [DefaultTrigger(typeof(TextBox), typeof(System.Windows.Interactivity.EventTrigger), new object[] { "KeyDown" })]
-    public class Command : TargetedTriggerAction<FrameworkElement>
+    public class RaiseCommand : TargetedTriggerAction<FrameworkElement>
     {
         #region Fields
 
@@ -28,7 +28,7 @@ namespace SLExtensions.Interactivity
             DependencyProperty.Register(
                 "CommandName",
                 typeof(string),
-                typeof(Command),
+                typeof(RaiseCommand),
                 null);
 
         /// <summary>
@@ -38,7 +38,7 @@ namespace SLExtensions.Interactivity
             DependencyProperty.Register(
                 "CommandParameter",
                 typeof(object),
-                typeof(Command),
+                typeof(RaiseCommand),
                 null);
 
         /// <summary>
@@ -48,7 +48,7 @@ namespace SLExtensions.Interactivity
             DependencyProperty.Register(
                 "Key",
                 typeof(Key),
-                typeof(Command),
+                typeof(RaiseCommand),
                 new PropertyMetadata(Key.Enter));
 
         #endregion Fields
@@ -105,10 +105,10 @@ namespace SLExtensions.Interactivity
                 return;
             }
 
-            SLExtensions.Input.Command command = SLExtensions.Input.CommandService.FindCommand(CommandName);
+            var command = SLExtensions.Input.CommandService.FindCommand(CommandName);
             if (command != null)
             {
-                command.Execute(CommandParameter, Target);
+                command.Execute(CommandParameter);
             }
         }
 

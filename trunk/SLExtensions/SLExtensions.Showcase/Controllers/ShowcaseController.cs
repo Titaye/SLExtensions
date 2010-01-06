@@ -15,6 +15,7 @@
     using System.Windows.Shapes;
 
     using SLExtensions.Stats;
+    using SLExtensions.Input;
 
     public class ShowcaseController : INotifyPropertyChanged
     {
@@ -33,7 +34,8 @@
 
         public ShowcaseController()
         {
-            Commands.Navigate.Executed += new EventHandler<SLExtensions.Input.ExecutedEventArgs>(Navigate_Executed);
+            //Commands.Navigate.Executed += new EventHandler<SLExtensions.Input.ExecutedEventArgs>(Navigate_Executed);
+            Navigate = new Command<ShowcaseItem>(DoNavigate);
             // added for BootStrapping hosted version
             if (Application.Current is App)
                 ((App)Application.Current).Navigate += new EventHandler<SLExtensions.Input.StateEventArgs>(ShowcaseController_Navigate);
@@ -126,6 +128,8 @@
 
         #endregion Properties
 
+        public Command<ShowcaseItem> Navigate { get; private set; }
+
         #region Methods
 
         protected virtual void OnPropertyChanged(string propertyName)
@@ -134,9 +138,8 @@
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        void Navigate_Executed(object sender, SLExtensions.Input.ExecutedEventArgs e)
+        void DoNavigate(ShowcaseItem item)
         {
-            ShowcaseItem item = e.Parameter as ShowcaseItem;
             if (lastPage != item)
             {
                 lastPage = item;
@@ -165,7 +168,7 @@
             object o = so.GetProperty("Page");
             if (o != null && o is string)
             {
-                Commands.Navigate.Execute(Items[int.Parse((string)o) - 1]);
+                Navigate.Execute(Items[int.Parse((string)o) - 1]);
             }
         }
 

@@ -327,7 +327,7 @@
                         <ItemsControl ItemsSource="{Binding Path=Items, Source={StaticResource controller}}" Height="Auto" Width="Auto" VerticalContentAlignment="Top">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
-                                    <HyperlinkButton slei:CommandService.Command="Navigate" slei:CommandService.CommandParameter="{Binding}" Style="{StaticResource HyperlinkButtonStyle1}" >
+                                    <HyperlinkButton slei:CommandService.Command="{Binding Navigate, Source={StaticResource controller}}" slei:CommandService.CommandParameter="{Binding}" Style="{StaticResource HyperlinkButtonStyle1}" >
                                         <TextBlock Text="{Binding Path=Title}" TextWrapping="Wrap"/>
                                     </HyperlinkButton>
                                 </DataTemplate>

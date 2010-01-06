@@ -11,7 +11,7 @@
     using System.Windows.Media.Animation;
     using System.Windows.Shapes;
 
-    public class MouseEnterCommand : Command
+    public class MouseEnterCommand : Command, IProvideCommandSubscription
     {
         #region Constructors
 
@@ -28,9 +28,9 @@
 
         #region Methods
 
-        public override CommandSubscription CreateCommandSubscription(FrameworkElement element, string commandName)
+        public CommandSubscription CreateCommandSubscription(FrameworkElement element)
         {
-            return  new MouseEnterCommandSubscription(element, commandName);
+            return  new MouseEnterCommandSubscription(element, this);
         }
 
         #endregion Methods

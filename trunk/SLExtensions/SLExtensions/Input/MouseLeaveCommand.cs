@@ -11,7 +11,7 @@
     using System.Windows.Media.Animation;
     using System.Windows.Shapes;
 
-    public class MouseLeaveCommand : Command
+    public class MouseLeaveCommand : Command, IProvideCommandSubscription
     {
         #region Constructors
 
@@ -28,9 +28,9 @@
 
         #region Methods
 
-        public override CommandSubscription CreateCommandSubscription(FrameworkElement element, string commandName)
+        public CommandSubscription CreateCommandSubscription(FrameworkElement element)
         {
-            return  new MouseLeaveCommandSubscription(element, commandName);
+            return new MouseLeaveCommandSubscription(element, this);
         }
 
         #endregion Methods

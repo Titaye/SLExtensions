@@ -5,6 +5,7 @@
 namespace SLExtensions.Input
 {
     using System;
+    using System.Linq;
     using System.Collections.Generic;
     using System.Net;
     using System.Reflection;
@@ -25,22 +26,11 @@ namespace SLExtensions.Input
     {
         #region Fields
 
-        /// <summary>
-        /// CommandSubscription depedency property.
-        /// </summary>
-        public static readonly DependencyProperty CommandSubscriptionProperty = 
-            DependencyProperty.RegisterAttached(
-                "CommandSubscription",
-                typeof(Dictionary<string, CommandSubscription>),
-                typeof(CommandSubscription),
-                null);
-
-
         // Using a DependencyProperty as the backing store for ICommandSubscription.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty ICommandSubscriptionProperty =
-            DependencyProperty.RegisterAttached("ICommandSubscription", typeof(Dictionary<ICommand,CommandSubscription>), typeof(CommandSubscription), null);
+        public static readonly DependencyProperty CommandSubscriptionsProperty =
+            DependencyProperty.RegisterAttached("CommandSubscriptions", typeof(List<CommandSubscription>), typeof(CommandSubscription), null);
 
-        
+
         #endregion Fields
 
         #region Constructors
@@ -49,26 +39,16 @@ namespace SLExtensions.Input
         /// Initializes a new instance of the <see cref="CommandSubscription"/> class.
         /// </summary>
         /// <param name="element">The element attached to the command.</param>
-        /// <param name="commandName">Name of the command.</param>
-        public CommandSubscription(FrameworkElement element, string commandName)
+        /// <param name="command">The command attached to the element.</param>
+        public CommandSubscription(FrameworkElement element, ICommand command)
         {
             this.Element = element;
-            this.CommandName = commandName;
+            this.Command = command;
         }
 
         #endregion Constructors
 
         #region Properties
-
-        /// <summary>
-        /// Gets the Command name
-        /// </summary>
-        /// <value>The name of the command.</value>
-        public string CommandName
-        {
-            get;
-            private set;
-        }
 
         /// <summary>
         /// Gets the element attached to the command
@@ -79,6 +59,8 @@ namespace SLExtensions.Input
             get;
             private set;
         }
+
+        public ICommand Command { get; private set; }
 
         #endregion Properties
 
@@ -91,20 +73,10 @@ namespace SLExtensions.Input
         /// <param name="element">The element.</param>
         internal static void RegisterCommand(string commandName, FrameworkElement element)
         {
-            Command cmd = CommandService.FindCommand(commandName);
+            ICommand cmd = CommandService.FindCommand(commandName);
             if (cmd != null)
             {
-                CommandSubscription subscription = cmd.CreateCommandSubscription(element, commandName);
-
-                Dictionary<string, CommandSubscription> elementSubscriptions = element.GetValue(CommandSubscriptionProperty) as Dictionary<string, CommandSubscription>;
-                if (elementSubscriptions == null)
-                {
-                    elementSubscriptions = new Dictionary<string, CommandSubscription>();
-                    element.SetValue(CommandSubscriptionProperty, elementSubscriptions);
-                }
-
-                subscription.HookEvents();
-                elementSubscriptions[commandName] = subscription;
+                RegisterCommand(cmd, element);
             }
         }
 
@@ -117,36 +89,27 @@ namespace SLExtensions.Input
         {
             if (command != null)
             {
-                CommandSubscription subscription = new CommandSubscription(element, command.ToString());
+                CommandSubscription subscription = new CommandSubscription(element, command);
 
-                var elementSubscriptions = element.GetValue(ICommandSubscriptionProperty) as Dictionary<ICommand, CommandSubscription>;
+                var elementSubscriptions = element.GetValue(CommandSubscriptionsProperty) as List<CommandSubscription>;
                 if (elementSubscriptions == null)
                 {
-                    elementSubscriptions = new Dictionary<ICommand, CommandSubscription>();
-                    element.SetValue(ICommandSubscriptionProperty, elementSubscriptions);
+                    elementSubscriptions = new List<CommandSubscription>();
+                    element.SetValue(CommandSubscriptionsProperty, elementSubscriptions);
                 }
 
                 subscription.HookEvents();
-                elementSubscriptions[command] = subscription;
+                elementSubscriptions.Add(subscription);
             }
         }
 
         internal static void UnregisterAllSubscriptions(FrameworkElement element)
         {
-            Dictionary<string, CommandSubscription> elementSubscriptions = element.GetValue(CommandSubscriptionProperty) as Dictionary<string, CommandSubscription>;
-            if (elementSubscriptions == null)
-                return;
-
-            foreach (var item in new List<CommandSubscription>(elementSubscriptions.Values))
-            {
-                item.Unregister();
-            }
-
-            Dictionary<ICommand, CommandSubscription> elementISubscriptions = element.GetValue(ICommandSubscriptionProperty) as Dictionary<ICommand, CommandSubscription>;
+            List<CommandSubscription> elementISubscriptions = element.GetValue(CommandSubscriptionsProperty) as List<CommandSubscription>;
             if (elementISubscriptions == null)
                 return;
 
-            foreach (var item in new List<CommandSubscription>(elementISubscriptions.Values))
+            foreach (var item in elementISubscriptions.ToArray())
             {
                 item.Unregister();
             }
@@ -157,44 +120,49 @@ namespace SLExtensions.Input
         /// </summary>
         /// <param name="commandName">The command name to remove</param>
         /// <param name="element">The element to be detached</param>
-        internal static void UnregisterSubscription(string commandName, FrameworkElement element)
+        internal static void UnregisterSubscriptions(FrameworkElement element, params ICommand[] commmands)
         {
-            Dictionary<string, CommandSubscription> elementSubscriptions = element.GetValue(CommandSubscriptionProperty) as Dictionary<string, CommandSubscription>;
+            if (commmands == null)
+            {
+                return;
+            }
+
+            List<CommandSubscription> elementSubscriptions = element.GetValue(CommandSubscriptionsProperty) as List<CommandSubscription>;
             if (elementSubscriptions == null)
             {
                 return;
             }
 
-            CommandSubscription currentSubscription;
-            if (!elementSubscriptions.TryGetValue(commandName, out currentSubscription))
+            var subscribtionsToRemove = (from s in elementSubscriptions
+                                         where commmands.Contains(s.Command)
+                                         select s).ToArray();
+            foreach (var item in subscribtionsToRemove)
             {
-                return;
+                item.Unregister();
             }
-
-            currentSubscription.Unregister();
         }
 
-        /// <summary>
-        /// Unregister a command from an element
-        /// </summary>
-        /// <param name="commandName">The command name to remove</param>
-        /// <param name="element">The element to be detached</param>
-        internal static void UnregisterSubscription(ICommand command, FrameworkElement element)
-        {
-            Dictionary<ICommand, CommandSubscription> elementSubscriptions = element.GetValue(ICommandSubscriptionProperty) as Dictionary<ICommand, CommandSubscription>;
-            if (elementSubscriptions == null)
-            {
-                return;
-            }
+        ///// <summary>
+        ///// Unregister a command from an element
+        ///// </summary>
+        ///// <param name="commandName">The command name to remove</param>
+        ///// <param name="element">The element to be detached</param>
+        //internal static void UnregisterSubscription(ICommand command, FrameworkElement element)
+        //{
+        //    Dictionary<ICommand, CommandSubscription> elementSubscriptions = element.GetValue(ICommandSubscriptionProperty) as Dictionary<ICommand, CommandSubscription>;
+        //    if (elementSubscriptions == null)
+        //    {
+        //        return;
+        //    }
 
-            CommandSubscription currentSubscription;
-            if (!elementSubscriptions.TryGetValue(command, out currentSubscription))
-            {
-                return;
-            }
+        //    CommandSubscription currentSubscription;
+        //    if (!elementSubscriptions.TryGetValue(command, out currentSubscription))
+        //    {
+        //        return;
+        //    }
 
-            currentSubscription.Unregister();
-        }
+        //    currentSubscription.Unregister();
+        //}
 
         /// <summary>
         /// Executes the command
@@ -213,22 +181,22 @@ namespace SLExtensions.Input
             parameter = PreProcessParameter(parameter);
             
             object command = CommandService.GetCommand(this.Element);
-                
-            string commandName = command as string;
-            if (commandName != null)
+
+            var ICmd = command as ICommand;
+            if (ICmd != null)
             {
-                Command cmd = CommandService.FindCommand(commandName);
-                cmd.Execute(parameter, sender);
+                if (ICmd.CanExecute(parameter))
+                    ICmd.Execute(parameter);
             }
             else
             {
-                ICommand cmd = command as ICommand;
-                if (cmd != null)
+                string commandName = command as string;
+                if (commandName != null)
                 {
-                    if (cmd.CanExecute(parameter))
-                        cmd.Execute(parameter);
+                    ICommand cmd = CommandService.FindCommand(commandName);
+                    cmd.Execute(parameter);
                 }
-            }
+            }            
         }
 
         protected virtual void HookEvents()
@@ -279,13 +247,13 @@ namespace SLExtensions.Input
         {
             UnhookEvents();
 
-            Dictionary<string, CommandSubscription> elementSubscriptions = this.Element.GetValue(CommandSubscriptionProperty) as Dictionary<string, CommandSubscription>;
+            List<CommandSubscription> elementSubscriptions = this.Element.GetValue(CommandSubscriptionsProperty) as List<CommandSubscription>;
             if (elementSubscriptions == null)
             {
                 return;
             }
 
-            elementSubscriptions.Remove(this.CommandName);
+            elementSubscriptions.Remove(this);
         }
 
         /// <summary>

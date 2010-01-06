@@ -92,16 +92,16 @@ namespace SLExtensions.Controls.Media
         /// <returns>returns the storyboard if found otherwise null</returns>
         private static Storyboard FindStoryboard(ExecutedEventArgs e)
         {
-            FrameworkElement element = e.Source as FrameworkElement;
-            if (element != null)
+            var prm = e.Parameter as StoryboardCommandParameter;
+            if (prm != null)
             {
-                string storyboardName = e.Parameter as string;
+                string storyboardName = prm.Name as string;
                 if (string.IsNullOrEmpty(storyboardName))
                 {
                     return null;
                 }
 
-                return FindStoryboardResource(element, storyboardName);
+                return FindStoryboardResource(prm.Source, storyboardName);
             }
 
             return null;

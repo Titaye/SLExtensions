@@ -56,7 +56,7 @@
 
         private void Application_Startup(object sender, StartupEventArgs e)
         {
-            VisualStateCommands.Initialize();
+            //VisualStateCommands.Initialize();
             MouseInactivityCommand.Initialize();
 
             FrameworkElement currentPlayer = null;

@@ -29,7 +29,7 @@ namespace SLExtensions.Input
         /// <summary>
         ///     The DependencyProperty for the CommandParameter property.
         /// </summary> 
-        public static readonly DependencyProperty CommandParameterProperty = 
+        public static readonly DependencyProperty CommandParameterProperty =
                 DependencyProperty.RegisterAttached(
                 "CommandParameter",         // Name
                 typeof(object),            // Type
@@ -39,7 +39,7 @@ namespace SLExtensions.Input
         /// <summary>
         ///     The DependencyProperty for the Command property.
         /// </summary> 
-        public static readonly DependencyProperty CommandProperty = 
+        public static readonly DependencyProperty CommandProperty =
                 DependencyProperty.RegisterAttached(
                 "Command",         // Name
                 typeof(object),            // Type
@@ -55,7 +55,7 @@ namespace SLExtensions.Input
         /// </summary>
         /// <param name="commandName">The command name.</param>
         /// <returns>returns the command for a given commandName</returns>
-        public static Command FindCommand(string commandName)
+        public static ICommand FindCommand(string commandName)
         {
             if (string.IsNullOrEmpty(commandName))
             {
@@ -63,8 +63,8 @@ namespace SLExtensions.Input
             }
 
             // Check from cache
-            Command cmd = null;
-            if (Command.CommandCache.TryGetValue(commandName, out cmd))
+            ICommand cmd = null;
+            if (CommandCache.TryGetValue(commandName, out cmd))
             {
                 return cmd;
             }
@@ -163,16 +163,13 @@ namespace SLExtensions.Input
                 string oldCommands = e.OldValue as string;
                 if (!string.IsNullOrEmpty(oldCommands))
                 {
-                    foreach (var item in oldCommands.Split(' '))
-                    {
-                        CommandSubscription.UnregisterSubscription(item, elem);
-                    }
+                    CommandSubscription.UnregisterSubscriptions(elem, (from s in oldCommands.Split(' ') select CommandService.FindCommand(s)).ToArray());
                 }
                 else
                 {
                     ICommand oldCommand = e.OldValue as ICommand;
-                    if(oldCommand != null)
-                        CommandSubscription.UnregisterSubscription(oldCommand, elem);
+                    if (oldCommand != null)
+                        CommandSubscription.UnregisterSubscriptions(elem, oldCommand);
                 }
 
                 string newCommands = e.NewValue as string;
@@ -193,5 +190,24 @@ namespace SLExtensions.Input
         }
 
         #endregion Methods
+
+        /// <summary>
+        /// Static constructor. Initialize static properties
+        /// </summary>
+        static CommandService()
+        {
+            CommandCache = new Dictionary<string, ICommand>();
+        }
+
+        /// <summary>
+        /// Gets the command cache.
+        /// </summary>
+        /// <value>The command cache.</value>
+        public static Dictionary<string, ICommand> CommandCache
+        {
+            get;
+            private set;
+        }
+
     }
 }

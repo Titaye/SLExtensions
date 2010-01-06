@@ -11,7 +11,7 @@
     using System.Windows.Media.Animation;
     using System.Windows.Shapes;
 
-    public class MouseInactivityCommand : Command
+    public class MouseInactivityCommand : Command, IProvideCommandSubscription
     {
         #region Constructors
 
@@ -46,9 +46,9 @@
         {
         }
 
-        public override CommandSubscription CreateCommandSubscription(FrameworkElement element, string commandName)
+        public CommandSubscription CreateCommandSubscription(FrameworkElement element)
         {
-            return new MouseInactivityCommandSubscription(element, commandName);
+            return new MouseInactivityCommandSubscription(element, this);
         }
 
         #endregion Methods

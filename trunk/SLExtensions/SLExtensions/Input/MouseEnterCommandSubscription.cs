@@ -19,9 +19,9 @@
         /// Initializes a new instance of the <see cref="MouseCommandSubscription"/> class.
         /// </summary>
         /// <param name="element">The element attached to the command.</param>
-        /// <param name="commandName">Name of the command.</param>
-        public MouseEnterCommandSubscription(FrameworkElement element, string commandName)
-            : base(element, commandName)
+        /// <param name="commandName">Command to hook.</param>
+        public MouseEnterCommandSubscription(FrameworkElement element, ICommand command)
+            : base(element, command)
         {
         }
 

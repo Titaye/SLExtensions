@@ -81,7 +81,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ClippingBorder.cs" />
-    <Compile Include="Command.cs" />
+    <Compile Include="RaiseCommand.cs" />
     <Compile Include="GoToState.cs" />
     <Compile Include="Localize.cs" />
     <Compile Include="MapState.cs" />

@@ -87,8 +87,6 @@
     <Compile Include="Animation\MarginWrapper.cs" />
     <Compile Include="Animation\PropertyPath.cs" />
     <Compile Include="Animation\VisualState.cs" />
-    <Compile Include="Animation\VisualStateCommandListener.cs" />
-    <Compile Include="Animation\VisualStateCommands.cs" />
     <Compile Include="Animation\ZIndexWrapper.cs" />
     <Compile Include="ChangeTracker.cs" />
     <Compile Include="ColorPicker.cs" />
@@ -100,6 +98,8 @@
     <Compile Include="CoolMenu\ICoolMenuBehavior.cs" />
     <Compile Include="CoolMenu\SelectedMenuItemArgs.cs" />
     <Compile Include="CursorService.cs" />
+    <Compile Include="Media\StoryboardCommandParameter.cs" />
+    <Compile Include="Media\StoryboardCommands.cs" />
     <Compile Include="TreeView\DataTemplateSelector.cs" />
     <Compile Include="Decorator.cs" />
     <Compile Include="Sliders\DiscreteSlider.cs" />
@@ -121,7 +121,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resource.resx</DependentUpon>
     </Compile>
-    <Compile Include="Media\StoryboardCommands.cs" />
     <Compile Include="Recaptcha\MessageEventArgs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Recaptcha\ReCaptcha.cs" />

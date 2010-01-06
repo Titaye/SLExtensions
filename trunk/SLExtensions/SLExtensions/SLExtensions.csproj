@@ -98,6 +98,7 @@
     <Compile Include="Input\Command.cs" />
     <Compile Include="Input\CommandService.cs" />
     <Compile Include="Input\CommandSubscription.cs" />
+    <Compile Include="Input\IProvideCommandSubscription.cs" />
     <Compile Include="Input\MouseInactivityCommandParameter.cs" />
     <Compile Include="Input\MouseInactivityCommandSubscription.cs" />
     <Compile Include="Input\MouseInactivityCommand.cs" />
