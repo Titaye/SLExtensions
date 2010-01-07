@@ -145,7 +145,7 @@ namespace SLExtensions
             }
         }
 
-        /// <summary>
+         /// <summary>
         /// Sends a file in multipart HTML form. The request is sent using POST method
         /// </summary>
         /// <param name="webclient">The webclient.</param>
@@ -180,7 +180,7 @@ namespace SLExtensions
                     byte[] buffer = new byte[4096];
                     int read = 0;
 
-                    while ((read = fileStream.Read(buffer, 0, buffer.Length)) == buffer.Length)
+                    while ((read = fileStream.Read(buffer, 0, buffer.Length)) > 0)
                     {
                         e.Result.Write(buffer, 0, read);
                         e.Result.Flush();
