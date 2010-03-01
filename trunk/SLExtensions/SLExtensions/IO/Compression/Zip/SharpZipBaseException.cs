@@ -1,3 +1,5 @@
+#region Header
+
 // SharpZipBaseException.cs
 //
 // Copyright 2004 John Reilly
@@ -20,7 +22,7 @@
 // making a combined work based on this library.  Thus, the terms and
 // conditions of the GNU General Public License cover the whole
 // combination.
-// 
+//
 // As a special exception, the copyright holders of this library give you
 // permission to link this library with independent modules to produce an
 // executable, regardless of the license terms of these independent
@@ -33,53 +35,60 @@
 // obligated to do so.  If you do not wish to do so, delete this
 // exception statement from your version.
 
-using System;
+#endregion Header
+
 
 #if !NETCF_1_0 && !NETCF_2_0
+
 using System.Runtime.Serialization;
+
 #endif
 
 namespace SLExtensions.IO.Compression.Zip
 {
-	/// <summary>
-	/// SharpZipBaseException is the base exception class for the SharpZipLibrary.
-	/// All library exceptions are derived from this.
-	/// </summary>
-	/// <remarks>NOTE: Not all exceptions thrown will be derived from this class.
-	/// A variety of other exceptions are possible for example <see cref="ArgumentNullException"></see></remarks>
+    using System;
 
-	public class SharpZipBaseException : Exception
-	{
+    /// <summary>
+    /// SharpZipBaseException is the base exception class for the SharpZipLibrary.
+    /// All library exceptions are derived from this.
+    /// </summary>
+    /// <remarks>NOTE: Not all exceptions thrown will be derived from this class.
+    /// A variety of other exceptions are possible for example <see cref="ArgumentNullException"></see></remarks>
+    public class SharpZipBaseException : Exception
+    {
+        #region Constructors
+
         /*
          UNDONE: Removed deserialization constructor
-         
-         */
-		
-		/// <summary>
-		/// Initializes a new instance of the SharpZipBaseException class.
-		/// </summary>
-		public SharpZipBaseException()
-		{
-		}
-		
-		/// <summary>
-		/// Initializes a new instance of the SharpZipBaseException class with a specified error message.
-		/// </summary>
-		/// <param name="message">A message describing the exception.</param>
-		public SharpZipBaseException(string message)
-			: base(message)
-		{
-		}
 
-		/// <summary>
-		/// Initializes a new instance of the SharpZipBaseException class with a specified
-		/// error message and a reference to the inner exception that is the cause of this exception.
-		/// </summary>
-		/// <param name="message">A message describing the exception.</param>
-		/// <param name="innerException">The inner exception</param>
-		public SharpZipBaseException(string message, Exception innerException)
-			: base(message, innerException)
-		{
-		}
-	}
+         */
+        /// <summary>
+        /// Initializes a new instance of the SharpZipBaseException class.
+        /// </summary>
+        public SharpZipBaseException()
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the SharpZipBaseException class with a specified error message.
+        /// </summary>
+        /// <param name="message">A message describing the exception.</param>
+        public SharpZipBaseException(string message)
+            : base(message)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the SharpZipBaseException class with a specified
+        /// error message and a reference to the inner exception that is the cause of this exception.
+        /// </summary>
+        /// <param name="message">A message describing the exception.</param>
+        /// <param name="innerException">The inner exception</param>
+        public SharpZipBaseException(string message, Exception innerException)
+            : base(message, innerException)
+        {
+        }
+
+        #endregion Constructors
+    }
 }

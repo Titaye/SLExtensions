@@ -15,6 +15,12 @@
 
     public interface IPlaylistSource
     {
+        #region Events
+
+        event EventHandler PlaylistChanged;
+
+        #endregion Events
+
         #region Properties
 
         IEnumerable<IMediaItem> Playlist
@@ -23,13 +29,5 @@
         }
 
         #endregion Properties
-
-        #region Methods
-
-        void LoadPlaylist(Action<IEnumerable<IMediaItem>> callback);
-
-        void ReloadPlaylist();
-
-        #endregion Methods
     }
 }

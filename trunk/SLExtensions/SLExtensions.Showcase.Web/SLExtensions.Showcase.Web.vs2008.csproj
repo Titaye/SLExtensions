@@ -1,0 +1,160 @@
+﻿<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{E246EAE5-2D6F-4281-B33D-0C3A704D044C}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>SLExtensions.Showcase.Web</RootNamespace>
+    <AssemblyName>SLExtensions.Showcase.Web</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <SccProjectName>%24/SLExtensions/trunk/SLExtensions/SLExtensions.Showcase.Web</SccProjectName>
+    <SccLocalPath>.</SccLocalPath>
+    <SccAuxPath>https://tfs07.codeplex.com</SccAuxPath>
+    <SccProvider>{4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}</SccProvider>
+    <SilverlightApplicationList>{997C0F08-47C4-4027-88A4-1BCE1E65D1D4}|..\SLExtensions.Showcase\SLExtensions.Showcase.csproj|ClientBin|False,{66D58D46-3966-4DD9-94F5-75A051CBC881}|..\SLExtensions.Player\SLExtensions.Player.csproj|ClientBin|False</SilverlightApplicationList>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Web.Extensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="System.Web.Mobile" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\bkgGradient.jpg" />
+    <Content Include="Assets\bkgGradientTransp.png" />
+    <Content Include="Assets\bkgGradientTranspSmall.png" />
+    <Content Include="Assets\btnHover.png" />
+    <Content Include="Assets\download.png" />
+    <Content Include="Assets\downloadHover.png" />
+    <Content Include="Assets\horzGradient.jpg" />
+    <Content Include="Assets\iconAdd.png" />
+    <Content Include="Assets\iconDownload.png" />
+    <Content Include="Assets\iconShowcase.png" />
+    <Content Include="Assets\li.jpg" />
+    <Content Include="Assets\logo.jpg" />
+    <Content Include="Assets\silverlight.png" />
+    <Content Include="ClientBin\Pubs\close.png" />
+    <Content Include="ClientBin\Pubs\pub.png" />
+    <None Include="ClientBin\Pubs\Pub1.xaml">
+      <SubType>Designer</SubType>
+    </None>
+    <Content Include="ClientBin\ScriptCommands.xml" />
+    <Content Include="ClientBin\SLExtensions.Player.xap" />
+    <Content Include="ClientBin\SLExtensions.Showcase.xap" />
+    <Content Include="player.html" />
+    <Content Include="default.aspx" />
+    <Content Include="History.htm" />
+    <Content Include="indexDeepZoom.html" />
+    <Content Include="indexPhoto.html" />
+    <Content Include="indexVideo.html" />
+    <Content Include="JS\MicrosoftAjax.js" />
+    <Content Include="PostFileResult.aspx" />
+    <Content Include="Showcase.aspx" />
+    <Content Include="PostResult.aspx" />
+    <Content Include="VerifyCaptcha.aspx" />
+    <Content Include="Web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Default.aspx.cs">
+      <SubType>ASPXCodeBehind</SubType>
+      <DependentUpon>default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Default.aspx.designer.cs">
+      <DependentUpon>default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="PostFileResult.aspx.cs">
+      <DependentUpon>PostFileResult.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="PostFileResult.aspx.designer.cs">
+      <DependentUpon>PostFileResult.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="PostResult.aspx.cs">
+      <DependentUpon>PostResult.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="PostResult.aspx.designer.cs">
+      <DependentUpon>PostResult.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="VerifyCaptcha.aspx.cs">
+      <DependentUpon>VerifyCaptcha.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="VerifyCaptcha.aspx.designer.cs">
+      <DependentUpon>VerifyCaptcha.aspx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="ClientBin\Pubs\Pub2.xaml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="playermsn.html" />
+    <Content Include="Doc\PageAlternateConverter.html" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v9.0\WebApplications\Microsoft.WebApplication.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>False</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>18099</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost/SLExtensions.Showcase.Web</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>

@@ -1,26 +1,88 @@
-﻿using System;
-using System.Net;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Ink;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Animation;
-using System.Windows.Shapes;
-using System.Windows.Interactivity;
-using System.Windows.Automation.Peers;
-using System.Windows.Automation.Provider;
-using System.Windows.Controls.Primitives;
-
-namespace SLExtensions.Interactivity
+﻿namespace SLExtensions.Interactivity
 {
+    using System;
+    using System.Net;
+    using System.Windows;
+    using System.Windows.Automation.Peers;
+    using System.Windows.Automation.Provider;
+    using System.Windows.Controls;
+    using System.Windows.Controls.Primitives;
+    using System.Windows.Documents;
+    using System.Windows.Ink;
+    using System.Windows.Input;
+    using System.Windows.Interactivity;
+    using System.Windows.Media;
+    using System.Windows.Media.Animation;
+    using System.Windows.Shapes;
+
     public class MouseWheelScrollBehavior : Behavior<UIElement>
     {
+        #region Fields
+
+        /// <summary>
+        /// IsScrollInversed depedency property.
+        /// </summary>
+        public static readonly DependencyProperty IsScrollInversedProperty = 
+            DependencyProperty.Register(
+                "IsScrollInversed",
+                typeof(bool),
+                typeof(MouseWheelScrollBehavior),
+                null);
+
+        /// <summary>
+        /// Orientation depedency property.
+        /// </summary>
+        public static readonly DependencyProperty OrientationProperty = 
+            DependencyProperty.Register(
+                "Orientation",
+                typeof(Orientation),
+                typeof(MouseWheelScrollBehavior),
+                null);
+
+        #endregion Fields
+
+        #region Properties
+
+        public bool IsScrollInversed
+        {
+            get
+            {
+                return (bool)GetValue(IsScrollInversedProperty);
+            }
+
+            set
+            {
+                SetValue(IsScrollInversedProperty, value);
+            }
+        }
+
+        public Orientation Orientation
+        {
+            get
+            {
+                return (Orientation)GetValue(OrientationProperty);
+            }
+
+            set
+            {
+                SetValue(OrientationProperty, value);
+            }
+        }
+
+        #endregion Properties
+
+        #region Methods
+
         protected override void OnAttached()
         {
             base.OnAttached();
             this.AssociatedObject.MouseWheel += new MouseWheelEventHandler(AssociatedObject_MouseWheel);
+        }
+
+        protected override void OnDetaching()
+        {
+            base.OnDetaching();
+            this.AssociatedObject.MouseWheel -= new MouseWheelEventHandler(AssociatedObject_MouseWheel);
         }
 
         void AssociatedObject_MouseWheel(object sender, MouseWheelEventArgs e)
@@ -75,66 +137,6 @@ namespace SLExtensions.Interactivity
             e.Handled = true;
         }
 
-        protected override void OnDetaching()
-        {
-            base.OnDetaching();
-            this.AssociatedObject.MouseWheel -= new MouseWheelEventHandler(AssociatedObject_MouseWheel);
-        }
-
-        #region Orientation
-
-        public Orientation Orientation
-        {
-            get
-            {
-                return (Orientation)GetValue(OrientationProperty);
-            }
-
-            set
-            {
-                SetValue(OrientationProperty, value);
-            }
-        }
-
-        /// <summary>
-        /// Orientation depedency property.
-        /// </summary>
-        public static readonly DependencyProperty OrientationProperty =
-            DependencyProperty.Register(
-                "Orientation",
-                typeof(Orientation),
-                typeof(MouseWheelScrollBehavior),
-                null);
-
-        #endregion Orientation
-
-        #region IsScrollInversed
-
-        public bool IsScrollInversed
-        {
-            get
-            {
-                return (bool)GetValue(IsScrollInversedProperty);
-            }
-
-            set
-            {
-                SetValue(IsScrollInversedProperty, value);
-            }
-        }
-
-        /// <summary>
-        /// IsScrollInversed depedency property.
-        /// </summary>
-        public static readonly DependencyProperty IsScrollInversedProperty =
-            DependencyProperty.Register(
-                "IsScrollInversed",
-                typeof(bool),
-                typeof(MouseWheelScrollBehavior),
-                null);
-
-        #endregion IsScrollInversed
-
-
+        #endregion Methods
     }
 }

@@ -1,13 +1,14 @@
-﻿using System;
-
-namespace SLExtensions.Text.Parsers
+﻿namespace SLExtensions.Text.Parsers
 {
+    using System;
+
     /// <summary>
     /// The exception for parse errors.
     /// </summary>
-    public class ParseException
-        : Exception
+    public class ParseException : Exception
     {
+        #region Constructors
+
         /// <summary>
         /// Initializes a new instance of the <see cref="T:ParseException"/> class.
         /// </summary>
@@ -16,5 +17,7 @@ namespace SLExtensions.Text.Parsers
             : base(message)
         {
         }
+
+        #endregion Constructors
     }
 }

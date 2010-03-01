@@ -1,15 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace SLExtensions.Xaml
+﻿namespace SLExtensions.Xaml
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Text;
+
     /// <summary>
     /// Represents a converter exception.
     /// </summary>
-    public class ConverterException
-        : Exception
+    public class ConverterException : Exception
     {
+        #region Constructors
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ConverterException"/> class.
         /// </summary>
@@ -28,5 +29,7 @@ namespace SLExtensions.Xaml
             : base(message, innerException)
         {
         }
+
+        #endregion Constructors
     }
 }

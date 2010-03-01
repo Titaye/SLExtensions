@@ -1,7 +1,9 @@
-﻿using System;
-
-namespace SLExtensions.Controls
+﻿namespace SLExtensions.Controls
 {
+    using System;
+
+    #region Delegates
+
     /// <summary>
     /// Delegate for the MenuIndexChanged and MenuItemClicked events.
     /// </summary>
@@ -9,13 +11,21 @@ namespace SLExtensions.Controls
     /// <param name="e">Event data for the event.</param>
     public delegate void MenuIndexChangedHandler(object sender, SelectedMenuItemArgs e);
 
+    #endregion Delegates
+
     /// <summary>
     /// Event data for the MenuIndexChanged and MenuItemClicked events.
     /// </summary>
     public class SelectedMenuItemArgs : EventArgs
     {
+        #region Fields
+
         private readonly CoolMenuItem m_cmi;
         private readonly int m_index;
+
+        #endregion Fields
+
+        #region Constructors
 
         /// <summary>
         /// Creates a new instance of the SelectedMenuItemArgs class.
@@ -28,13 +38,9 @@ namespace SLExtensions.Controls
             m_index = menuIndex;
         }
 
-        /// <summary>
-        /// The currently selected menu item.
-        /// </summary>
-        public CoolMenuItem Item
-        {
-            get { return m_cmi; }
-        }
+        #endregion Constructors
+
+        #region Properties
 
         /// <summary>
         /// The currently selected index of the menu item.
@@ -43,5 +49,15 @@ namespace SLExtensions.Controls
         {
             get { return m_index; }
         }
+
+        /// <summary>
+        /// The currently selected menu item.
+        /// </summary>
+        public CoolMenuItem Item
+        {
+            get { return m_cmi; }
+        }
+
+        #endregion Properties
     }
 }

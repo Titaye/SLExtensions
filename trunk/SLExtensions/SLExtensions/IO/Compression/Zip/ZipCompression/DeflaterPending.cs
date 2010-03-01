@@ -24,7 +24,7 @@
 // making a combined work based on this library.  Thus, the terms and
 // conditions of the GNU General Public License cover the whole
 // combination.
-// 
+//
 // As a special exception, the copyright holders of this library give you
 // permission to link this library with independent modules to produce an
 // executable, regardless of the license terms of these independent
@@ -36,22 +36,25 @@
 // this exception to your version of the library, but you are not
 // obligated to do so.  If you do not wish to do so, delete this
 // exception statement from your version.
-
 namespace SLExtensions.IO.Compression.Zip.ZipCompression
 {
-	
-	/// <summary>
-	/// This class stores the pending output of the Deflater.
-	/// 
-	/// author of the original java version : Jochen Hoenicke
-	/// </summary>
-	public class DeflaterPending : PendingBuffer
-	{
-		/// <summary>
-		/// Construct instance with default buffer size
-		/// </summary>
-		public DeflaterPending() : base(DeflaterConstants.PENDING_BUF_SIZE)
-		{
-		}
-	}
+    /// <summary>
+    /// This class stores the pending output of the Deflater.
+    /// 
+    /// author of the original java version : Jochen Hoenicke
+    /// </summary>
+    public class DeflaterPending : PendingBuffer
+    {
+        #region Constructors
+
+        /// <summary>
+        /// Construct instance with default buffer size
+        /// </summary>
+        public DeflaterPending()
+            : base(DeflaterConstants.PENDING_BUF_SIZE)
+        {
+        }
+
+        #endregion Constructors
+    }
 }

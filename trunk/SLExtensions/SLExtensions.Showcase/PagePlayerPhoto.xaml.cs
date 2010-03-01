@@ -25,8 +25,8 @@
             InitializeComponent();
 
             MediaRssProvider rssProvider = new MediaRssProvider();
-            string url = "http://api.flickr.com/services/feeds/photos_public.gne?tags=ninja636&lang=en-us&format=rss_200";
-            rssProvider.Source = url;
+            Uri url = new Uri("http://api.flickr.com/services/feeds/photos_public.gne?tags=ninja636&lang=en-us&format=rss_200");
+            rssProvider.ContentSource = url;
             player.Controller.PlaylistSource = rssProvider;
         }
 

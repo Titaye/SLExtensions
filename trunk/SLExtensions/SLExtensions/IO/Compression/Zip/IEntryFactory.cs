@@ -1,3 +1,5 @@
+#region Header
+
 // IEntryFactory.cs
 //
 // Copyright 2006 John Reilly
@@ -22,7 +24,7 @@
 // making a combined work based on this library.  Thus, the terms and
 // conditions of the GNU General Public License cover the whole
 // combination.
-// 
+//
 // As a special exception, the copyright holders of this library give you
 // permission to link this library with independent modules to produce an
 // executable, regardless of the license terms of these independent
@@ -35,50 +37,63 @@
 // obligated to do so.  If you do not wish to do so, delete this
 // exception statement from your version.
 
-using System;
-
-using SLExtensions.IO.Compression.Zip.Core;
+#endregion Header
 
 namespace SLExtensions.IO.Compression.Zip
 {
-	/// <summary>
-	/// Defines factory methods for creating new <see cref="ZipEntry"></see> values.
-	/// </summary>
-	public interface IEntryFactory
-	{
-		/// <summary>
-		/// Create a <see cref="ZipEntry"/> for a file given its name
-		/// </summary>
-		/// <param name="fileName">The name of the file to create an entry for.</param>
-		/// <returns>Returns a <see cref="ZipEntry">file entry</see> based on the <paramref name="fileName"/> passed.</returns>
-		ZipEntry MakeFileEntry(string fileName);
+    using System;
 
-		/// <summary>
-		/// Create a <see cref="ZipEntry"/> for a file given its name
-		/// </summary>
-		/// <param name="fileName">The name of the file to create an entry for.</param>
-		/// <param name="useFileSystem">If true get details from the file system if the file exists.</param>
-		/// <returns>Returns a <see cref="ZipEntry">file entry</see> based on the <paramref name="fileName"/> passed.</returns>
-		ZipEntry MakeFileEntry(string fileName, bool useFileSystem);
+    using SLExtensions.IO.Compression.Zip.Core;
 
-		/// <summary>
-		/// Create a <see cref="ZipEntry"/> for a directory given its name
-		/// </summary>
-		/// <param name="directoryName">The name of the directory to create an entry for.</param>
-		/// <returns>Returns a <see cref="ZipEntry">directory entry</see> based on the <paramref name="directoryName"/> passed.</returns>
-		ZipEntry MakeDirectoryEntry(string directoryName);
+    /// <summary>
+    /// Defines factory methods for creating new <see cref="ZipEntry"></see> values.
+    /// </summary>
+    public interface IEntryFactory
+    {
+        #region Properties
 
-		/// <summary>
-		/// Create a <see cref="ZipEntry"/> for a directory given its name
-		/// </summary>
-		/// <param name="directoryName">The name of the directory to create an entry for.</param>
-		/// <param name="useFileSystem">If true get details from the file system for this directory if it exists.</param>
-		/// <returns>Returns a <see cref="ZipEntry">directory entry</see> based on the <paramref name="directoryName"/> passed.</returns>
-		ZipEntry MakeDirectoryEntry(string directoryName, bool useFileSystem);
-		
-		/// <summary>
-		/// Get/set the <see cref="INameTransform"></see> applicable.
-		/// </summary>
-		INameTransform NameTransform { get; set;  }
-	}
+        /// <summary>
+        /// Get/set the <see cref="INameTransform"></see> applicable.
+        /// </summary>
+        INameTransform NameTransform
+        {
+            get; set;
+        }
+
+        #endregion Properties
+
+        #region Methods
+
+        /// <summary>
+        /// Create a <see cref="ZipEntry"/> for a directory given its name
+        /// </summary>
+        /// <param name="directoryName">The name of the directory to create an entry for.</param>
+        /// <returns>Returns a <see cref="ZipEntry">directory entry</see> based on the <paramref name="directoryName"/> passed.</returns>
+        ZipEntry MakeDirectoryEntry(string directoryName);
+
+        /// <summary>
+        /// Create a <see cref="ZipEntry"/> for a directory given its name
+        /// </summary>
+        /// <param name="directoryName">The name of the directory to create an entry for.</param>
+        /// <param name="useFileSystem">If true get details from the file system for this directory if it exists.</param>
+        /// <returns>Returns a <see cref="ZipEntry">directory entry</see> based on the <paramref name="directoryName"/> passed.</returns>
+        ZipEntry MakeDirectoryEntry(string directoryName, bool useFileSystem);
+
+        /// <summary>
+        /// Create a <see cref="ZipEntry"/> for a file given its name
+        /// </summary>
+        /// <param name="fileName">The name of the file to create an entry for.</param>
+        /// <returns>Returns a <see cref="ZipEntry">file entry</see> based on the <paramref name="fileName"/> passed.</returns>
+        ZipEntry MakeFileEntry(string fileName);
+
+        /// <summary>
+        /// Create a <see cref="ZipEntry"/> for a file given its name
+        /// </summary>
+        /// <param name="fileName">The name of the file to create an entry for.</param>
+        /// <param name="useFileSystem">If true get details from the file system if the file exists.</param>
+        /// <returns>Returns a <see cref="ZipEntry">file entry</see> based on the <paramref name="fileName"/> passed.</returns>
+        ZipEntry MakeFileEntry(string fileName, bool useFileSystem);
+
+        #endregion Methods
+    }
 }

@@ -2,6 +2,7 @@
 {
     using System;
     using System.Globalization;
+    using System.Linq;
     using System.Net;
     using System.Windows;
     using System.Windows.Controls;
@@ -15,6 +16,15 @@
 
     public class TimeSpanConverter : IValueConverter
     {
+        #region Properties
+
+        public bool RemoveEmptyHours
+        {
+            get; set;
+        }
+
+        #endregion Properties
+
         #region Methods
 
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
@@ -46,6 +56,10 @@
                     Duration? duration = value as Duration?;
                     if (duration.HasValue && duration.Value.HasTimeSpan)
                         ts = duration.Value.TimeSpan;
+
+                    double? dbl = value as double?;
+                    if (dbl.HasValue)
+                        ts = TimeSpan.FromSeconds(dbl.Value);
                 }
 
                 if(!ts.HasValue)
@@ -53,7 +67,14 @@
                     return string.Empty;
                 }
 
-                return ts.Value.ToString().Split('.')[0];
+                if (ts.Value.Milliseconds != 0)
+                    ts = ts.Value.Add(TimeSpan.FromMilliseconds(-ts.Value.Milliseconds));
+                var str = ts.Value.ToString();
+
+                var tparts = str.Split(':');
+                if (RemoveEmptyHours && tparts[0] == "00")
+                    return string.Join(":", tparts.Skip(1).ToArray());
+                return str;
             }
 
             if (targetType == typeof(TimeSpan))

@@ -14,7 +14,7 @@
 
     using SLExtensions;
 
-    public class Category
+    public class Category : Core.Category
     {
         #region Properties
 

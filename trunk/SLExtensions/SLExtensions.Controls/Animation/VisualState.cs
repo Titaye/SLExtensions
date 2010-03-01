@@ -19,17 +19,17 @@
         #region Fields
 
         // Using a DependencyProperty as the backing store for LoadedState.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty LoadedStateProperty = 
+        public static readonly DependencyProperty LoadedStateProperty =
             DependencyProperty.RegisterAttached("LoadedState", typeof(string), typeof(VisualState), new PropertyMetadata(PropertyChangedCallback));
 
         // Using a DependencyProperty as the backing store for MouseOverState.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty MouseOverStateProperty = 
+        public static readonly DependencyProperty MouseOverStateProperty =
             DependencyProperty.RegisterAttached("MouseOverState", typeof(string), typeof(VisualState), new PropertyMetadata(PropertyChangedCallback));
 
         // Using a DependencyProperty as the backing store for NormalState.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty NormalStateProperty = 
+        public static readonly DependencyProperty NormalStateProperty =
             DependencyProperty.RegisterAttached("NormalState", typeof(string), typeof(VisualState), new PropertyMetadata(PropertyChangedCallback));
-        public static readonly DependencyProperty subscriptionProperty = 
+        public static readonly DependencyProperty subscriptionProperty =
             DependencyProperty.RegisterAttached("subscription", typeof(subscription), typeof(VisualState), null);
 
         #endregion Fields
@@ -134,6 +134,9 @@
 
             public static bool GoToState(FrameworkElement element, string stateName, bool useTransitions)
             {
+                if (System.ComponentModel.DesignerProperties.IsInDesignTool)
+                    return false;
+
                 System.Windows.VisualState state;
                 VisualStateGroup group;
                 if (stateName == null)
@@ -149,10 +152,10 @@
 
                 if (!TryGetState(visualStateGroups, stateName, out group, out state))
                 {
-                    if (!System.ComponentModel.DesignerProperties.GetIsInDesignMode(element))
-                        throw new Exception("Unable to find state " + stateName + " for element " + element.Name);
-                    else
-                        return false;
+                    //if (!System.ComponentModel.DesignerProperties.GetIsInDesignMode(element))
+                    //    throw new Exception("Unable to find state " + stateName + " for element " + element.Name);
+                    //else
+                    return false;
                 }
 
                 customVisualStateManager customVisualStateManager = GetCustomVisualStateManager(element) as customVisualStateManager;
@@ -166,6 +169,11 @@
 
             internal static bool TryGetState(IEnumerable<VisualStateGroup> groups, string stateName, out VisualStateGroup group, out System.Windows.VisualState state)
             {
+                group = null;
+                state = null;
+                if (groups == null)
+                    return false;
+
                 var item = (from g in groups
                             from s in g.States.OfType<System.Windows.VisualState>()
                             where s.Name == stateName
@@ -176,8 +184,6 @@
                     }).FirstOrDefault();
                 if (item == null)
                 {
-                    group = null;
-                    state = null;
                     return false;
                 }
                 group = item.grp;
@@ -187,6 +193,13 @@
 
             protected override bool GoToStateCore(Control control, FrameworkElement templateRoot, string stateName, VisualStateGroup group, System.Windows.VisualState state, bool useTransitions)
             {
+                if(state == null)
+                {
+
+                    var groupList = GetVisualStateGroups(templateRoot);
+                    if (groupList== null || !TryGetState(groupList.OfType<VisualStateGroup>(), stateName, out group, out state))
+                        return false;                    
+                }
                 return base.GoToStateCore(control, templateRoot, stateName, group, state, useTransitions);
             }
 

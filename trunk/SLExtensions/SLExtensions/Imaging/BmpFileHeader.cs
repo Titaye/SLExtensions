@@ -1,52 +1,75 @@
-﻿using System;
-using System.Net;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Ink;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Animation;
-using System.Windows.Shapes;
-using System.IO;
-
-namespace SLExtensions.Imaging
+﻿namespace SLExtensions.Imaging
 {
+    using System;
+    using System.IO;
+    using System.Net;
+    using System.Windows;
+    using System.Windows.Controls;
+    using System.Windows.Documents;
+    using System.Windows.Ink;
+    using System.Windows.Input;
+    using System.Windows.Media;
+    using System.Windows.Media.Animation;
+    using System.Windows.Shapes;
+
     /// <summary>
     /// Bitmap File Header class used y BmpDecoder.
     /// </summary>
     public class BmpFileHeader
     {
+        #region Fields
+
         /// Original EditableImage and PngEncoder classes courtesy Joe Stegman.
         /// http://blogs.msdn.com/jstegman
-
         private const int _SIZE = 14;
 
-        /// <summary>
-        /// 
-        /// </summary>
-        public short BitmapType { get; set; }
+        #endregion Fields
+
+        #region Properties
 
         /// <summary>
         /// 
         /// </summary>
-        public int Size { get; set; }
+        public short BitmapType
+        {
+            get; set;
+        }
 
         /// <summary>
         /// 
         /// </summary>
-        public short NA1 { get; set; }
+        public short NA1
+        {
+            get; set;
+        }
 
         /// <summary>
         /// 
         /// </summary>
-        public short NA2 { get; set; }
+        public short NA2
+        {
+            get; set;
+        }
 
         /// <summary>
         /// 
         /// </summary>
-        public int OffsetToData { get; set; }
+        public int OffsetToData
+        {
+            get; set;
+        }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        public int Size
+        {
+            get; set;
+        }
+
+        #endregion Properties
+
+        #region Methods
 
         /// <summary>
         /// 
@@ -68,5 +91,7 @@ namespace SLExtensions.Imaging
             // Return results
             return header;
         }
+
+        #endregion Methods
     }
 }

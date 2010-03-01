@@ -1,5 +1,7 @@
 ﻿#region Header
+
 // Originaly from http://blogs.msdn.com/delay/archive/2007/09/10/bringing-a-bit-of-html-to-silverlight-htmltextblock-makes-rich-text-display-easy.aspx
+
 #endregion Header
 
 namespace SLExtensions.Data
@@ -26,7 +28,7 @@ namespace SLExtensions.Data
         #region Fields
 
         // Using a DependencyProperty as the backing store for Html.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty HtmlProperty =
+        public static readonly DependencyProperty HtmlProperty = 
             DependencyProperty.RegisterAttached("Html", typeof(string), typeof(HtmlInlineConverter), new PropertyMetadata(HtmlChangedCallback));
 
         // Constants

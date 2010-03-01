@@ -56,7 +56,7 @@
             if (value is bool)
             {
                 bool b = (bool)value;
-                if ("!".Equals(parameter))
+                if ("!".Equals(parameter) || "!?".Equals(parameter))
                 {
                     return !b;
                 }
@@ -86,7 +86,7 @@
                 if (value is bool)
                 {
                     bool b = (bool)value;
-                    if ("!".Equals(parameter))
+                    if ("!".Equals(parameter) || "!?".Equals(parameter))
                     {
                         return !b;
                     }
@@ -107,6 +107,11 @@
                     return convertResult;
             }
 
+            if (parameter is string && "!?".Equals(parameter) && value == null)
+            {
+                return value;
+            }
+
             if (parameter is string && "!".Equals(parameter))
             {
                 return value == null;
@@ -115,35 +120,6 @@
             // If a parameter is provided returns true if the value is equals to the parameter
 
             return object.Equals(value, parameter);
-        }
-
-        private static bool ConvertUri(object value, object parameter, CultureInfo culture, out bool result)
-        {
-            result = false;
-
-            if (value == null)
-                return false;
-
-            Uri uri = value as Uri;
-            if (uri == null)
-            {
-                return false;
-            }
-
-            Uri uriParamater;
-            string strParameter = parameter as string;
-            if (string.IsNullOrEmpty(strParameter))
-                return false;
-            bool not = strParameter.StartsWith("!");
-            strParameter = strParameter.TrimStart('!');
-
-            if (!Uri.TryCreate(strParameter, UriKind.RelativeOrAbsolute, out uriParamater))
-                return false;
-
-            result = object.Equals(uriParamater, uri);
-            if (not)
-                result = !result;
-            return true;
         }
 
         private static bool ConvertDecimal(object value, object parameter, System.Globalization.CultureInfo culture, out bool result)
@@ -262,6 +238,42 @@
 
             }
             return false;
+        }
+
+        private static bool ConvertUri(object value, object parameter, CultureInfo culture, out bool result)
+        {
+            result = false;
+
+            if (value == null)
+                return false;
+
+            Uri uri = value as Uri;
+            if (uri == null)
+            {
+                return false;
+            }
+
+            Uri uriParamater;
+            string strParameter = parameter as string;
+            if (string.IsNullOrEmpty(strParameter))
+                return false;
+
+            if ("!".Equals(strParameter))
+            {
+                result = false;
+                return true;
+            }
+
+            bool not = strParameter.StartsWith("!");
+            strParameter = strParameter.TrimStart('!');
+
+            if (!Uri.TryCreate(strParameter, UriKind.RelativeOrAbsolute, out uriParamater))
+                return false;
+
+            result = object.Equals(uriParamater, uri);
+            if (not)
+                result = !result;
+            return true;
         }
 
         #endregion Methods

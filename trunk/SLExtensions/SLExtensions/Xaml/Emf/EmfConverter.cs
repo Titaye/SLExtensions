@@ -1,88 +1,93 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
-using System.Windows;
-using System.Windows.Media;
-using System.Xml;
-
-using SLExtensions.IO;
-
 namespace SLExtensions.Xaml.Emf
 {
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Text;
+    using System.Windows;
+    using System.Windows.Media;
+    using System.Xml;
+
+    using SLExtensions.IO;
+
     /// <summary>
     /// Converts Enhanced Metafile streams to XAML.
     /// </summary>
-    public class EmfConverter
-        : ConverterBase
+    public class EmfConverter : ConverterBase
     {
-        private const short META_SETBKCOLOR = 0x0201;
-        private const short META_SETBKMODE = 0x0102;
-        private const short META_SETMAPMODE = 0x0103;
-        private const short META_SETROP2 = 0x0104;
-        private const short META_SETPOLYFILLMODE = 0x0106;
-        private const short META_SETSTRETCHBLTMODE = 0x0107;
-        private const short META_SETTEXTCOLOR = 0x0209;
-        private const short META_SETTEXTCHAREXTRA = 0x0108;
-        private const short META_SETWINDOWORG = 0x020B;
-        private const short META_SETWINDOWEXT = 0x020C;
-        private const short META_SETVIEWPORTORG = 0x020D;
-        private const short META_SETVIEWPORTEXT = 0x020E;
-        private const short META_OFFSETWINDOWORG = 0x020F;
-        private const short META_SCALEWINDOWEXT = 0x0410;
-        private const short META_OFFSETVIEWPORTORG = 0x0211;
-        private const short META_SCALEVIEWPORTEXT = 0x0412;
-        private const short META_LINETO = 0x0213;
-        private const short META_MOVETO = 0x0214;
-        private const short META_EXCLUDECLIPRECT = 0x0415;
-        private const short META_INTERSECTCLIPRECT = 0x0416;
+        #region Fields
+
+        private const short META_ANIMATEPALETTE = 0x0436;
         private const short META_ARC = 0x0817;
-        private const short META_ELLIPSE = 0x0418;
-        private const short META_FLOODFILL = 0x0419;
-        private const short META_PIE = 0x081A;
-        private const short META_RECTANGLE = 0x041B;
-        private const short META_ROUNDRECT = 0x061C;
-        private const short META_PATBLT = 0x061D;
-        private const short META_SAVEDC = 0x001E;
-        private const short META_SETPIXEL = 0x041F;
-        private const short META_OFFSETCLIPRGN = 0x0220;
-        private const short META_POLYGON = 0x0324;
-        private const short META_POLYLINE = 0x0325;
-        private const short META_ESCAPE = 0x0626;
-        private const short META_RESTOREDC = 0x0127;
-        private const short META_FILLREGION = 0x0228;
-        private const short META_FRAMEREGION = 0x0429;
-        private const short META_INVERTREGION = 0x012A;
-        private const short META_PAINTREGION = 0x012B;
-        private const short META_SELECTCLIPREGION = 0x012C;
-        private const short META_SELECTOBJECT = 0x012D;
-        private const short META_SETTEXTALIGN = 0x012E;
+        private const short META_BITBLT = 0x0922;
         private const short META_CHORD = 0x0830;
-        private const short META_SETMAPPERFLAGS = 0x0231;
-        private const short META_TEXTOUT = 0x0521;
-        private const short META_EXTTEXTOUT = 0x0a32;
-        private const short META_SETDIBTODEV = 0x0d33;
-        private const short META_POLYPOLYGON = 0x0538;
+        private const short META_CREATEBRUSHINDIRECT = 0x02FC;
+        private const short META_CREATEFONTINDIRECT = 0x02FB;
+        private const short META_CREATEPALETTE = 0x00f7;
+        private const short META_CREATEPATTERNBRUSH = 0x01F9;
+        private const short META_CREATEPENINDIRECT = 0x02FA;
+        private const short META_CREATEREGION = 0x06FF;
+        private const short META_DELETEOBJECT = 0x01f0;
         private const short META_DIBBITBLT = 0x0940;
         private const short META_DIBSTRETCHBLT = 0x0b41;
+        private const short META_ELLIPSE = 0x0418;
+        private const short META_ESCAPE = 0x0626;
+        private const short META_EXCLUDECLIPRECT = 0x0415;
         private const short META_EXTFLOODFILL = 0x0548;
-        private const short META_DELETEOBJECT = 0x01f0;
-        private const short META_CREATEPENINDIRECT = 0x02FA;
-        private const short META_CREATEFONTINDIRECT = 0x02FB;
-        private const short META_CREATEBRUSHINDIRECT = 0x02FC;
-        private const short META_CREATEREGION = 0x06FF;
-        private const short META_STRETCHDIB = 0x0f43;
-        private const short META_SETTEXTJUSTIFICATION = 0x020A;
-        private const short META_BITBLT = 0x0922;
-        private const short META_STRETCHBLT = 0x0B23;
-        private const short META_CREATEPATTERNBRUSH = 0x01F9;
-        private const short META_SELECTPALETTE = 0x0234;
+        private const short META_EXTTEXTOUT = 0x0a32;
+        private const short META_FILLREGION = 0x0228;
+        private const short META_FLOODFILL = 0x0419;
+        private const short META_FRAMEREGION = 0x0429;
+        private const short META_INTERSECTCLIPRECT = 0x0416;
+        private const short META_INVERTREGION = 0x012A;
+        private const short META_LINETO = 0x0213;
+        private const short META_MOVETO = 0x0214;
+        private const short META_OFFSETCLIPRGN = 0x0220;
+        private const short META_OFFSETVIEWPORTORG = 0x0211;
+        private const short META_OFFSETWINDOWORG = 0x020F;
+        private const short META_PAINTREGION = 0x012B;
+        private const short META_PATBLT = 0x061D;
+        private const short META_PIE = 0x081A;
+        private const short META_POLYGON = 0x0324;
+        private const short META_POLYLINE = 0x0325;
+        private const short META_POLYPOLYGON = 0x0538;
         private const short META_REALIZEPALETTE = 0x0035;
-        private const short META_ANIMATEPALETTE = 0x0436;
-        private const short META_SETPALENTRIES = 0x0037;
+        private const short META_RECTANGLE = 0x041B;
         private const short META_RESIZEPALETTE = 0x0139;
-        private const short META_CREATEPALETTE = 0x00f7;
+        private const short META_RESTOREDC = 0x0127;
+        private const short META_ROUNDRECT = 0x061C;
+        private const short META_SAVEDC = 0x001E;
+        private const short META_SCALEVIEWPORTEXT = 0x0412;
+        private const short META_SCALEWINDOWEXT = 0x0410;
+        private const short META_SELECTCLIPREGION = 0x012C;
+        private const short META_SELECTOBJECT = 0x012D;
+        private const short META_SELECTPALETTE = 0x0234;
+        private const short META_SETBKCOLOR = 0x0201;
+        private const short META_SETBKMODE = 0x0102;
+        private const short META_SETDIBTODEV = 0x0d33;
+        private const short META_SETMAPMODE = 0x0103;
+        private const short META_SETMAPPERFLAGS = 0x0231;
+        private const short META_SETPALENTRIES = 0x0037;
+        private const short META_SETPIXEL = 0x041F;
+        private const short META_SETPOLYFILLMODE = 0x0106;
         private const short META_SETRELABS = 0x0105;
+        private const short META_SETROP2 = 0x0104;
+        private const short META_SETSTRETCHBLTMODE = 0x0107;
+        private const short META_SETTEXTALIGN = 0x012E;
+        private const short META_SETTEXTCHAREXTRA = 0x0108;
+        private const short META_SETTEXTCOLOR = 0x0209;
+        private const short META_SETTEXTJUSTIFICATION = 0x020A;
+        private const short META_SETVIEWPORTEXT = 0x020E;
+        private const short META_SETVIEWPORTORG = 0x020D;
+        private const short META_SETWINDOWEXT = 0x020C;
+        private const short META_SETWINDOWORG = 0x020B;
+        private const short META_STRETCHBLT = 0x0B23;
+        private const short META_STRETCHDIB = 0x0f43;
+        private const short META_TEXTOUT = 0x0521;
+
+        #endregion Fields
+
+        #region Constructors
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EmfConverter"/> class.
@@ -90,6 +95,10 @@ namespace SLExtensions.Xaml.Emf
         public EmfConverter()
         {
         }
+
+        #endregion Constructors
+
+        #region Methods
 
         /// <summary>
         /// Writes the XAML from specified EMF input stream.
@@ -142,6 +151,75 @@ namespace SLExtensions.Xaml.Emf
             while (ReadRecord(input, context, output)) ;
 
             WriteEndElement(output);
+        }
+
+        internal static Color ReadColor(byte[] parameters, int index)
+        {
+            int c = ReadInt32(parameters, index);
+
+            return Color.FromArgb(0xff, (byte)(c & 0xff), (byte)((c >> 8) & 0xff), (byte)((c >> 16) & 0xff));
+        }
+
+        internal static Int16 ReadInt16(byte[] parameters, int index)
+        {
+            return ByteUtility.ReadInt16(parameters, index, ByteOrder.LittleEndian);
+        }
+
+        internal static Int32 ReadInt32(byte[] parameters, int index)
+        {
+            return ByteUtility.ReadInt32(parameters, index, ByteOrder.LittleEndian);
+        }
+
+        internal static Point ReadPoint(byte[] parameters, int index, bool xy, EmfContext context)
+        {
+            int x = ReadInt16(parameters, index);
+            int y = ReadInt16(parameters, index + 2);
+
+            if (!xy) {
+                int c = x;
+                x = y;
+                y = c;
+            }
+
+            if (context != null) {
+                return context.Translate(x, y);
+            }
+
+            return new Point(x, y);
+        }
+
+        internal static string ReadPoints(byte[] parameters, int index, int count, EmfContext context)
+        {
+            StringBuilder points = new StringBuilder();
+            for (int i = index; i < parameters.Length; i += 4) {
+                if (i > index) {
+                    points.Append(' ');
+                }
+
+                Point p = ReadPoint(parameters, i, true, context);
+
+                points.Append(p.Format());
+            }
+
+            return points.ToString();
+        }
+
+        internal static Size ReadSize(byte[] parameters, int index)
+        {
+            int height = ReadInt16(parameters, index);
+            int width = ReadInt16(parameters, index + 2);
+
+            return new Size(width, height);
+        }
+
+        internal static long ReadUInt32(byte[] parameters, int index)
+        {
+            return ByteUtility.ReadUInt32(parameters, index, ByteOrder.LittleEndian);
+        }
+
+        private void HandleNotImplemented(string functionName, byte[] parameters)
+        {
+            OnWarning(Resource.MessageEmfFunctionNotSupported, functionName);
         }
 
         private bool ReadRecord(Stream stream, EmfContext context, XmlWriter output)
@@ -378,24 +456,6 @@ namespace SLExtensions.Xaml.Emf
             return true;
         }
 
-        private void HandleNotImplemented(string functionName, byte[] parameters)
-        {
-            OnWarning(Resource.MessageEmfFunctionNotSupported, functionName);
-        }
-
-        private void WriteLine(byte[] parameters, EmfContext context, XmlWriter output)
-        {
-            Point to = ReadPoint(parameters, 0, false, context);
-
-            WriteStartElement(output, "Line");
-            WriteAttribute(output, "X1", context.CurrentPosition.X);
-            WriteAttribute(output, "Y1", context.CurrentPosition.Y);
-            WriteAttribute(output, "X2", to.X);
-            WriteAttribute(output, "Y2", to.Y);
-            WriteStroke(context.Pen, output);
-            WriteEndElement(output);
-        }
-
         private void WriteArc(byte[] parameters, EmfContext context, XmlWriter output)
         {
             Point end = ReadPoint(parameters, 0, false, context);
@@ -439,38 +499,29 @@ namespace SLExtensions.Xaml.Emf
             WriteEndElement(output);
         }
 
-        private void WriteRectangle(byte[] parameters, EmfContext context, XmlWriter output)
+        private void WriteFill(Brush brush, XmlWriter output)
         {
-            Point rightBottom = ReadPoint(parameters, 0, false, context);
-            Point leftTop = ReadPoint(parameters, 4, false, context);
-
-            WriteStartElement(output, "Rectangle");
-            WriteAttribute(output, "Canvas.Left", leftTop.X);
-            WriteAttribute(output, "Canvas.Top", leftTop.Y);
-            WriteAttribute(output, "Width", rightBottom.X - leftTop.X);
-            WriteAttribute(output, "Height", rightBottom.Y - leftTop.Y);
-            WriteStroke(context.Pen, output);
-            WriteFill(context.Brush, output);
-            WriteEndElement(output);
+            if (brush != null) {
+                if (brush.Style == Brush.BS_SOLID) {
+                    WriteAttribute(output, "Fill", brush.Color);
+                }
+                else if (brush.Style == Brush.BS_HATCHED) {
+                    //TODO: implement
+                }
+            }
         }
 
-        private void WritePolyline(byte[] parameters, EmfContext context, XmlWriter output)
+        private void WriteLine(byte[] parameters, EmfContext context, XmlWriter output)
         {
-            int count = ReadInt16(parameters, 0);
-            string points = ReadPoints(parameters, 2, count, context);
+            Point to = ReadPoint(parameters, 0, false, context);
 
-            WriteStartElement(output, "Polyline");
+            WriteStartElement(output, "Line");
+            WriteAttribute(output, "X1", context.CurrentPosition.X);
+            WriteAttribute(output, "Y1", context.CurrentPosition.Y);
+            WriteAttribute(output, "X2", to.X);
+            WriteAttribute(output, "Y2", to.Y);
             WriteStroke(context.Pen, output);
-            WriteAttribute(output, "Points", points);
             WriteEndElement(output);
-        }
-
-        private void WritePolygon(byte[] parameters, EmfContext context, XmlWriter output)
-        {
-            int count = ReadInt16(parameters, 0);
-            string points = ReadPoints(parameters, 2, count, context);
-
-            WritePolygon(points, context, output);
         }
 
         private void WritePolyPolygon(byte[] parameters, EmfContext context, XmlWriter output)
@@ -487,12 +538,46 @@ namespace SLExtensions.Xaml.Emf
             }
         }
 
+        private void WritePolygon(byte[] parameters, EmfContext context, XmlWriter output)
+        {
+            int count = ReadInt16(parameters, 0);
+            string points = ReadPoints(parameters, 2, count, context);
+
+            WritePolygon(points, context, output);
+        }
+
         private void WritePolygon(string points, EmfContext context, XmlWriter output)
         {
             WriteStartElement(output, "Polygon");
             WriteStroke(context.Pen, output);
             WriteFill(context.Brush, output);
             WriteAttribute(output, "Points", points);
+            WriteEndElement(output);
+        }
+
+        private void WritePolyline(byte[] parameters, EmfContext context, XmlWriter output)
+        {
+            int count = ReadInt16(parameters, 0);
+            string points = ReadPoints(parameters, 2, count, context);
+
+            WriteStartElement(output, "Polyline");
+            WriteStroke(context.Pen, output);
+            WriteAttribute(output, "Points", points);
+            WriteEndElement(output);
+        }
+
+        private void WriteRectangle(byte[] parameters, EmfContext context, XmlWriter output)
+        {
+            Point rightBottom = ReadPoint(parameters, 0, false, context);
+            Point leftTop = ReadPoint(parameters, 4, false, context);
+
+            WriteStartElement(output, "Rectangle");
+            WriteAttribute(output, "Canvas.Left", leftTop.X);
+            WriteAttribute(output, "Canvas.Top", leftTop.Y);
+            WriteAttribute(output, "Width", rightBottom.X - leftTop.X);
+            WriteAttribute(output, "Height", rightBottom.Y - leftTop.Y);
+            WriteStroke(context.Pen, output);
+            WriteFill(context.Brush, output);
             WriteEndElement(output);
         }
 
@@ -532,80 +617,6 @@ namespace SLExtensions.Xaml.Emf
             }
         }
 
-        private void WriteFill(Brush brush, XmlWriter output)
-        {
-            if (brush != null) {
-                if (brush.Style == Brush.BS_SOLID) {
-                    WriteAttribute(output, "Fill", brush.Color);
-                }
-                else if (brush.Style == Brush.BS_HATCHED) {
-                    //TODO: implement
-                }
-            }
-        }
-
-        internal static string ReadPoints(byte[] parameters, int index, int count, EmfContext context)
-        {
-            StringBuilder points = new StringBuilder();
-            for (int i = index; i < parameters.Length; i += 4) {
-                if (i > index) {
-                    points.Append(' ');
-                }
-
-                Point p = ReadPoint(parameters, i, true, context);
-
-                points.Append(p.Format());
-            }
-
-            return points.ToString();
-        }
-
-        internal static Int16 ReadInt16(byte[] parameters, int index)
-        {
-            return ByteUtility.ReadInt16(parameters, index, ByteOrder.LittleEndian);
-        }
-
-        internal static Int32 ReadInt32(byte[] parameters, int index)
-        {
-            return ByteUtility.ReadInt32(parameters, index, ByteOrder.LittleEndian);
-        }
-
-        internal static long ReadUInt32(byte[] parameters, int index)
-        {
-            return ByteUtility.ReadUInt32(parameters, index, ByteOrder.LittleEndian);
-        }
-
-        internal static Point ReadPoint(byte[] parameters, int index, bool xy, EmfContext context)
-        {
-            int x = ReadInt16(parameters, index);
-            int y = ReadInt16(parameters, index + 2);
-
-            if (!xy) {
-                int c = x;
-                x = y;
-                y = c;
-            }
-
-            if (context != null) {
-                return context.Translate(x, y);
-            }
-
-            return new Point(x, y);
-        }
-
-        internal static Size ReadSize(byte[] parameters, int index)
-        {
-            int height = ReadInt16(parameters, index);
-            int width = ReadInt16(parameters, index + 2);
-
-            return new Size(width, height);
-        }
-
-        internal static Color ReadColor(byte[] parameters, int index)
-        {
-            int c = ReadInt32(parameters, index);
-
-            return Color.FromArgb(0xff, (byte)(c & 0xff), (byte)((c >> 8) & 0xff), (byte)((c >> 16) & 0xff));
-        }
+        #endregion Methods
     }
 }

@@ -541,6 +541,24 @@ namespace SLExtensions.Controls.Layers
             }
         }
 
+        protected override void OnMouseWheel(MouseWheelEventArgs e)
+        {
+            double newZoom = this.Zoom;
+            if (this.IsMouseMoveEnabled)
+            {
+                if (e.Delta > 0)
+                {
+                    newZoom *= 1.10;
+                }
+                else
+                {
+                    newZoom /= 1.10;
+                }
+            }
+
+            this.ZoomAndInvariantLocal(newZoom, this.lastMouseMovePoint, true);
+        }
+
         /// <summary>
         /// Called when a property changed.
         /// </summary>
@@ -665,24 +683,6 @@ namespace SLExtensions.Controls.Layers
             {
                 item.ClipHost(clipRect, this.Zoom);
             }
-        }
-
-        protected override void OnMouseWheel(MouseWheelEventArgs e)
-        {
-            double newZoom = this.Zoom;
-            if (this.IsMouseMoveEnabled)
-            {
-                if (e.Delta > 0)
-                {
-                    newZoom *= 1.10;
-                }
-                else
-                {
-                    newZoom /= 1.10;
-                }
-            }
-
-            this.ZoomAndInvariantLocal(newZoom, this.lastMouseMovePoint, true);
         }
 
         /// <summary>
@@ -878,7 +878,5 @@ namespace SLExtensions.Controls.Layers
         }
 
         #endregion Methods
-
-        
     }
 }

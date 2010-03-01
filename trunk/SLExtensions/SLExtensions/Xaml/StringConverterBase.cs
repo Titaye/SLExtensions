@@ -1,17 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
-using System.Xml;
-
-namespace SLExtensions.Xaml
+﻿namespace SLExtensions.Xaml
 {
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Text;
+    using System.Xml;
+
     /// <summary>
     /// Represents a base converter capable of converting string input into XAML.
     /// </summary>
-    public abstract class StringConverterBase
-        : ConverterBase
+    public abstract class StringConverterBase : ConverterBase
     {
+        #region Methods
+
         /// <summary>
         /// Converts the data from the input string to XAML using specified format options.
         /// </summary>
@@ -48,5 +49,7 @@ namespace SLExtensions.Xaml
         /// <param name="input">The input.</param>
         /// <param name="output">The output.</param>
         public abstract void ToXaml(TextReader input, XmlWriter output);
+
+        #endregion Methods
     }
 }

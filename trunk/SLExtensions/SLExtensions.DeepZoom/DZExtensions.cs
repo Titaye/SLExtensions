@@ -37,6 +37,10 @@
         public static readonly DependencyProperty IsZoomOnClickEnabledProperty = 
             DependencyProperty.RegisterAttached("IsZoomOnClickEnabled", typeof(bool), typeof(DZExtensions), new PropertyMetadata(IsZoomOnClickEnabledChangedCallback));
 
+        // Using a DependencyProperty as the backing store for IsZoomForceEnabled.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty IsZoomForceEnabledProperty =
+            DependencyProperty.RegisterAttached("IsZoomForceEnabled", typeof(bool), typeof(DZExtensions), new PropertyMetadata(IsZoomForceEnabledChangedCallback));
+
         #endregion Fields
 
         #region Methods
@@ -262,6 +266,11 @@
             return (bool)obj.GetValue(IsZoomOnClickEnabledProperty);
         }
 
+        public static bool GetIsZoomForceEnabled(DependencyObject obj)
+        {
+            return (bool)obj.GetValue(IsZoomForceEnabledProperty);
+        }
+
         public static Rect GetSubImageRect(this MultiScaleImage msi, int indexSubImage)
         {
             if (indexSubImage < 0 || indexSubImage >= msi.SubImages.Count)
@@ -343,6 +352,11 @@
             obj.SetValue(IsZoomOnClickEnabledProperty, value);
         }
 
+        public static void SetIsZoomForceEnabled(DependencyObject obj, bool value)
+        {
+            obj.SetValue(IsZoomForceEnabledProperty, value);
+        }
+
         public static void ShowAll(this MultiScaleImage msi)
         {
             DZContext context = msi.EnsureContext();
@@ -364,11 +378,16 @@
 
         public static void Zoom(this MultiScaleImage msi, double zoom, Point pointToZoom)
         {
-            if ((zoom >= 1.0 && msi.ViewportWidth > 0.05) || (zoom < 1.0 && msi.ViewportWidth < 2))
+            Zoom(msi, zoom, pointToZoom, false);
+        }
+
+        public static void Zoom(this MultiScaleImage msi, double zoom, Point pointToZoom, bool force)
+        {
+            if (force || ((zoom >= 1.0 && msi.ViewportWidth > 0.05) || (zoom < 1.0 && msi.ViewportWidth < 2)))
             {
                 Point logicalPoint = msi.ElementToLogicalPoint(pointToZoom);
                 msi.ZoomAboutLogicalPoint(zoom, logicalPoint.X, logicalPoint.Y);
-            }
+            }           
         }
 
         public static void ZoomAndCenterImage(this MultiScaleImage msi, int subImageIndex, double zoomFactor)
@@ -509,6 +528,16 @@
 
             DZContext context = msi.EnsureContext();
             context.IsZoomOnClickEnabled = (bool)e.NewValue;
+        }
+
+        private static void IsZoomForceEnabledChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            MultiScaleImage msi = d as MultiScaleImage;
+            if (msi == null)
+                return;
+
+            DZContext context = msi.EnsureContext();
+            context.IsZoomForceEnabled = (bool)e.NewValue;
         }
 
         #endregion Methods

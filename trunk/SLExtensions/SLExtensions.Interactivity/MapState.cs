@@ -1,5 +1,4 @@
-﻿
-namespace SLExtensions.Interactivity
+﻿namespace SLExtensions.Interactivity
 {
     using System;
     using System.Collections;
@@ -17,12 +16,11 @@ namespace SLExtensions.Interactivity
     using System.Windows.Documents;
     using System.Windows.Ink;
     using System.Windows.Input;
+    using System.Windows.Interactivity;
     using System.Windows.Markup;
     using System.Windows.Media;
     using System.Windows.Media.Animation;
     using System.Windows.Shapes;
-    using System.Windows.Interactivity;
-
 
     [ContentProperty("Mappings")]
     public class MapState : Behavior<FrameworkElement>
@@ -30,13 +28,13 @@ namespace SLExtensions.Interactivity
         #region Fields
 
         // Using a DependencyProperty as the backing store for AttachedValue.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty AttachedValueProperty = 
+        public static readonly DependencyProperty AttachedValueProperty =
             DependencyProperty.RegisterAttached("AttachedValue", typeof(object), typeof(MapState), new PropertyMetadata(AttachedValueChangedCallback));
 
         /// <summary>
         /// Property depedency property.
         /// </summary>
-        public static readonly DependencyProperty PropertyProperty = 
+        public static readonly DependencyProperty PropertyProperty =
             DependencyProperty.Register(
                 "Property",
                 typeof(string),
@@ -46,7 +44,7 @@ namespace SLExtensions.Interactivity
         /// <summary>
         /// Source depedency property.
         /// </summary>
-        public static readonly DependencyProperty SourceProperty = 
+        public static readonly DependencyProperty SourceProperty =
             DependencyProperty.Register(
                 "Source",
                 typeof(object),
@@ -61,13 +59,15 @@ namespace SLExtensions.Interactivity
         /// <summary>
         /// Value depedency property.
         /// </summary>
-        public static readonly DependencyProperty ValueProperty = 
+        public static readonly DependencyProperty ValueProperty =
             DependencyProperty.Register(
                 "Value",
                 typeof(object),
                 typeof(MapState),
                 new PropertyMetadata((d, e) => ((MapState)d).OnValueChanged((object)e.OldValue, (object)e.NewValue)));
 
+        private BindingListener bindingListener;
+        private Binding boundValue;
         private bool isAttached = false;
         private PropertyInfo propertyInfo = null;
 
@@ -78,15 +78,39 @@ namespace SLExtensions.Interactivity
         public MapState()
         {
             Mappings = new List<MapStateMapping>();
+            bindingListener = new BindingListener();
+            bindingListener.ValueChanged += delegate { this.Value = bindingListener.Value; };
         }
 
         #endregion Constructors
 
+
+
         #region Properties
+
+        public Binding BoundValue
+        {
+            get { return this.boundValue; }
+            set
+            {
+                if (this.boundValue != value)
+                {
+                    this.boundValue = value;
+                    if (value == null)
+                        bindingListener.ClearValue(BindingListener.ValueProperty);
+                    else
+                    {
+                        bindingListener.EnsureBindingSource(AssociatedObject);
+                        bindingListener.SetBinding(BindingListener.ValueProperty, value);
+                    }
+                }
+            }
+        }
 
         public List<MapStateMapping> Mappings
         {
-            get; private set;
+            get;
+            private set;
         }
 
         public string Property
@@ -141,16 +165,6 @@ namespace SLExtensions.Interactivity
 
         #region Methods
 
-        public static object GetAttachedValue(DependencyObject obj)
-        {
-            return (object)obj.GetValue(AttachedValueProperty);
-        }
-
-        public static void SetAttachedValue(DependencyObject obj, object value)
-        {
-            obj.SetValue(AttachedValueProperty, value);
-        }
-
         /// <summary>
         /// Hooks up necessary handlers for the state changes.
         /// </summary>
@@ -158,11 +172,9 @@ namespace SLExtensions.Interactivity
         {
             base.OnAttached();
 
-            isAttached = true;
+            bindingListener.EnsureBindingSource(AssociatedObject);
 
-            object val = GetAttachedValue(this.AssociatedObject);
-            if (val != null)
-                Value = val;
+            isAttached = true;
 
             // Launch control visual state refresh. If the associated control is not loaded, some exceptions can be thrown by the VisualStateManager
             RefreshState();
@@ -183,14 +195,19 @@ namespace SLExtensions.Interactivity
 
         private static void AttachedValueChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            BehaviorCollection col = System.Windows.Interactivity.Interaction.GetBehaviors(d);
-            if (col != null)
+            MapState ms = d as MapState;
+            if (ms == null)
             {
-                MapState ms = col.OfType<MapState>().FirstOrDefault();
-                if (ms != null)
+                BehaviorCollection col = System.Windows.Interactivity.Interaction.GetBehaviors(d);
+                if (col != null)
                 {
-                    ms.Value = e.NewValue;
+                    ms = col.OfType<MapState>().FirstOrDefault();
                 }
+            }
+
+            if (ms != null)
+            {
+                ms.Value = e.NewValue;
             }
         }
 
@@ -279,7 +296,24 @@ namespace SLExtensions.Interactivity
 
                 try
                 {
-                    SLExtensions.Controls.Animation.VisualState.GoToState(AssociatedObject, UseTransitions, nullMappings.ToArray());
+                    var ctrl = AssociatedObject as Control;
+                    if (ctrl != null)
+                    {
+                        foreach (var state in nullMappings)
+                        {
+                            if (VisualStateManager.GoToState(ctrl, state, true))
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        SLExtensions.Controls.Animation.VisualState.GoToState(AssociatedObject, true, nullMappings.ToArray());
+                    }
+                    //foreach (var state in nullMappings)
+                    //{
+                    //    if (VisualStateManager.GoToState(AssociatedObject.FirstVisualAncestorOfType<Control>(), state, UseTransitions))
+                    //        break;
+                    //}
                 }
                 catch
                 {
@@ -299,7 +333,22 @@ namespace SLExtensions.Interactivity
                             break;
                         }
 
-                        if (propValue is IConvertible && value is IConvertible)
+                        if (propValue is Enum)
+                        {
+                            try
+                            {
+                                var val2 = Enum.Parse(propValue.GetType(), value, true);
+                                if (object.Equals(val2, propValue))
+                                {
+                                    mapping = item;
+                                    break;
+                                }
+                            }
+                            catch
+                            {
+                            }
+                        }
+                        else if (propValue is IConvertible)
                         {
                             try
                             {
@@ -344,11 +393,19 @@ namespace SLExtensions.Interactivity
                 {
                     try
                     {
-                        SLExtensions.Controls.Animation.VisualState.GoToState(AssociatedObject, UseTransitions, mapping.StateName);
+                        var ctrl = AssociatedObject as Control;
+                        if (ctrl != null)
+                        {
+                            VisualStateManager.GoToState(ctrl, mapping.StateName, UseTransitions);
+                        }
+                        else
+                            SLExtensions.Controls.Animation.VisualState.GoToState(AssociatedObject, UseTransitions, mapping.StateName);
+                        //VisualStateManager.GoToState(AssociatedObject.FirstVisualAncestorOfType<Control>(), mapping.StateName, UseTransitions);
                         Debug.WriteLine("MapState : (" + propValue + ") -> " + mapping.StateName);
                     }
-                    catch
+                    catch (Exception ex)
                     {
+                        Debug.WriteLine("MapState : (" + propValue + ") -> " + mapping.StateName + " failed " + ex);
                     }
                 }
             }

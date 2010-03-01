@@ -1,16 +1,16 @@
-﻿using System;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Media.Animation;
-
-namespace SLExtensions.Controls
+﻿namespace SLExtensions.Controls
 {
+    using System;
+    using System.Windows;
+    using System.Windows.Controls;
+    using System.Windows.Media.Animation;
+
     /// <summary>
     /// Represents an indivdual menu item in CoolMenu.
     /// </summary>
     public class CoolMenuItem : ContentControl
     {
-        internal ItemsControl ParentItemsControl { get; set; }
+        #region Constructors
 
         /// <summary>
         /// Initializes a new instance of a CoolMenuItem.
@@ -25,19 +25,18 @@ namespace SLExtensions.Controls
             this.MouseLeftButtonUp += CoolMenuItem_MouseLeftButtonUp;
         }
 
-        void CoolMenuItem_MouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        #endregion Constructors
+
+        #region Properties
+
+        internal ItemsControl ParentItemsControl
         {
-            CoolMenu cm = this.ParentItemsControl as CoolMenu;
-            int index = CoolMenu.GetGenerator(cm).IndexFromContainer(this);
-            cm.OnItemMouseUp(index);
+            get; set;
         }
 
-        void CoolMenuItem_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        {
-            CoolMenu cm = this.ParentItemsControl as CoolMenu;
-            int index = CoolMenu.GetGenerator(cm).IndexFromContainer(this);
-            cm.OnItemMouseDown(index);
-        }
+        #endregion Properties
+
+        #region Methods
 
         void CoolMenuItem_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
         {
@@ -52,5 +51,21 @@ namespace SLExtensions.Controls
             int index = CoolMenu.GetGenerator(cm).IndexFromContainer(this);
             cm.OnItemMouseLeave(index);
         }
+
+        void CoolMenuItem_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            CoolMenu cm = this.ParentItemsControl as CoolMenu;
+            int index = CoolMenu.GetGenerator(cm).IndexFromContainer(this);
+            cm.OnItemMouseDown(index);
+        }
+
+        void CoolMenuItem_MouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            CoolMenu cm = this.ParentItemsControl as CoolMenu;
+            int index = CoolMenu.GetGenerator(cm).IndexFromContainer(this);
+            cm.OnItemMouseUp(index);
+        }
+
+        #endregion Methods
     }
 }

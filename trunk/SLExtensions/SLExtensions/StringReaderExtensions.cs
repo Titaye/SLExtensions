@@ -39,52 +39,90 @@
 
         public static string ReadMarkup(this StringReader reader)
         {
-            bool b;
-            IDictionary<string, string> prms;
-            return reader.ReadMarkup(out b, out prms, StringComparer.OrdinalIgnoreCase);
+            MarkupContent content;
+            reader.ReadMarkup(out content, StringComparer.OrdinalIgnoreCase);
+            if (content != null)
+                return content.Name;
+
+            return null;
         }
 
-        public static string ReadMarkup(this StringReader reader, out bool isClosingMarkup, out IDictionary<string, string> parameters,  StringComparer comparer)
+        public static MarkupType ReadMarkup(this StringReader reader, out MarkupContent content, StringComparer comparer)
         {
-            isClosingMarkup = false;
-            parameters = null;
+            content = null;
 
             if (!reader.PeekIsMarkup())
             {
-                return null;
+                return MarkupType.Raw;
             }
 
             //Skip Markup
             reader.Read();
             int intChar = reader.Peek();
-            if(intChar == -1)
-                return null;
+            if (intChar == -1)
+                return MarkupType.Raw;
 
-            isClosingMarkup = intChar == slash;
+            var isClosingMarkup = intChar == slash;
             if (isClosingMarkup)
             {
                 // Consume /
                 reader.Read();
 
-                string content = reader.ReadToBeforeChar(gt);
+                var name = reader.ReadToBeforeChar(gt);
+                content = new MarkupContent { Name = name };
                 // Consume >
                 reader.Read();
-                return content;
+                return MarkupType.ClosingNode;
             }
             else
             {
-                string content = reader.ReadToBeforeChar(gt);
+                bool isComment = false;
+
+                StringBuilder data = new StringBuilder();
+                data.Append(reader.ReadToBeforeChar(gt));
+                if (data.Length > 3 && data.ToString(0, 3) == "!--")
+                {
+                    isComment = true;
+
+                    while (data.ToString(data.Length - 2, 2) != "--")
+                    {
+                        char[] cBuffer = new char[1];
+                        if (reader.Read(cBuffer, 0, 1) == 0)
+                            break;
+
+                        data.Append(cBuffer[0]);
+                        if (reader.Peek() != -1)
+                            data.Append(reader.ReadToBeforeChar(gt));
+                    }
+                }
                 // Consume >
                 reader.Read();
+                if (isComment)
+                {
+                    content = new MarkupContent { Content = data.ToString(3, data.Length - 5).Trim(), Name = "!--" };
+                    return MarkupType.Comment;
+                }
+                else
+                {
+                    bool isClosed = false;
+                    if(data[data.Length - 1] == slash)
+                    {
+                        data.Remove(data.Length - 1, 1);
+                        isClosed = true;
+                    }
 
-                StringReader elementReader = new StringReader(content);
-                string elementName = elementReader.ReadToBeforeChar(space);
-                parameters = attributesRegex.Matches(elementReader.ReadToEnd()).OfType<Match>().ToDictionary(
-                    (e) => e.Groups["key"].Value,
-                    (e) => e.Groups["value"].Value,
-                    comparer);
+                    content = new MarkupContent { Content = data.ToString() };
+                    StringReader elementReader = new StringReader(content.Content);
+                    string elementName = elementReader.ReadToBeforeChar(space);
+                    content.Name = elementName;
 
-                return elementName;
+                    content.Parameters = attributesRegex.Matches(elementReader.ReadToEnd()).OfType<Match>().ToDictionary(
+                        (e) => e.Groups["key"].Value,
+                        (e) => e.Groups["value"].Value,
+                        comparer);
+
+                    return isClosed ? MarkupType.Node : MarkupType.StartNode;
+                }
             }
         }
 
@@ -92,10 +130,10 @@
         {
             StringBuilder sb = new StringBuilder();
             int intChar;
-            while((intChar = reader.Peek()) != -1)
+            while ((intChar = reader.Peek()) != -1)
             {
-                char c = (char) intChar;
-                if(c == charStop)
+                char c = (char)intChar;
+                if (c == charStop)
                     return sb.ToString();
                 sb.Append(c);
                 reader.Read();

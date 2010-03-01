@@ -1,3 +1,5 @@
+#region Header
+
 // StreamUtils.cs
 //
 // Copyright 2005 John Reilly
@@ -20,7 +22,7 @@
 // making a combined work based on this library.  Thus, the terms and
 // conditions of the GNU General Public License cover the whole
 // combination.
-// 
+//
 // As a special exception, the copyright holders of this library give you
 // permission to link this library with independent modules to produce an
 // executable, regardless of the license terms of these independent
@@ -33,184 +35,194 @@
 // obligated to do so.  If you do not wish to do so, delete this
 // exception statement from your version.
 
-using System;
-using System.IO;
+#endregion Header
 
 namespace SLExtensions.IO.Compression.Zip.Core
 {
-	/// <summary>
-	/// Provides simple <see cref="Stream"/>" utilities.
-	/// </summary>
-	public sealed class StreamUtils
-	{
-		/// <summary>
-		/// Read from a <see cref="Stream"/> ensuring all the required data is read.
-		/// </summary>
-		/// <param name="stream">The stream to read.</param>
-		/// <param name="buffer">The buffer to fill.</param>
-		static public void ReadFully(Stream stream, byte[] buffer)
-		{
-			ReadFully(stream, buffer, 0, buffer.Length);
-		}
+    using System;
+    using System.IO;
 
-		/// <summary>
-		/// Read from a <see cref="Stream"/>" ensuring all the required data is read.
-		/// </summary>
-		/// <param name="stream">The stream to read data from.</param>
-		/// <param name="buffer">The buffer to store data in.</param>
-		/// <param name="offset">The offset at which to begin storing data.</param>
-		/// <param name="count">The number of bytes of data to store.</param>
-		static public void ReadFully(Stream stream, byte[] buffer, int offset, int count)
-		{
-			if ( stream == null ) {
-				throw new ArgumentNullException("stream");
-			}
+    /// <summary>
+    /// Provides simple <see cref="Stream"/>" utilities.
+    /// </summary>
+    public sealed class StreamUtils
+    {
+        #region Constructors
 
-			if ( buffer == null ) {
-				throw new ArgumentNullException("buffer");
-			}
+        /// <summary>
+        /// Initialise an instance of <see cref="StreamUtils"></see>
+        /// </summary>
+        private StreamUtils()
+        {
+            // Do nothing.
+        }
 
-			// Offset can equal length when buffer and count are 0.
-			if ( (offset < 0) || (offset > buffer.Length) ) {
-				throw new ArgumentOutOfRangeException("offset");
-			}
+        #endregion Constructors
 
-			if ( (count < 0) || (offset + count > buffer.Length) ) {
-				throw new ArgumentOutOfRangeException("count");
-			}
+        #region Methods
 
-			while ( count > 0 ) {
-				int readCount = stream.Read(buffer, offset, count);
-				if ( readCount <= 0 ) {
-					throw new EndOfStreamException();
-				}
-				offset += readCount;
-				count -= readCount;
-			}
-		}
+        /// <summary>
+        /// Copy the contents of one <see cref="Stream"/> to another.
+        /// </summary>
+        /// <param name="source">The stream to source data from.</param>
+        /// <param name="destination">The stream to write data to.</param>
+        /// <param name="buffer">The buffer to use during copying.</param>
+        /// <param name="progressHandler">The <see cref="ProgressHandler">progress handler delegate</see> to use.</param>
+        /// <param name="updateInterval">The minimum <see cref="TimeSpan"/> between progress updates.</param>
+        /// <param name="sender">The source for this event.</param>
+        /// <param name="name">The name to use with the event.</param>
+        public static void Copy(Stream source, Stream destination,
+            byte[] buffer, ProgressHandler progressHandler, TimeSpan updateInterval, object sender, string name)
+        {
+            if (source == null) {
+                throw new ArgumentNullException("source");
+            }
 
-		/// <summary>
-		/// Copy the contents of one <see cref="Stream"/> to another.
-		/// </summary>
-		/// <param name="source">The stream to source data from.</param>
-		/// <param name="destination">The stream to write data to.</param>
-		/// <param name="buffer">The buffer to use during copying.</param>
-		/// <param name="progressHandler">The <see cref="ProgressHandler">progress handler delegate</see> to use.</param>
-		/// <param name="updateInterval">The minimum <see cref="TimeSpan"/> between progress updates.</param>
-		/// <param name="sender">The source for this event.</param>
-		/// <param name="name">The name to use with the event.</param>
-		static public void Copy(Stream source, Stream destination,
-			byte[] buffer, ProgressHandler progressHandler, TimeSpan updateInterval, object sender, string name)
-		{
-			if (source == null) {
-				throw new ArgumentNullException("source");
-			}
+            if (destination == null) {
+                throw new ArgumentNullException("destination");
+            }
 
-			if (destination == null) {
-				throw new ArgumentNullException("destination");
-			}
+            if (buffer == null) {
+                throw new ArgumentNullException("buffer");
+            }
 
-			if (buffer == null) {
-				throw new ArgumentNullException("buffer");
-			}
+            // Ensure a reasonable size of buffer is used without being prohibitive.
+            if (buffer.Length < 128) {
+                throw new ArgumentException("Buffer is too small", "buffer");
+            }
 
-			// Ensure a reasonable size of buffer is used without being prohibitive.
-			if (buffer.Length < 128) {
-				throw new ArgumentException("Buffer is too small", "buffer");
-			}
+            if (progressHandler == null) {
+                throw new ArgumentNullException("progressHandler");
+            }
 
-			if (progressHandler == null) {
-				throw new ArgumentNullException("progressHandler");
-			}
+            bool copying = true;
 
-			bool copying = true;
+            DateTime marker = DateTime.Now;
+            long processed = 0;
+            long target = 0;
 
-			DateTime marker = DateTime.Now;
-			long processed = 0;
-			long target = 0;
+            if (source.CanSeek) {
+                target = source.Length - source.Position;
+            }
 
-			if (source.CanSeek) {
-				target = source.Length - source.Position;
-			}
+            // Always fire 0% progress..
+            ProgressEventArgs args = new ProgressEventArgs(name, processed, target);
+            progressHandler(sender, args);
 
-			// Always fire 0% progress..
-			ProgressEventArgs args = new ProgressEventArgs(name, processed, target);
-			progressHandler(sender, args);
+            bool completeFired = false;
 
-			bool completeFired = false;
+            while (copying) {
+                int bytesRead = source.Read(buffer, 0, buffer.Length);
+                if (bytesRead > 0) {
+                    processed += bytesRead;
+                    destination.Write(buffer, 0, bytesRead);
+                }
+                else {
+                    destination.Flush();
+                    copying = false;
+                }
 
-			while (copying) {
-				int bytesRead = source.Read(buffer, 0, buffer.Length);
-				if (bytesRead > 0) {
-					processed += bytesRead;
-					destination.Write(buffer, 0, bytesRead);
-				}
-				else {
-					destination.Flush();
-					copying = false;
-				}
+                if (DateTime.Now - marker > updateInterval) {
+                    completeFired = (processed == target);
+                    marker = DateTime.Now;
+                    args = new ProgressEventArgs(name, processed, target);
+                    progressHandler(sender, args);
 
-				if (DateTime.Now - marker > updateInterval) {
-					completeFired = (processed == target);
-					marker = DateTime.Now;
-					args = new ProgressEventArgs(name, processed, target);
-					progressHandler(sender, args);
+                    copying = args.ContinueRunning;
+                }
+            }
 
-					copying = args.ContinueRunning;
-				}
-			}
+            if (!completeFired) {
+                args = new ProgressEventArgs(name, processed, target);
+                progressHandler(sender, args);
+            }
+        }
 
-			if (!completeFired) {
-				args = new ProgressEventArgs(name, processed, target);
-				progressHandler(sender, args);
-			}
-		}
+        /// <summary>
+        /// Copy the contents of one <see cref="Stream"/> to another.
+        /// </summary>
+        /// <param name="source">The stream to source data from.</param>
+        /// <param name="destination">The stream to write data to.</param>
+        /// <param name="buffer">The buffer to use during copying.</param>
+        public static void Copy(Stream source, Stream destination, byte[] buffer)
+        {
+            if ( source == null ) {
+                throw new ArgumentNullException("source");
+            }
 
-		/// <summary>
-		/// Copy the contents of one <see cref="Stream"/> to another.
-		/// </summary>
-		/// <param name="source">The stream to source data from.</param>
-		/// <param name="destination">The stream to write data to.</param>
-		/// <param name="buffer">The buffer to use during copying.</param>
-		static public void Copy(Stream source, Stream destination, byte[] buffer)
-		{
-			if ( source == null ) {
-				throw new ArgumentNullException("source");
-			}
+            if ( destination == null ) {
+                throw new ArgumentNullException("destination");
+            }
 
-			if ( destination == null ) {
-				throw new ArgumentNullException("destination");
-			}
+            if ( buffer == null ) {
+                throw new ArgumentNullException("buffer");
+            }
 
-			if ( buffer == null ) {
-				throw new ArgumentNullException("buffer");
-			}
+            // Ensure a reasonable size of buffer is used without being prohibitive.
+            if ( buffer.Length < 128 ) {
+                throw new ArgumentException("Buffer is too small", "buffer");
+            }
 
-			// Ensure a reasonable size of buffer is used without being prohibitive.
-			if ( buffer.Length < 128 ) {
-				throw new ArgumentException("Buffer is too small", "buffer");
-			}
+            bool copying = true;
 
-			bool copying = true;
+            while ( copying ) {
+                int bytesRead = source.Read(buffer, 0, buffer.Length);
+                if ( bytesRead > 0 ) {
+                    destination.Write(buffer, 0, bytesRead);
+                }
+                else {
+                    destination.Flush();
+                    copying = false;
+                }
+            }
+        }
 
-			while ( copying ) {
-				int bytesRead = source.Read(buffer, 0, buffer.Length);
-				if ( bytesRead > 0 ) {
-					destination.Write(buffer, 0, bytesRead);
-				}
-				else {
-					destination.Flush();
-					copying = false;
-				}
-			}
-		}
+        /// <summary>
+        /// Read from a <see cref="Stream"/> ensuring all the required data is read.
+        /// </summary>
+        /// <param name="stream">The stream to read.</param>
+        /// <param name="buffer">The buffer to fill.</param>
+        public static void ReadFully(Stream stream, byte[] buffer)
+        {
+            ReadFully(stream, buffer, 0, buffer.Length);
+        }
 
-		/// <summary>
-		/// Initialise an instance of <see cref="StreamUtils"></see>
-		/// </summary>
-		private StreamUtils()
-		{
-			// Do nothing.
-		}
-	}
+        /// <summary>
+        /// Read from a <see cref="Stream"/>" ensuring all the required data is read.
+        /// </summary>
+        /// <param name="stream">The stream to read data from.</param>
+        /// <param name="buffer">The buffer to store data in.</param>
+        /// <param name="offset">The offset at which to begin storing data.</param>
+        /// <param name="count">The number of bytes of data to store.</param>
+        public static void ReadFully(Stream stream, byte[] buffer, int offset, int count)
+        {
+            if ( stream == null ) {
+                throw new ArgumentNullException("stream");
+            }
+
+            if ( buffer == null ) {
+                throw new ArgumentNullException("buffer");
+            }
+
+            // Offset can equal length when buffer and count are 0.
+            if ( (offset < 0) || (offset > buffer.Length) ) {
+                throw new ArgumentOutOfRangeException("offset");
+            }
+
+            if ( (count < 0) || (offset + count > buffer.Length) ) {
+                throw new ArgumentOutOfRangeException("count");
+            }
+
+            while ( count > 0 ) {
+                int readCount = stream.Read(buffer, offset, count);
+                if ( readCount <= 0 ) {
+                    throw new EndOfStreamException();
+                }
+                offset += readCount;
+                count -= readCount;
+            }
+        }
+
+        #endregion Methods
+    }
 }

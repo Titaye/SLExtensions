@@ -1,18 +1,23 @@
-﻿using System;
-using System.IO;
-using System.Text;
-
-using SLExtensions.Text.Parsers;
-
-namespace SLExtensions.Xaml.Rtf
+﻿namespace SLExtensions.Xaml.Rtf
 {
+    using System;
+    using System.IO;
+    using System.Text;
+
+    using SLExtensions.Text.Parsers;
+
     /// <summary>
     /// A lexer for RTF
     /// </summary>
-    public class RtfLexer
-        : Lexer<RtfLexerState>
+    public class RtfLexer : Lexer<RtfLexerState>
     {
+        #region Fields
+
         private static char[] IgnoredChars = new char[] { '\r', '\n', '\t', '\0' };
+
+        #endregion Fields
+
+        #region Constructors
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RtfLexer"/> class.
@@ -23,6 +28,10 @@ namespace SLExtensions.Xaml.Rtf
         {
         }
 
+        #endregion Constructors
+
+        #region Properties
+
         /// <summary>
         /// Gets the default state of the lexer.
         /// </summary>
@@ -31,6 +40,10 @@ namespace SLExtensions.Xaml.Rtf
         {
             get { return RtfLexerState.Default; }
         }
+
+        #endregion Properties
+
+        #region Methods
 
         /// <summary>
         /// Gets the next token.
@@ -75,32 +88,6 @@ namespace SLExtensions.Xaml.Rtf
         private bool IsDigit(int c)
         {
             return IsInRange('0', '9');
-        }
-
-        private RtfToken ParseWord()
-        {
-            RtfToken token = new RtfToken();
-
-            Read();     // consume /
-            int c = Peek();
-            if (IsAsciiLetter(c)) {
-                token = ParseControlWord();
-            }
-            else if (c == '{' || c == '}' || c == '\\') {
-                // escaped character
-                token.Type = RtfTokenType.Text;
-                token.Value = ((char)c).ToString();
-
-                Read();     // consume character
-            }
-            else {
-                token.Type = RtfTokenType.ControlSymbol;
-                token.Value = ((char)c).ToString();
-
-                Read();     // consume symbol
-            }
-
-            return token;
         }
 
         private RtfToken ParseControlWord()
@@ -182,5 +169,33 @@ namespace SLExtensions.Xaml.Rtf
 
             return token;
         }
+
+        private RtfToken ParseWord()
+        {
+            RtfToken token = new RtfToken();
+
+            Read();     // consume /
+            int c = Peek();
+            if (IsAsciiLetter(c)) {
+                token = ParseControlWord();
+            }
+            else if (c == '{' || c == '}' || c == '\\') {
+                // escaped character
+                token.Type = RtfTokenType.Text;
+                token.Value = ((char)c).ToString();
+
+                Read();     // consume character
+            }
+            else {
+                token.Type = RtfTokenType.ControlSymbol;
+                token.Value = ((char)c).ToString();
+
+                Read();     // consume symbol
+            }
+
+            return token;
+        }
+
+        #endregion Methods
     }
 }

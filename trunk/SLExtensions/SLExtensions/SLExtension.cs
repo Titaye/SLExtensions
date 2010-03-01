@@ -1,7 +1,12 @@
-﻿// <copyright file="SLExtension.cs" company="Ucaya">
+﻿#region Header
+
+// <copyright file="SLExtension.cs" company="Ucaya">
 // Distributed under Microsoft Public License (Ms-PL)
 // </copyright>
 // <author>Thierry Bouquain</author>
+
+#endregion Header
+
 namespace SLExtensions
 {
     using System;
@@ -10,6 +15,7 @@ namespace SLExtensions
     using System.IO;
     using System.Net;
     using System.Text;
+    using System.Text.RegularExpressions;
     using System.Windows;
     using System.Windows.Browser;
     using System.Windows.Controls;
@@ -26,19 +32,78 @@ namespace SLExtensions
     /// </summary>
     public static class SLExtension
     {
+        #region Fields
+
+        private static Regex colorRegex = new Regex("#?(?<a>[0-9a-f-A-F]{2})?(?<r>[0-9a-f-A-F]{2})(?<g>[0-9a-f-A-F]{2})(?<b>[0-9a-f-A-F]{2})");
+
+        #endregion Fields
+
         #region Methods
+
+        /// <summary>
+        /// Check if a number is zero.
+        /// </summary>
+        /// <param name="value">The number to check.</param>
+        /// <returns>True if the number is zero, false otherwise.</returns>
+        public static bool IsZero(this double value)
+        {
+            // We actually consider anything within an order of magnitude of
+            // epsilon to be zero
+
+            return Math.Abs(value) < 2.2204460492503131E-15;
+        }
 
         public static T FirstVisualAncestorOfType<T>(this FrameworkElement element)
             where T : FrameworkElement
         {
+            return FirstVisualAncestorOfType<T>(element, int.MaxValue);
+        }
+
+        public static T FirstVisualAncestorOfType<T>(this FrameworkElement element, int maxDistance)
+            where T : FrameworkElement
+        {
+            var cnt = 0;
             var parent = VisualTreeHelper.GetParent(element) as FrameworkElement;
-            while (parent != null)
+            cnt++;
+            while (parent != null && cnt < maxDistance)
             {
                 if (parent is T)
                     return (T)parent;
                 parent = VisualTreeHelper.GetParent(parent) as FrameworkElement;
+                cnt++;
             }
-            return null;
+            return parent as T;
+        }
+
+        public static T FirstVisualAncestorOfType<T>(this FrameworkElement element, FrameworkElement rootAncestor)
+            where T : FrameworkElement
+        {
+            var parent = VisualTreeHelper.GetParent(element) as FrameworkElement;
+            while (parent != null && parent != rootAncestor)
+            {
+                if (parent is T)
+                    return (T)parent;
+                parent = VisualTreeHelper.GetParent(parent) as FrameworkElement;                
+            }
+            return parent as T;
+        }
+
+        public static void FromColorHexa(this SolidColorBrush brush, string color)
+        {
+            if(brush == null)
+                throw new ArgumentNullException("brush");
+
+            var m = colorRegex.Match(color);
+            if (m.Success)
+            {
+                byte a = 0xFF;
+                if (m.Groups["a"].Success)
+                    a = Convert.ToByte(m.Groups["a"].Value, 16);
+                byte r = Convert.ToByte(m.Groups["r"].Value, 16);
+                byte g = Convert.ToByte(m.Groups["g"].Value, 16);
+                byte b = Convert.ToByte(m.Groups["b"].Value, 16);
+                brush.Color = Color.FromArgb(a, r, g, b);
+            }
         }
 
         /// <summary>
@@ -145,7 +210,7 @@ namespace SLExtensions
             }
         }
 
-         /// <summary>
+        /// <summary>
         /// Sends a file in multipart HTML form. The request is sent using POST method
         /// </summary>
         /// <param name="webclient">The webclient.</param>
@@ -180,7 +245,7 @@ namespace SLExtensions
                     byte[] buffer = new byte[4096];
                     int read = 0;
 
-                    while ((read = fileStream.Read(buffer, 0, buffer.Length)) > 0)
+                    while ((read = fileStream.Read(buffer, 0, buffer.Length)) == buffer.Length)
                     {
                         e.Result.Write(buffer, 0, read);
                         e.Result.Flush();

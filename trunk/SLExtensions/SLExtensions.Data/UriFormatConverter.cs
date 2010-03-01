@@ -43,7 +43,6 @@ namespace SLExtensions.Data
         /// </returns>
         public override object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
-            
             var result = base.Convert(value, typeof(string), parameter, culture) as string;
             Uri uri;
             if (Uri.TryCreate(result, UriKind.RelativeOrAbsolute, out uri))

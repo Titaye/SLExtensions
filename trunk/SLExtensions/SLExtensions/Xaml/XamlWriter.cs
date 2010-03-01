@@ -1,34 +1,37 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Reflection;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Ink;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Animation;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using System.Xml;
-
-namespace SLExtensions.Xaml
+﻿namespace SLExtensions.Xaml
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Reflection;
+    using System.Text;
+    using System.Windows;
+    using System.Windows.Controls;
+    using System.Windows.Documents;
+    using System.Windows.Ink;
+    using System.Windows.Input;
+    using System.Windows.Media;
+    using System.Windows.Media.Animation;
+    using System.Windows.Media.Imaging;
+    using System.Windows.Shapes;
+    using System.Xml;
+
     /// <summary>
     /// Provides XAML serialization for Silverlight runtime objects.
     /// </summary>
-    public class XamlWriter
-        : IDisposable
+    public class XamlWriter : IDisposable
     {
+        #region Fields
+
         /// <summary>
         /// The XAML client namespace
         /// </summary>
         public const string NamespaceClient = "http://schemas.microsoft.com/client/2007";
+
         /// <summary>
         /// The XAML namespace
         /// </summary>
         public const string NamespaceXaml = "http://schemas.microsoft.com/winfx/2006/xaml";
+
         /// <summary>
         /// The XAML prefix
         /// </summary>
@@ -41,13 +44,16 @@ namespace SLExtensions.Xaml
         private static readonly Size DefaultSize = new Size();
         private static readonly Thickness DefaultThickness = new Thickness();
 
-        private XmlWriter writer;
-        private XamlWriterSettings settings;
+        private bool disposed = false;
+        private int elementCount = 0;
         private bool isXamlComplete = true;
         private bool isXamlTruncated = false;
-        private int elementCount = 0;
+        private XamlWriterSettings settings;
+        private XmlWriter writer;
 
-        private bool disposed = false;
+        #endregion Fields
+
+        #region Constructors
 
         /// <summary>
         /// Initializes a new instance of the <see cref="XamlWriter"/> class.
@@ -74,28 +80,17 @@ namespace SLExtensions.Xaml
             Dispose(false);
         }
 
-        /// <summary>
-        /// Disposes this instance.
-        /// </summary>
-        public void Dispose()
-        {
-            Dispose(true);
+        #endregion Constructors
 
-            GC.SuppressFinalize(this);
-        }
+        #region Properties
 
         /// <summary>
-        /// Disposes this instance.
+        /// Gets the number of written UI elements.
         /// </summary>
-        /// <param name="disposing"></param>
-        private void Dispose(bool disposing)
+        /// <value>The element count.</value>
+        public int ElementCount
         {
-            if (!disposed) {
-                this.writer.Close();
-                this.writer = null;
-
-                disposed = true;
-            }
+            get { return this.elementCount; }
         }
 
         /// <summary>
@@ -115,15 +110,6 @@ namespace SLExtensions.Xaml
         }
 
         /// <summary>
-        /// Gets the number of written UI elements.
-        /// </summary>
-        /// <value>The element count.</value>
-        public int ElementCount
-        {
-            get { return this.elementCount; }
-        }
-
-        /// <summary>
         /// Gets the settings.
         /// </summary>
         /// <value>The settings.</value>
@@ -132,40 +118,73 @@ namespace SLExtensions.Xaml
             get { return this.settings; }
         }
 
-        /// <summary>
-        /// Writes the start element in the XAML client namespace.
-        /// </summary>
-        /// <param name="name">The name.</param>
-        protected void WriteStartElement(string name)
-        {
-            this.writer.WriteStartElement(name, NamespaceClient);
-        }
+        #endregion Properties
+
+        #region Methods
 
         /// <summary>
-        /// Writes the end element.
+        /// Creates a XAML writer for given output and settings.
         /// </summary>
-        protected void WriteEndElement()
-        {
-            this.writer.WriteEndElement();
-        }
-
-        /// <summary>
-        /// Writes the start element of given object.
-        /// </summary>
-        /// <param name="o">The o.</param>
+        /// <param name="output">The output.</param>
+        /// <param name="newLineOnAttributes">whether to write attributes on a new line.</param>
+        /// <param name="settings">The settings.</param>
         /// <returns></returns>
-        protected virtual string WriteStartElement(DependencyObject o)
+        public static XamlWriter CreateWriter(StringBuilder output, bool newLineOnAttributes, XamlWriterSettings settings)
         {
-            Type type = o.GetType();
-            string typeName = type.Name;
+            XmlWriterSettings xmlSettings = new XmlWriterSettings();
+            xmlSettings.Indent = true;
+            xmlSettings.NewLineOnAttributes = newLineOnAttributes;
+            xmlSettings.ConformanceLevel = ConformanceLevel.Fragment;
 
-            WriteStartElement(typeName);
-            string name = (string)o.GetValue(FrameworkElement.NameProperty);
-            if (!string.IsNullOrEmpty(name)) {
-                WriteAttribute(PrefixXaml, "Name", NamespaceXaml, name);
+            XmlWriter writer = XmlWriter.Create(output, xmlSettings);
+
+            return new XamlWriter(writer, settings);
+        }
+
+        /// <summary>
+        /// Saves the specified element using the default settings.
+        /// </summary>
+        /// <param name="element">The element.</param>
+        /// <returns></returns>
+        public static string Save(FrameworkElement element)
+        {
+            return Save(element, new XamlWriterSettings());
+        }
+
+        /// <summary>
+        /// Gets the XAML of specified framework element.
+        /// </summary>
+        /// <param name="element">The element.</param>
+        /// <param name="settings">The settings.</param>
+        /// <returns></returns>
+        public static string Save(FrameworkElement element, XamlWriterSettings settings)
+        {
+            if (element == null) {
+                throw new ArgumentNullException("element");
             }
 
-            return typeName;
+            StringBuilder output = new StringBuilder();
+
+            try {
+                using (XamlWriter writer = CreateWriter(output, false, settings)) {
+                    writer.WriteElement(element);
+                }
+            }
+            catch (Exception e) {
+                WriteException(output, e);
+            }
+
+            return output.ToString();
+        }
+
+        /// <summary>
+        /// Disposes this instance.
+        /// </summary>
+        public void Dispose()
+        {
+            Dispose(true);
+
+            GC.SuppressFinalize(this);
         }
 
         /// <summary>
@@ -277,7 +296,7 @@ namespace SLExtensions.Xaml
                 this.isXamlComplete = false;
             }
 
-        End:
+            End:
             //if (element.Resources != null && element.Resources.Count > 0) {
             //    string fullName = string.Format("{0}.Resources", typeName);
             //    WriteStartElement(fullName);
@@ -319,175 +338,6 @@ namespace SLExtensions.Xaml
             WriteEndElement();
 
             return result;
-        }
-
-        /// <summary>
-        /// Writes the content of specified element.
-        /// </summary>
-        /// <param name="element">The element.</param>
-        /// <returns></returns>
-        protected virtual bool WriteContent(FrameworkElement element)
-        {
-            // write element content
-            int count = VisualTreeHelper.GetChildrenCount(element);
-            bool result = true;
-
-            for (int i = 0; i < count; i++) {
-                FrameworkElement child = (FrameworkElement)VisualTreeHelper.GetChild(element, i);
-                if (!WriteElement(child)) {
-                    result = false;
-                    break;
-                }
-            }
-
-            return result;
-        }
-
-        private void WriteElement(TriggerCollection triggers)
-        {
-            foreach (EventTrigger trigger in triggers) {
-                WriteStartElement(trigger);
-                //WriteAttribute("RoutedEvent", trigger.RoutedEvent.ToString());
-                foreach (BeginStoryboard beginStoryboard in trigger.Actions) {
-                    WriteStartElement(beginStoryboard);
-                    WriteElement(beginStoryboard.Storyboard);
-                    this.writer.WriteEndElement();
-                }
-                this.writer.WriteEndElement();
-            }
-        }
-
-        private void WriteElement(Timeline timeline)
-        {
-            //TODO: implement
-        //    string typeName = WriteStartElement(timeline);
-
-        //    WriteAttribute("Storyboard.TargetName", (string)timeline.GetValue(Storyboard.TargetNameProperty));
-        //    WriteAttribute("Storyboard.TargetProperty", (string)timeline.GetValue(Storyboard.TargetPropertyProperty));
-        //    WriteAttribute("AutoReverse", timeline.AutoReverse, false);
-        //    WriteAttribute("BeginTime", timeline.BeginTime ?? TimeSpan.Zero, TimeSpan.Zero);
-        //    WriteAttribute("Duration", timeline.Duration, Duration.Automatic);
-        //    WriteAttribute("FillBehavior", timeline.FillBehavior, FillBehavior.HoldEnd);
-        //    WriteAttribute("RepeatBehavior", timeline.RepeatBehavior, new RepeatBehavior(1));
-        //    WriteAttribute("SpeedRatio", timeline.SpeedRatio, 1);
-
-        //    Animation animation = timeline as Animation;
-        //    if (animation != null) {
-        //        WriteInnerElement(animation, typeName);
-        //        goto End;
-        //    }
-        //    TimelineGroup group = timeline as TimelineGroup;
-        //    if (group != null) {
-        //        foreach (Timeline child in group.Children) {
-        //            WriteElement(child);
-        //        }
-        //        goto End;
-        //    }
-
-        //End:
-        //    writer.WriteEndElement();
-        }
-
-        private void WriteElement(Stroke stroke)
-        {
-            string typeName = WriteStartElement(stroke);
-            // drawing attributes
-            WriteStartElement(string.Format("{0}.DrawingAttributes", typeName));
-            WriteStartElement("DrawingAttributes");
-            WriteAttribute("Color", stroke.DrawingAttributes.Color, Colors.Black);
-            WriteAttribute("OutlineColor", stroke.DrawingAttributes.OutlineColor, DefaultColor);
-            WriteAttribute("Width", stroke.DrawingAttributes.Width, 3.0);
-            WriteAttribute("Height", stroke.DrawingAttributes.Height, 3.0);
-            WriteEndElement();
-            WriteEndElement();
-
-            // stylus points
-            //WriteStartElement(string.Format("{0}.StylusPoints", typeName));
-            //foreach (StylusPoint point in stroke.StylusPoints) {
-
-            //TODO: fix this, StylusPoint no longer a DependencyObject?
-
-            //    WriteStartElement(point);
-            //    WriteAttribute("X", point.X, 0);
-            //    WriteAttribute("Y", point.Y, 0);
-            //    writer.WriteEndElement();
-            //}
-            //WriteEndElement();
-            WriteEndElement();
-        }
-
-        private void WriteElement(Brush brush)
-        {
-            string typeName = WriteStartElement(brush);
-
-            WriteAttribute("Opacity", brush.Opacity, 1);
-
-            GradientBrush gradient = brush as GradientBrush;
-            if (gradient != null) {
-                LinearGradientBrush linearGradient = gradient as LinearGradientBrush;
-                if (linearGradient != null) {
-                    WriteAttribute("StartPoint", linearGradient.StartPoint, DefaultPoint);
-                    WriteAttribute("EndPoint", linearGradient.EndPoint, new Point(1, 1));
-                }
-                RadialGradientBrush radialGradient = gradient as RadialGradientBrush;
-                if (radialGradient != null) {
-                    WriteAttribute("Center", radialGradient.Center, new Point(.5, .5));
-                    WriteAttribute("GradientOrigin", radialGradient.GradientOrigin, new Point(.5, .5));
-                    WriteAttribute("RadiusX", radialGradient.RadiusX, .5);
-                    WriteAttribute("RadiusY", radialGradient.RadiusY, .5);
-                }
-                WriteAttribute("ColorInterpolationMode", gradient.ColorInterpolationMode, ColorInterpolationMode.SRgbLinearInterpolation);
-                WriteAttribute("MappingMode", gradient.MappingMode, BrushMappingMode.RelativeToBoundingBox);
-                WriteAttribute("SpreadMethod", gradient.SpreadMethod, GradientSpreadMethod.Pad);
-
-                foreach (GradientStop stop in gradient.GradientStops) {
-                    WriteStartElement(stop);
-                    WriteAttribute("Color", stop.Color, DefaultColor);
-                    WriteAttribute("Offset", stop.Offset, 0);
-                    WriteEndElement();
-                }
-                goto End;
-            }
-
-            SolidColorBrush solidColor = brush as SolidColorBrush;
-            if (solidColor != null) {
-                WriteAttribute("Color", solidColor.Color, DefaultColor);
-                goto End;
-            }
-
-            TileBrush tile = brush as TileBrush;
-            if (tile != null) {
-                ImageBrush image = tile as ImageBrush;
-                if (image != null) {
-                    BitmapImage bitmap = image.ImageSource as BitmapImage;
-                    if (bitmap != null) {
-                        WriteAttribute("ImageSource", bitmap.UriSource);
-                    }
-                }
-                VideoBrush video = tile as VideoBrush;
-                if (video != null) {
-                    WriteAttribute("SourceName", video.SourceName);
-                }
-
-                WriteAttribute("AlignmentX", tile.AlignmentX, AlignmentX.Center);
-                WriteAttribute("AlignmentY", tile.AlignmentY, AlignmentY.Center);
-                WriteAttribute("Stretch", tile.Stretch, Stretch.Fill);
-                goto End;
-            }
-
-        End:
-            if (brush.Transform != null) {
-                WriteStartElement(string.Format("{0}.Transform", typeName));
-                WriteElement(brush.Transform);
-                WriteEndElement();
-            }
-            if (brush.RelativeTransform != null) {
-                WriteStartElement(string.Format("{0}.RelativeTransform", typeName));
-                WriteElement(brush.RelativeTransform);
-                WriteEndElement();
-            }
-
-            WriteEndElement();
         }
 
         /// <summary>
@@ -553,476 +403,8 @@ namespace SLExtensions.Xaml
                 goto End;
             }
 
-        End:
+            End:
             WriteEndElement();
-        }
-
-        private void WriteElement(Geometry geometry)
-        {
-            string typeName = WriteStartElement(geometry);
-
-            EllipseGeometry ellipse = geometry as EllipseGeometry;
-            if (ellipse != null) {
-                WriteAttribute("Center", ellipse.Center, DefaultPoint);
-                WriteAttribute("RadiusX", ellipse.RadiusX, 0);
-                WriteAttribute("RadiusY", ellipse.RadiusY, 0);
-                goto End;
-            }
-
-            GeometryGroup group = geometry as GeometryGroup;
-            if (group != null) {
-                WriteAttribute("FillRule", group.FillRule, FillRule.EvenOdd);
-                foreach (Geometry child in group.Children) {
-                    WriteElement(child);
-                }
-                goto End;
-            }
-
-            LineGeometry line = geometry as LineGeometry;
-            if (line != null) {
-                WriteAttribute("StartPoint", line.StartPoint, DefaultPoint);
-                WriteAttribute("EndPoint", line.EndPoint, DefaultPoint);
-                goto End;
-            }
-
-            PathGeometry path = geometry as PathGeometry;
-            if (path != null) {
-                WriteAttribute("FillRule", path.FillRule, FillRule.EvenOdd);
-
-                WriteComment(Resource.MessageXamlPathDataNotSupported);
-                this.isXamlComplete = false;
-
-                //if (path.Figures == null) {
-                //    WriteComment(Resources.MessageXamlPathMiniLanguage);
-                //    this.isXamlComplete = false;
-                //}
-                //else {
-                //    WriteStartElement(string.Format("{0}.Figures", typeName));
-                //    foreach (PathFigure figure in path.Figures) {
-                //        WriteElement(figure);
-                //    }
-                //    WriteEndElement();
-                //}
-                goto End;
-            }
-
-            RectangleGeometry rectangle = geometry as RectangleGeometry;
-            if (rectangle != null) {
-                WriteAttribute("Rect", rectangle.Rect, DefaultRect);
-                WriteAttribute("RadiusX", rectangle.RadiusX, 0);
-                WriteAttribute("RadiusY", rectangle.RadiusY, 0);
-                goto End;
-            }
-
-        End:
-            if (geometry.Transform != null) {
-                WriteStartElement(string.Format("{0}.Transform", typeName));
-                WriteElement(geometry.Transform);
-                WriteEndElement();
-            }
-            WriteEndElement();
-        }
-
-        private void WriteElement(PathFigure figure)
-        {
-            string typeName = WriteStartElement(figure);
-            WriteAttribute("StartPoint", figure.StartPoint, DefaultPoint);
-            WriteAttribute("IsClosed", figure.IsClosed, false);
-            WriteAttribute("IsFilled", figure.IsFilled, true);
-
-            foreach (PathSegment segment in figure.Segments) {
-                WriteElement(segment);
-            }
-
-            WriteEndElement();
-        }
-
-        private void WriteElement(PathSegment segment)
-        {
-            string typeName = WriteStartElement(segment);
-
-            ArcSegment arc = segment as ArcSegment;
-            if (arc != null) {
-                WriteAttribute("IsLargeArc", arc.IsLargeArc, false);
-                WriteAttribute("Point", arc.Point, DefaultPoint);
-                WriteAttribute("RotationAngle", arc.RotationAngle, 0);
-                WriteAttribute("Size", arc.Size, DefaultSize);
-                WriteAttribute("SweepDirection", arc.SweepDirection, SweepDirection.Counterclockwise);
-                goto End;
-            }
-            BezierSegment bezier = segment as BezierSegment;
-            if (bezier != null) {
-                WriteAttribute("Point1", bezier.Point1, DefaultPoint);
-                WriteAttribute("Point2", bezier.Point2, DefaultPoint);
-                WriteAttribute("Point3", bezier.Point3, DefaultPoint);
-                goto End;
-            }
-            LineSegment line = segment as LineSegment;
-            if (line != null) {
-                WriteAttribute("Point", line.Point, DefaultPoint);
-                goto End;
-            }
-            PolyBezierSegment polyBezier = segment as PolyBezierSegment;
-            if (polyBezier != null) {
-                WriteAttribute("Points", polyBezier.Points);
-                goto End;
-            }
-            PolyLineSegment polyLine = segment as PolyLineSegment;
-            if (polyLine != null) {
-                WriteAttribute("Points", polyLine.Points);
-                goto End;
-            }
-            PolyQuadraticBezierSegment polyQuadraticBezier = segment as PolyQuadraticBezierSegment;
-            if (polyQuadraticBezier != null) {
-                WriteAttribute("Points", polyQuadraticBezier.Points);
-                goto End;
-            }
-            QuadraticBezierSegment quadraticBezier = segment as QuadraticBezierSegment;
-            if (quadraticBezier != null) {
-                WriteAttribute("Point1", quadraticBezier.Point1, DefaultPoint);
-                WriteAttribute("Point2", quadraticBezier.Point2, DefaultPoint);
-                goto End;
-            }
-        End:
-            WriteEndElement();
-        }
-
-        private void WriteInnerElement(Border border, string typeName)
-        {
-            Color? background;
-            if (TryParseColorValue(border.Background, out background)) {
-                WriteAttribute("Background", background.Value, DefaultColor);
-            }
-            Color? borderBrush;
-            if (TryParseColorValue(border.BorderBrush, out borderBrush)) {
-                WriteAttribute("BorderBrush", borderBrush.Value, DefaultColor);
-            }
-            WriteAttribute("BorderThickness", border.BorderThickness, DefaultThickness);
-            WriteAttribute("CornerRadius", border.CornerRadius, DefaultCornerRadius);
-            WriteAttribute("Padding", border.Padding, DefaultThickness);
-
-            if (background == null && border.Background != null) {
-                WriteStartElement(string.Format("{0}.Background", typeName));
-                WriteElement(border.Background);
-                WriteEndElement();
-            }
-            if (borderBrush == null && border.BorderBrush != null) {
-                WriteStartElement(string.Format("{0}.BorderBrush", typeName));
-                WriteElement(border.BorderBrush);
-                WriteEndElement();
-            }
-        }
-
-        /// <summary>
-        /// Writes the inner element of a control.
-        /// </summary>
-        /// <param name="control">The control.</param>
-        /// <param name="typeName">Name of the type.</param>
-        protected virtual void WriteInnerElement(Control control, string typeName)
-        {
-            Color? background;
-            if (TryParseColorValue(control.Background, out background)) {
-                WriteAttribute("Background", background.Value, Colors.Black);
-            }
-            Color? foreground;
-            if (TryParseColorValue(control.Foreground, out foreground)) {
-                WriteAttribute("Foreground", foreground.Value, Colors.Black);
-            }
-            Color? borderBrush;
-            if (TryParseColorValue(control.BorderBrush, out borderBrush)) {
-                WriteAttribute("BorderBrush", borderBrush.Value, DefaultColor);
-            }
-            WriteAttribute("BorderThickness", control.BorderThickness, DefaultThickness);
-
-            WriteAttribute("FontFamily", control.FontFamily, "Portable User Interface");
-            WriteAttribute("FontSize", control.FontSize, 11);
-            WriteAttribute("FontStretch", control.FontStretch, FontStretches.Normal);
-            WriteAttribute("FontStyle", control.FontStyle, FontStyles.Normal);
-            WriteAttribute("FontWeight", control.FontWeight, FontWeights.Normal);
-
-            WriteAttribute("HorizontalContentAlignment", control.HorizontalContentAlignment, HorizontalAlignment.Left);
-            WriteAttribute("VerticalContentAlignment", control.VerticalContentAlignment, VerticalAlignment.Top);
-            WriteAttribute("Padding", control.Padding, DefaultThickness);
-
-            WriteAttribute("IsTabStop", control.IsTabStop, true);
-            WriteAttribute("TabIndex", control.TabIndex, -1);
-            WriteAttribute("TabNavigation", control.TabNavigation, KeyboardNavigationMode.Local);
-
-            if (background == null && control.Background != null) {
-                WriteStartElement(string.Format("{0}.Background", typeName));
-                WriteElement(control.Background);
-                WriteEndElement();
-            }
-            if (foreground == null && control.Foreground != null) {
-                WriteStartElement(string.Format("{0}.Foreground", typeName));
-                WriteElement(control.Foreground);
-                WriteEndElement();
-            }
-            if (borderBrush == null && control.BorderBrush != null) {
-                WriteStartElement(string.Format("{0}.BorderBrush", typeName));
-                WriteElement(control.BorderBrush);
-                WriteEndElement();
-            }
-
-            // a custom class derived from Control
-            WriteCustomProperties(control, typeName, typeof(Control));
-        }
-
-        private void WriteInnerElement(Glyphs glyphs, string typeName)
-        {
-            //TODO: implement
-        }
-
-        private void WriteInnerElement(Image image, string typeName)
-        {
-            BitmapImage bitmap = image.Source as BitmapImage;
-            if (bitmap != null) {
-                WriteAttribute("Source", bitmap.UriSource);
-            }
-            WriteAttribute("Stretch", image.Stretch, Stretch.Uniform);
-        }
-
-        private void WriteInnerElement(MediaElement element, string typeName)
-        {
-            //TODO: implement
-        }
-
-        private void WriteInnerElement(MultiScaleImage image, string typeName)
-        {
-            //TODO: implement
-        }
-
-        private void WriteInnerElement(TextBlock textBlock, string typeName)
-        {
-            string text;
-            if (TryParseTextValue(textBlock, out text)) {
-                WriteAttribute("Text", text);
-            }
-            WriteAttribute("FontFamily", textBlock.FontFamily, "Portable User Interface");
-            WriteAttribute("FontSize", textBlock.FontSize, 14.666);
-            WriteAttribute("FontStretch", textBlock.FontStretch, FontStretches.Normal);
-            WriteAttribute("FontStyle", textBlock.FontStyle, FontStyles.Normal);
-            WriteAttribute("FontWeight", textBlock.FontWeight, FontWeights.Normal);
-            WriteAttribute("TextDecorations", textBlock.TextDecorations);
-            WriteAttribute("TextWrapping", textBlock.TextWrapping, TextWrapping.NoWrap);
-
-            Color? foreground;
-            if (TryParseColorValue(textBlock.Foreground, out foreground)) {
-                WriteAttribute("Foreground", foreground.Value, Colors.Black);
-            }
-            else if (textBlock.Foreground != null) {
-                WriteStartElement(string.Format("{0}.Foreground", typeName));
-                WriteElement(textBlock.Foreground);
-                WriteEndElement();
-            }
-            if (text == null && textBlock.Inlines != null) {
-                if (textBlock.Inlines.Count == 1 && textBlock.Inlines[0] is Run) {
-                    this.writer.WriteString(((Run)textBlock.Inlines[0]).Text);
-                }
-                else {
-                    foreach (Inline inline in textBlock.Inlines) {
-                        WriteElement(inline);
-                    }
-                }
-            }
-        }
-
-        private void WriteElement(Inline inline)
-        {
-            string typeName = WriteStartElement(inline);
-            string text = null;
-
-            Run run = inline as Run;
-            if (run != null) {
-                text = run.Text;
-            }
-
-            WriteAttribute("FontFamily", inline.FontFamily, "Portable User Interface");
-            WriteAttribute("FontSize", inline.FontSize, 14.666);
-            WriteAttribute("FontStretch", inline.FontStretch, FontStretches.Normal);
-            WriteAttribute("FontStyle", inline.FontStyle, FontStyles.Normal);
-            WriteAttribute("FontWeight", inline.FontWeight, FontWeights.Normal);
-            WriteAttribute("TextDecorations", inline.TextDecorations);
-
-            Color? foreground;
-            if (TryParseColorValue(inline.Foreground, out foreground)) {
-                WriteAttribute("Foreground", foreground.Value, Colors.Black);
-
-                if (text != null) {
-                    this.writer.WriteString(text);
-                }
-            }
-            else if (inline.Foreground != null) {
-                if (text != null) {
-                    WriteAttribute("Text", text);
-                }
-
-                WriteStartElement(string.Format("{0}.Foreground", typeName));
-                WriteElement(inline.Foreground);
-                WriteEndElement();
-            }
-
-            WriteEndElement();
-        }
-
-        private void WriteInnerElement(TextBox textBox, string typeName)
-        {
-            //TODO: implement
-
-            WriteCustomProperties(textBox, typeName, typeof(TextBox));
-        }
-
-        private void WriteInnerElement(Panel panel, string typeName)
-        {
-            Color? background;
-            if (TryParseColorValue(panel.Background, out background)) {
-                WriteAttribute("Background", background.Value, DefaultColor);
-            }
-
-            Canvas canvas = panel as Canvas;
-            if (canvas != null) {
-                WriteCustomProperties(canvas, typeName, typeof(Canvas));
-                goto End;
-            }
-            Grid grid = panel as Grid;
-            if (grid != null) {
-                WriteAttribute("ShowGridLines", grid.ShowGridLines, false);
-
-                WriteCustomProperties(grid, typeName, typeof(Grid));
-
-                if (grid.ColumnDefinitions.Count > 0) {
-                    WriteStartElement("Grid.ColumnDefinitions");
-                    foreach (ColumnDefinition column in grid.ColumnDefinitions) {
-                        WriteStartElement("ColumnDefinition");
-                        WriteAttribute("Width", column.Width, new GridLength(1));
-                        WriteAttribute("MinWidth", column.MinWidth, 0);
-                        WriteAttribute("MaxWidth", column.MaxWidth, double.PositiveInfinity);
-                        WriteEndElement();
-                    }
-                    WriteEndElement();
-                }
-                if (grid.RowDefinitions.Count > 0) {
-                    WriteStartElement("Grid.RowDefinitions");
-                    foreach (RowDefinition row in grid.RowDefinitions) {
-                        WriteStartElement("RowDefinition");
-                        WriteAttribute("Height", row.Height, new GridLength(1));
-                        WriteAttribute("MinHeight", row.MinHeight, 0);
-                        WriteAttribute("MaxHeight", row.MaxHeight, double.PositiveInfinity);
-                        WriteEndElement();
-                    }
-                    WriteEndElement();
-                }
-                goto End;
-            }
-            StackPanel stackPanel = panel as StackPanel;
-            if (stackPanel != null) {
-                WriteAttribute("Orientation", stackPanel.Orientation, Orientation.Vertical);
-
-                WriteCustomProperties(stackPanel, typeName, typeof(StackPanel));
-                goto End;
-            }
-            
-            InkPresenter ink = panel as InkPresenter;
-            if (ink != null) {
-                if (ink.Strokes != null) {
-                    WriteStartElement(string.Format("{0}.Strokes", typeName));
-                    foreach (Stroke stroke in ink.Strokes) {
-                        WriteElement(stroke);
-                    }
-                    WriteEndElement();
-                }
-                goto End;
-            }
-
-            // a custom class derived from Panel
-            WriteCustomProperties(panel, typeName, typeof(Panel));
-
-        End:
-            if (background == null && panel.Background != null) {
-                WriteStartElement(string.Format("{0}.Background", typeName));
-                WriteElement(panel.Background);
-                WriteEndElement();
-            }
-        }
-
-        private void WriteInnerElement(Shape shape, string typeName)
-        {
-            Color? fill;
-            if (TryParseColorValue(shape.Fill, out fill)) {
-                WriteAttribute("Fill", fill.Value, DefaultColor);
-            }
-
-            Color? stroke;
-            if (TryParseColorValue(shape.Stroke, out stroke)) {
-                WriteAttribute("Stroke", stroke.Value, DefaultColor);
-            }
-
-            WriteAttribute("StrokeDashArray", shape.StrokeDashArray);
-            WriteAttribute("StrokeDashCap", shape.StrokeDashCap, PenLineCap.Flat);
-            WriteAttribute("StrokeDashOffset", shape.StrokeDashOffset, 0);
-            WriteAttribute("StrokeEndLineCap", shape.StrokeEndLineCap, PenLineCap.Flat);
-            WriteAttribute("StrokeLineJoin", shape.StrokeLineJoin, PenLineJoin.Miter);
-            WriteAttribute("StrokeMiterLimit", shape.StrokeMiterLimit, 10);
-            WriteAttribute("StrokeStartLineCap", shape.StrokeStartLineCap, PenLineCap.Flat);
-            WriteAttribute("StrokeThickness", shape.StrokeThickness, 1);
-            WriteAttribute("Stretch", shape.Stretch, Stretch.None);
-
-            Ellipse ellipse = shape as Ellipse;
-            if (ellipse != null) {
-                goto End;
-            }
-            Line line = shape as Line;
-            if (line != null) {
-                WriteAttribute("X1", line.X1, 0);
-                WriteAttribute("Y1", line.Y1, 0);
-                WriteAttribute("X2", line.X2, 0);
-                WriteAttribute("Y2", line.Y2, 0);
-                goto End;
-            }
-            Path path = shape as Path;
-            if (path != null) {
-                WriteStartElement("Path.Data");
-                WriteElement(path.Data);
-                WriteEndElement();
-                goto End;
-            }
-            Polygon polygon = shape as Polygon;
-            if (polygon != null) {
-                WriteAttribute("FillRule", polygon.FillRule, FillRule.EvenOdd);
-                WriteAttribute("Points", polygon.Points);
-                goto End;
-            }
-            Polyline polyline = shape as Polyline;
-            if (polyline != null) {
-                WriteAttribute("FillRule", polyline.FillRule, FillRule.EvenOdd);
-                WriteAttribute("Points", polyline.Points);
-                goto End;
-            }
-            Rectangle rectangle = shape as Rectangle;
-            if (rectangle != null) {
-                WriteAttribute("RadiusX", rectangle.RadiusX, 0);
-                WriteAttribute("RadiusY", rectangle.RadiusY, 0);
-                goto End;
-            }
-
-        End:
-            if (fill == null && shape.Fill != null) {
-                WriteStartElement(string.Format("{0}.Fill", typeName));
-                WriteElement(shape.Fill);
-                WriteEndElement();
-            }
-            if (stroke == null && shape.Stroke != null) {
-                WriteStartElement(string.Format("{0}.Stroke", typeName));
-                WriteElement(shape.Stroke);
-                WriteEndElement();
-            }
-        }
-
-        private void WriteCustomProperties(FrameworkElement element, string typeName, Type baseType)
-        {
-            if (!IsDerivableCoreType(element.GetType())) {
-                //TODO: write custom XAML properties
-            }
         }
 
         /// <summary>
@@ -1307,6 +689,130 @@ namespace SLExtensions.Xaml
             }
         }
 
+        /// <summary>
+        /// Writes the content of specified element.
+        /// </summary>
+        /// <param name="element">The element.</param>
+        /// <returns></returns>
+        protected virtual bool WriteContent(FrameworkElement element)
+        {
+            // write element content
+            int count = VisualTreeHelper.GetChildrenCount(element);
+            bool result = true;
+
+            for (int i = 0; i < count; i++) {
+                FrameworkElement child = (FrameworkElement)VisualTreeHelper.GetChild(element, i);
+                if (!WriteElement(child)) {
+                    result = false;
+                    break;
+                }
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Writes the end element.
+        /// </summary>
+        protected void WriteEndElement()
+        {
+            this.writer.WriteEndElement();
+        }
+
+        /// <summary>
+        /// Writes the inner element of a control.
+        /// </summary>
+        /// <param name="control">The control.</param>
+        /// <param name="typeName">Name of the type.</param>
+        protected virtual void WriteInnerElement(Control control, string typeName)
+        {
+            Color? background;
+            if (TryParseColorValue(control.Background, out background)) {
+                WriteAttribute("Background", background.Value, Colors.Black);
+            }
+            Color? foreground;
+            if (TryParseColorValue(control.Foreground, out foreground)) {
+                WriteAttribute("Foreground", foreground.Value, Colors.Black);
+            }
+            Color? borderBrush;
+            if (TryParseColorValue(control.BorderBrush, out borderBrush)) {
+                WriteAttribute("BorderBrush", borderBrush.Value, DefaultColor);
+            }
+            WriteAttribute("BorderThickness", control.BorderThickness, DefaultThickness);
+
+            WriteAttribute("FontFamily", control.FontFamily, "Portable User Interface");
+            WriteAttribute("FontSize", control.FontSize, 11);
+            WriteAttribute("FontStretch", control.FontStretch, FontStretches.Normal);
+            WriteAttribute("FontStyle", control.FontStyle, FontStyles.Normal);
+            WriteAttribute("FontWeight", control.FontWeight, FontWeights.Normal);
+
+            WriteAttribute("HorizontalContentAlignment", control.HorizontalContentAlignment, HorizontalAlignment.Left);
+            WriteAttribute("VerticalContentAlignment", control.VerticalContentAlignment, VerticalAlignment.Top);
+            WriteAttribute("Padding", control.Padding, DefaultThickness);
+
+            WriteAttribute("IsTabStop", control.IsTabStop, true);
+            WriteAttribute("TabIndex", control.TabIndex, -1);
+            WriteAttribute("TabNavigation", control.TabNavigation, KeyboardNavigationMode.Local);
+
+            if (background == null && control.Background != null) {
+                WriteStartElement(string.Format("{0}.Background", typeName));
+                WriteElement(control.Background);
+                WriteEndElement();
+            }
+            if (foreground == null && control.Foreground != null) {
+                WriteStartElement(string.Format("{0}.Foreground", typeName));
+                WriteElement(control.Foreground);
+                WriteEndElement();
+            }
+            if (borderBrush == null && control.BorderBrush != null) {
+                WriteStartElement(string.Format("{0}.BorderBrush", typeName));
+                WriteElement(control.BorderBrush);
+                WriteEndElement();
+            }
+
+            // a custom class derived from Control
+            WriteCustomProperties(control, typeName, typeof(Control));
+        }
+
+        /// <summary>
+        /// Writes the start element in the XAML client namespace.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        protected void WriteStartElement(string name)
+        {
+            this.writer.WriteStartElement(name, NamespaceClient);
+        }
+
+        /// <summary>
+        /// Writes the start element of given object.
+        /// </summary>
+        /// <param name="o">The o.</param>
+        /// <returns></returns>
+        protected virtual string WriteStartElement(DependencyObject o)
+        {
+            Type type = o.GetType();
+            string typeName = type.Name;
+
+            WriteStartElement(typeName);
+            string name = (string)o.GetValue(FrameworkElement.NameProperty);
+            if (!string.IsNullOrEmpty(name)) {
+                WriteAttribute(PrefixXaml, "Name", NamespaceXaml, name);
+            }
+
+            return typeName;
+        }
+
+        private static bool IsDerivableCoreType(Type type)
+        {
+            if (type == null) {
+                throw new ArgumentNullException("type");
+            }
+
+            return type == typeof(Control) || type == typeof(UserControl) || type == typeof(ItemsControl) ||
+                type == typeof(TextBox) || type == typeof(Panel) || type == typeof(Canvas) ||
+                type == typeof(Grid) || type == typeof(StackPanel);
+        }
+
         private static bool TryParseColorValue(Brush brush, out Color? value)
         {
             value = null;
@@ -1337,11 +843,6 @@ namespace SLExtensions.Xaml
             return result;
         }
 
-        private void WriteComment(string comment, params object[] o)
-        {
-            this.writer.WriteComment(" " + string.Format(comment, o) + " ");
-        }
-
         private static void WriteException(StringBuilder b, Exception e)
         {
             b.AppendLine();
@@ -1351,70 +852,585 @@ namespace SLExtensions.Xaml
             b.AppendLine("-->");
         }
 
-        private static bool IsDerivableCoreType(Type type)
+        /// <summary>
+        /// Disposes this instance.
+        /// </summary>
+        /// <param name="disposing"></param>
+        private void Dispose(bool disposing)
         {
-            if (type == null) {
-                throw new ArgumentNullException("type");
-            }
+            if (!disposed) {
+                this.writer.Close();
+                this.writer = null;
 
-            return type == typeof(Control) || type == typeof(UserControl) || type == typeof(ItemsControl) ||
-                type == typeof(TextBox) || type == typeof(Panel) || type == typeof(Canvas) ||
-                type == typeof(Grid) || type == typeof(StackPanel);
+                disposed = true;
+            }
         }
 
-        /// <summary>
-        /// Saves the specified element using the default settings.
-        /// </summary>
-        /// <param name="element">The element.</param>
-        /// <returns></returns>
-        public static string Save(FrameworkElement element)
+        private void WriteComment(string comment, params object[] o)
         {
-            return Save(element, new XamlWriterSettings());
+            this.writer.WriteComment(" " + string.Format(comment, o) + " ");
         }
 
-        /// <summary>
-        /// Gets the XAML of specified framework element.
-        /// </summary>
-        /// <param name="element">The element.</param>
-        /// <param name="settings">The settings.</param>
-        /// <returns></returns>
-        public static string Save(FrameworkElement element, XamlWriterSettings settings)
+        private void WriteCustomProperties(FrameworkElement element, string typeName, Type baseType)
         {
-            if (element == null) {
-                throw new ArgumentNullException("element");
+            if (!IsDerivableCoreType(element.GetType())) {
+                //TODO: write custom XAML properties
+            }
+        }
+
+        private void WriteElement(TriggerCollection triggers)
+        {
+            foreach (EventTrigger trigger in triggers) {
+                WriteStartElement(trigger);
+                //WriteAttribute("RoutedEvent", trigger.RoutedEvent.ToString());
+                foreach (BeginStoryboard beginStoryboard in trigger.Actions) {
+                    WriteStartElement(beginStoryboard);
+                    WriteElement(beginStoryboard.Storyboard);
+                    this.writer.WriteEndElement();
+                }
+                this.writer.WriteEndElement();
+            }
+        }
+
+        private void WriteElement(Timeline timeline)
+        {
+            //TODO: implement
+            //    string typeName = WriteStartElement(timeline);
+
+            //    WriteAttribute("Storyboard.TargetName", (string)timeline.GetValue(Storyboard.TargetNameProperty));
+            //    WriteAttribute("Storyboard.TargetProperty", (string)timeline.GetValue(Storyboard.TargetPropertyProperty));
+            //    WriteAttribute("AutoReverse", timeline.AutoReverse, false);
+            //    WriteAttribute("BeginTime", timeline.BeginTime ?? TimeSpan.Zero, TimeSpan.Zero);
+            //    WriteAttribute("Duration", timeline.Duration, Duration.Automatic);
+            //    WriteAttribute("FillBehavior", timeline.FillBehavior, FillBehavior.HoldEnd);
+            //    WriteAttribute("RepeatBehavior", timeline.RepeatBehavior, new RepeatBehavior(1));
+            //    WriteAttribute("SpeedRatio", timeline.SpeedRatio, 1);
+
+            //    Animation animation = timeline as Animation;
+            //    if (animation != null) {
+            //        WriteInnerElement(animation, typeName);
+            //        goto End;
+            //    }
+            //    TimelineGroup group = timeline as TimelineGroup;
+            //    if (group != null) {
+            //        foreach (Timeline child in group.Children) {
+            //            WriteElement(child);
+            //        }
+            //        goto End;
+            //    }
+
+            //End:
+            //    writer.WriteEndElement();
+        }
+
+        private void WriteElement(Stroke stroke)
+        {
+            string typeName = WriteStartElement(stroke);
+            // drawing attributes
+            WriteStartElement(string.Format("{0}.DrawingAttributes", typeName));
+            WriteStartElement("DrawingAttributes");
+            WriteAttribute("Color", stroke.DrawingAttributes.Color, Colors.Black);
+            WriteAttribute("OutlineColor", stroke.DrawingAttributes.OutlineColor, DefaultColor);
+            WriteAttribute("Width", stroke.DrawingAttributes.Width, 3.0);
+            WriteAttribute("Height", stroke.DrawingAttributes.Height, 3.0);
+            WriteEndElement();
+            WriteEndElement();
+
+            // stylus points
+            //WriteStartElement(string.Format("{0}.StylusPoints", typeName));
+            //foreach (StylusPoint point in stroke.StylusPoints) {
+
+            //TODO: fix this, StylusPoint no longer a DependencyObject?
+
+            //    WriteStartElement(point);
+            //    WriteAttribute("X", point.X, 0);
+            //    WriteAttribute("Y", point.Y, 0);
+            //    writer.WriteEndElement();
+            //}
+            //WriteEndElement();
+            WriteEndElement();
+        }
+
+        private void WriteElement(Brush brush)
+        {
+            string typeName = WriteStartElement(brush);
+
+            WriteAttribute("Opacity", brush.Opacity, 1);
+
+            GradientBrush gradient = brush as GradientBrush;
+            if (gradient != null) {
+                LinearGradientBrush linearGradient = gradient as LinearGradientBrush;
+                if (linearGradient != null) {
+                    WriteAttribute("StartPoint", linearGradient.StartPoint, DefaultPoint);
+                    WriteAttribute("EndPoint", linearGradient.EndPoint, new Point(1, 1));
+                }
+                RadialGradientBrush radialGradient = gradient as RadialGradientBrush;
+                if (radialGradient != null) {
+                    WriteAttribute("Center", radialGradient.Center, new Point(.5, .5));
+                    WriteAttribute("GradientOrigin", radialGradient.GradientOrigin, new Point(.5, .5));
+                    WriteAttribute("RadiusX", radialGradient.RadiusX, .5);
+                    WriteAttribute("RadiusY", radialGradient.RadiusY, .5);
+                }
+                WriteAttribute("ColorInterpolationMode", gradient.ColorInterpolationMode, ColorInterpolationMode.SRgbLinearInterpolation);
+                WriteAttribute("MappingMode", gradient.MappingMode, BrushMappingMode.RelativeToBoundingBox);
+                WriteAttribute("SpreadMethod", gradient.SpreadMethod, GradientSpreadMethod.Pad);
+
+                foreach (GradientStop stop in gradient.GradientStops) {
+                    WriteStartElement(stop);
+                    WriteAttribute("Color", stop.Color, DefaultColor);
+                    WriteAttribute("Offset", stop.Offset, 0);
+                    WriteEndElement();
+                }
+                goto End;
             }
 
-            StringBuilder output = new StringBuilder();
+            SolidColorBrush solidColor = brush as SolidColorBrush;
+            if (solidColor != null) {
+                WriteAttribute("Color", solidColor.Color, DefaultColor);
+                goto End;
+            }
 
-            try {
-                using (XamlWriter writer = CreateWriter(output, false, settings)) {
-                    writer.WriteElement(element);
+            TileBrush tile = brush as TileBrush;
+            if (tile != null) {
+                ImageBrush image = tile as ImageBrush;
+                if (image != null) {
+                    BitmapImage bitmap = image.ImageSource as BitmapImage;
+                    if (bitmap != null) {
+                        WriteAttribute("ImageSource", bitmap.UriSource);
+                    }
+                }
+                VideoBrush video = tile as VideoBrush;
+                if (video != null) {
+                    WriteAttribute("SourceName", video.SourceName);
+                }
+
+                WriteAttribute("AlignmentX", tile.AlignmentX, AlignmentX.Center);
+                WriteAttribute("AlignmentY", tile.AlignmentY, AlignmentY.Center);
+                WriteAttribute("Stretch", tile.Stretch, Stretch.Fill);
+                goto End;
+            }
+
+            End:
+            if (brush.Transform != null) {
+                WriteStartElement(string.Format("{0}.Transform", typeName));
+                WriteElement(brush.Transform);
+                WriteEndElement();
+            }
+            if (brush.RelativeTransform != null) {
+                WriteStartElement(string.Format("{0}.RelativeTransform", typeName));
+                WriteElement(brush.RelativeTransform);
+                WriteEndElement();
+            }
+
+            WriteEndElement();
+        }
+
+        private void WriteElement(Geometry geometry)
+        {
+            string typeName = WriteStartElement(geometry);
+
+            EllipseGeometry ellipse = geometry as EllipseGeometry;
+            if (ellipse != null) {
+                WriteAttribute("Center", ellipse.Center, DefaultPoint);
+                WriteAttribute("RadiusX", ellipse.RadiusX, 0);
+                WriteAttribute("RadiusY", ellipse.RadiusY, 0);
+                goto End;
+            }
+
+            GeometryGroup group = geometry as GeometryGroup;
+            if (group != null) {
+                WriteAttribute("FillRule", group.FillRule, FillRule.EvenOdd);
+                foreach (Geometry child in group.Children) {
+                    WriteElement(child);
+                }
+                goto End;
+            }
+
+            LineGeometry line = geometry as LineGeometry;
+            if (line != null) {
+                WriteAttribute("StartPoint", line.StartPoint, DefaultPoint);
+                WriteAttribute("EndPoint", line.EndPoint, DefaultPoint);
+                goto End;
+            }
+
+            PathGeometry path = geometry as PathGeometry;
+            if (path != null) {
+                WriteAttribute("FillRule", path.FillRule, FillRule.EvenOdd);
+
+                WriteComment(Resource.MessageXamlPathDataNotSupported);
+                this.isXamlComplete = false;
+
+                //if (path.Figures == null) {
+                //    WriteComment(Resources.MessageXamlPathMiniLanguage);
+                //    this.isXamlComplete = false;
+                //}
+                //else {
+                //    WriteStartElement(string.Format("{0}.Figures", typeName));
+                //    foreach (PathFigure figure in path.Figures) {
+                //        WriteElement(figure);
+                //    }
+                //    WriteEndElement();
+                //}
+                goto End;
+            }
+
+            RectangleGeometry rectangle = geometry as RectangleGeometry;
+            if (rectangle != null) {
+                WriteAttribute("Rect", rectangle.Rect, DefaultRect);
+                WriteAttribute("RadiusX", rectangle.RadiusX, 0);
+                WriteAttribute("RadiusY", rectangle.RadiusY, 0);
+                goto End;
+            }
+
+            End:
+            if (geometry.Transform != null) {
+                WriteStartElement(string.Format("{0}.Transform", typeName));
+                WriteElement(geometry.Transform);
+                WriteEndElement();
+            }
+            WriteEndElement();
+        }
+
+        private void WriteElement(PathFigure figure)
+        {
+            string typeName = WriteStartElement(figure);
+            WriteAttribute("StartPoint", figure.StartPoint, DefaultPoint);
+            WriteAttribute("IsClosed", figure.IsClosed, false);
+            WriteAttribute("IsFilled", figure.IsFilled, true);
+
+            foreach (PathSegment segment in figure.Segments) {
+                WriteElement(segment);
+            }
+
+            WriteEndElement();
+        }
+
+        private void WriteElement(PathSegment segment)
+        {
+            string typeName = WriteStartElement(segment);
+
+            ArcSegment arc = segment as ArcSegment;
+            if (arc != null) {
+                WriteAttribute("IsLargeArc", arc.IsLargeArc, false);
+                WriteAttribute("Point", arc.Point, DefaultPoint);
+                WriteAttribute("RotationAngle", arc.RotationAngle, 0);
+                WriteAttribute("Size", arc.Size, DefaultSize);
+                WriteAttribute("SweepDirection", arc.SweepDirection, SweepDirection.Counterclockwise);
+                goto End;
+            }
+            BezierSegment bezier = segment as BezierSegment;
+            if (bezier != null) {
+                WriteAttribute("Point1", bezier.Point1, DefaultPoint);
+                WriteAttribute("Point2", bezier.Point2, DefaultPoint);
+                WriteAttribute("Point3", bezier.Point3, DefaultPoint);
+                goto End;
+            }
+            LineSegment line = segment as LineSegment;
+            if (line != null) {
+                WriteAttribute("Point", line.Point, DefaultPoint);
+                goto End;
+            }
+            PolyBezierSegment polyBezier = segment as PolyBezierSegment;
+            if (polyBezier != null) {
+                WriteAttribute("Points", polyBezier.Points);
+                goto End;
+            }
+            PolyLineSegment polyLine = segment as PolyLineSegment;
+            if (polyLine != null) {
+                WriteAttribute("Points", polyLine.Points);
+                goto End;
+            }
+            PolyQuadraticBezierSegment polyQuadraticBezier = segment as PolyQuadraticBezierSegment;
+            if (polyQuadraticBezier != null) {
+                WriteAttribute("Points", polyQuadraticBezier.Points);
+                goto End;
+            }
+            QuadraticBezierSegment quadraticBezier = segment as QuadraticBezierSegment;
+            if (quadraticBezier != null) {
+                WriteAttribute("Point1", quadraticBezier.Point1, DefaultPoint);
+                WriteAttribute("Point2", quadraticBezier.Point2, DefaultPoint);
+                goto End;
+            }
+            End:
+            WriteEndElement();
+        }
+
+        private void WriteElement(Inline inline)
+        {
+            string typeName = WriteStartElement(inline);
+            string text = null;
+
+            Run run = inline as Run;
+            if (run != null) {
+                text = run.Text;
+            }
+
+            WriteAttribute("FontFamily", inline.FontFamily, "Portable User Interface");
+            WriteAttribute("FontSize", inline.FontSize, 14.666);
+            WriteAttribute("FontStretch", inline.FontStretch, FontStretches.Normal);
+            WriteAttribute("FontStyle", inline.FontStyle, FontStyles.Normal);
+            WriteAttribute("FontWeight", inline.FontWeight, FontWeights.Normal);
+            WriteAttribute("TextDecorations", inline.TextDecorations);
+
+            Color? foreground;
+            if (TryParseColorValue(inline.Foreground, out foreground)) {
+                WriteAttribute("Foreground", foreground.Value, Colors.Black);
+
+                if (text != null) {
+                    this.writer.WriteString(text);
                 }
             }
-            catch (Exception e) {
-                WriteException(output, e);
+            else if (inline.Foreground != null) {
+                if (text != null) {
+                    WriteAttribute("Text", text);
+                }
+
+                WriteStartElement(string.Format("{0}.Foreground", typeName));
+                WriteElement(inline.Foreground);
+                WriteEndElement();
             }
 
-            return output.ToString();
+            WriteEndElement();
         }
 
-        /// <summary>
-        /// Creates a XAML writer for given output and settings.
-        /// </summary>
-        /// <param name="output">The output.</param>
-        /// <param name="newLineOnAttributes">whether to write attributes on a new line.</param>
-        /// <param name="settings">The settings.</param>
-        /// <returns></returns>
-        public static XamlWriter CreateWriter(StringBuilder output, bool newLineOnAttributes, XamlWriterSettings settings)
+        private void WriteInnerElement(Border border, string typeName)
         {
-            XmlWriterSettings xmlSettings = new XmlWriterSettings();
-            xmlSettings.Indent = true;
-            xmlSettings.NewLineOnAttributes = newLineOnAttributes;
-            xmlSettings.ConformanceLevel = ConformanceLevel.Fragment;
+            Color? background;
+            if (TryParseColorValue(border.Background, out background)) {
+                WriteAttribute("Background", background.Value, DefaultColor);
+            }
+            Color? borderBrush;
+            if (TryParseColorValue(border.BorderBrush, out borderBrush)) {
+                WriteAttribute("BorderBrush", borderBrush.Value, DefaultColor);
+            }
+            WriteAttribute("BorderThickness", border.BorderThickness, DefaultThickness);
+            WriteAttribute("CornerRadius", border.CornerRadius, DefaultCornerRadius);
+            WriteAttribute("Padding", border.Padding, DefaultThickness);
 
-            XmlWriter writer = XmlWriter.Create(output, xmlSettings);
-
-            return new XamlWriter(writer, settings);
+            if (background == null && border.Background != null) {
+                WriteStartElement(string.Format("{0}.Background", typeName));
+                WriteElement(border.Background);
+                WriteEndElement();
+            }
+            if (borderBrush == null && border.BorderBrush != null) {
+                WriteStartElement(string.Format("{0}.BorderBrush", typeName));
+                WriteElement(border.BorderBrush);
+                WriteEndElement();
+            }
         }
+
+        private void WriteInnerElement(Glyphs glyphs, string typeName)
+        {
+            //TODO: implement
+        }
+
+        private void WriteInnerElement(Image image, string typeName)
+        {
+            BitmapImage bitmap = image.Source as BitmapImage;
+            if (bitmap != null) {
+                WriteAttribute("Source", bitmap.UriSource);
+            }
+            WriteAttribute("Stretch", image.Stretch, Stretch.Uniform);
+        }
+
+        private void WriteInnerElement(MediaElement element, string typeName)
+        {
+            //TODO: implement
+        }
+
+        private void WriteInnerElement(MultiScaleImage image, string typeName)
+        {
+            //TODO: implement
+        }
+
+        private void WriteInnerElement(TextBlock textBlock, string typeName)
+        {
+            string text;
+            if (TryParseTextValue(textBlock, out text)) {
+                WriteAttribute("Text", text);
+            }
+            WriteAttribute("FontFamily", textBlock.FontFamily, "Portable User Interface");
+            WriteAttribute("FontSize", textBlock.FontSize, 14.666);
+            WriteAttribute("FontStretch", textBlock.FontStretch, FontStretches.Normal);
+            WriteAttribute("FontStyle", textBlock.FontStyle, FontStyles.Normal);
+            WriteAttribute("FontWeight", textBlock.FontWeight, FontWeights.Normal);
+            WriteAttribute("TextDecorations", textBlock.TextDecorations);
+            WriteAttribute("TextWrapping", textBlock.TextWrapping, TextWrapping.NoWrap);
+
+            Color? foreground;
+            if (TryParseColorValue(textBlock.Foreground, out foreground)) {
+                WriteAttribute("Foreground", foreground.Value, Colors.Black);
+            }
+            else if (textBlock.Foreground != null) {
+                WriteStartElement(string.Format("{0}.Foreground", typeName));
+                WriteElement(textBlock.Foreground);
+                WriteEndElement();
+            }
+            if (text == null && textBlock.Inlines != null) {
+                if (textBlock.Inlines.Count == 1 && textBlock.Inlines[0] is Run) {
+                    this.writer.WriteString(((Run)textBlock.Inlines[0]).Text);
+                }
+                else {
+                    foreach (Inline inline in textBlock.Inlines) {
+                        WriteElement(inline);
+                    }
+                }
+            }
+        }
+
+        private void WriteInnerElement(TextBox textBox, string typeName)
+        {
+            //TODO: implement
+
+            WriteCustomProperties(textBox, typeName, typeof(TextBox));
+        }
+
+        private void WriteInnerElement(Panel panel, string typeName)
+        {
+            Color? background;
+            if (TryParseColorValue(panel.Background, out background)) {
+                WriteAttribute("Background", background.Value, DefaultColor);
+            }
+
+            Canvas canvas = panel as Canvas;
+            if (canvas != null) {
+                WriteCustomProperties(canvas, typeName, typeof(Canvas));
+                goto End;
+            }
+            Grid grid = panel as Grid;
+            if (grid != null) {
+                WriteAttribute("ShowGridLines", grid.ShowGridLines, false);
+
+                WriteCustomProperties(grid, typeName, typeof(Grid));
+
+                if (grid.ColumnDefinitions.Count > 0) {
+                    WriteStartElement("Grid.ColumnDefinitions");
+                    foreach (ColumnDefinition column in grid.ColumnDefinitions) {
+                        WriteStartElement("ColumnDefinition");
+                        WriteAttribute("Width", column.Width, new GridLength(1));
+                        WriteAttribute("MinWidth", column.MinWidth, 0);
+                        WriteAttribute("MaxWidth", column.MaxWidth, double.PositiveInfinity);
+                        WriteEndElement();
+                    }
+                    WriteEndElement();
+                }
+                if (grid.RowDefinitions.Count > 0) {
+                    WriteStartElement("Grid.RowDefinitions");
+                    foreach (RowDefinition row in grid.RowDefinitions) {
+                        WriteStartElement("RowDefinition");
+                        WriteAttribute("Height", row.Height, new GridLength(1));
+                        WriteAttribute("MinHeight", row.MinHeight, 0);
+                        WriteAttribute("MaxHeight", row.MaxHeight, double.PositiveInfinity);
+                        WriteEndElement();
+                    }
+                    WriteEndElement();
+                }
+                goto End;
+            }
+            StackPanel stackPanel = panel as StackPanel;
+            if (stackPanel != null) {
+                WriteAttribute("Orientation", stackPanel.Orientation, Orientation.Vertical);
+
+                WriteCustomProperties(stackPanel, typeName, typeof(StackPanel));
+                goto End;
+            }
+
+            InkPresenter ink = panel as InkPresenter;
+            if (ink != null) {
+                if (ink.Strokes != null) {
+                    WriteStartElement(string.Format("{0}.Strokes", typeName));
+                    foreach (Stroke stroke in ink.Strokes) {
+                        WriteElement(stroke);
+                    }
+                    WriteEndElement();
+                }
+                goto End;
+            }
+
+            // a custom class derived from Panel
+            WriteCustomProperties(panel, typeName, typeof(Panel));
+
+            End:
+            if (background == null && panel.Background != null) {
+                WriteStartElement(string.Format("{0}.Background", typeName));
+                WriteElement(panel.Background);
+                WriteEndElement();
+            }
+        }
+
+        private void WriteInnerElement(Shape shape, string typeName)
+        {
+            Color? fill;
+            if (TryParseColorValue(shape.Fill, out fill)) {
+                WriteAttribute("Fill", fill.Value, DefaultColor);
+            }
+
+            Color? stroke;
+            if (TryParseColorValue(shape.Stroke, out stroke)) {
+                WriteAttribute("Stroke", stroke.Value, DefaultColor);
+            }
+
+            WriteAttribute("StrokeDashArray", shape.StrokeDashArray);
+            WriteAttribute("StrokeDashCap", shape.StrokeDashCap, PenLineCap.Flat);
+            WriteAttribute("StrokeDashOffset", shape.StrokeDashOffset, 0);
+            WriteAttribute("StrokeEndLineCap", shape.StrokeEndLineCap, PenLineCap.Flat);
+            WriteAttribute("StrokeLineJoin", shape.StrokeLineJoin, PenLineJoin.Miter);
+            WriteAttribute("StrokeMiterLimit", shape.StrokeMiterLimit, 10);
+            WriteAttribute("StrokeStartLineCap", shape.StrokeStartLineCap, PenLineCap.Flat);
+            WriteAttribute("StrokeThickness", shape.StrokeThickness, 1);
+            WriteAttribute("Stretch", shape.Stretch, Stretch.None);
+
+            Ellipse ellipse = shape as Ellipse;
+            if (ellipse != null) {
+                goto End;
+            }
+            Line line = shape as Line;
+            if (line != null) {
+                WriteAttribute("X1", line.X1, 0);
+                WriteAttribute("Y1", line.Y1, 0);
+                WriteAttribute("X2", line.X2, 0);
+                WriteAttribute("Y2", line.Y2, 0);
+                goto End;
+            }
+            Path path = shape as Path;
+            if (path != null) {
+                WriteStartElement("Path.Data");
+                WriteElement(path.Data);
+                WriteEndElement();
+                goto End;
+            }
+            Polygon polygon = shape as Polygon;
+            if (polygon != null) {
+                WriteAttribute("FillRule", polygon.FillRule, FillRule.EvenOdd);
+                WriteAttribute("Points", polygon.Points);
+                goto End;
+            }
+            Polyline polyline = shape as Polyline;
+            if (polyline != null) {
+                WriteAttribute("FillRule", polyline.FillRule, FillRule.EvenOdd);
+                WriteAttribute("Points", polyline.Points);
+                goto End;
+            }
+            Rectangle rectangle = shape as Rectangle;
+            if (rectangle != null) {
+                WriteAttribute("RadiusX", rectangle.RadiusX, 0);
+                WriteAttribute("RadiusY", rectangle.RadiusY, 0);
+                goto End;
+            }
+
+            End:
+            if (fill == null && shape.Fill != null) {
+                WriteStartElement(string.Format("{0}.Fill", typeName));
+                WriteElement(shape.Fill);
+                WriteEndElement();
+            }
+            if (stroke == null && shape.Stroke != null) {
+                WriteStartElement(string.Format("{0}.Stroke", typeName));
+                WriteElement(shape.Stroke);
+                WriteEndElement();
+            }
+        }
+
+        #endregion Methods
     }
 }

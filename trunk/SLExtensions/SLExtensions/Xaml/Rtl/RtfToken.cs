@@ -1,15 +1,16 @@
-﻿using System;
-
-using SLExtensions.Text.Parsers;
-
-namespace SLExtensions.Xaml.Rtf
+﻿namespace SLExtensions.Xaml.Rtf
 {
+    using System;
+
+    using SLExtensions.Text.Parsers;
+
     /// <summary>
     /// Represents an RTF token.
     /// </summary>
-    public struct RtfToken
-        : IToken
+    public struct RtfToken : IToken
     {
+        #region Properties
+
         /// <summary>
         /// Gets a value indicating whether this instance is EOF.
         /// </summary>
@@ -18,21 +19,37 @@ namespace SLExtensions.Xaml.Rtf
         {
             get { return this.Type == RtfTokenType.Eof; }
         }
-        /// <summary>
-        /// Gets or sets the type.
-        /// </summary>
-        /// <value>The type.</value>
-        public RtfTokenType Type { get; set; }
-        /// <summary>
-        /// Gets or sets the value.
-        /// </summary>
-        /// <value>The value.</value>
-        public string Value { get; set; }
+
         /// <summary>
         /// Gets or sets the control word parameter.
         /// </summary>
         /// <value>The parameter.</value>
-        public int? Parameter { get; set; }
+        public int? Parameter
+        {
+            get; set;
+        }
+
+        /// <summary>
+        /// Gets or sets the type.
+        /// </summary>
+        /// <value>The type.</value>
+        public RtfTokenType Type
+        {
+            get; set;
+        }
+
+        /// <summary>
+        /// Gets or sets the value.
+        /// </summary>
+        /// <value>The value.</value>
+        public string Value
+        {
+            get; set;
+        }
+
+        #endregion Properties
+
+        #region Methods
 
         /// <summary>
         /// Returns the fully qualified type name of this instance.
@@ -44,5 +61,7 @@ namespace SLExtensions.Xaml.Rtf
         {
             return string.Format("{0}: {1}{2}", this.Type, this.Value, this.Parameter.HasValue ? this.Parameter.ToString() : "");
         }
+
+        #endregion Methods
     }
 }

@@ -35,7 +35,7 @@
         {
             coreCategories = new List<SLMedia.Core.Category>();
             if (item.Categories != null)
-                coreCategories.AddRange(item.Categories.Select(c => new Core.Category { Name = c.Label }));
+                coreCategories.AddRange(item.Categories.OfType<MediaRSS.Category>().Select(c => new Core.Category { Name = c.Label }));
 
             this.Categories = item.Categories;
             this.Content = item.Content;
@@ -48,66 +48,5 @@
         }
 
         #endregion Constructors
-
-        #region Properties
-
-        public string Source
-        {
-            get
-            {
-                Content firstContent;
-                if (Content != null
-                    && (firstContent = Content.FirstOrDefault()) != null)
-                {
-                    return firstContent.Url;
-                }
-
-                return null;
-            }
-        }
-
-        public Uri SourceUri
-        {
-            get
-            {
-                Uri uri;
-                if (Uri.TryCreate(Source, UriKind.RelativeOrAbsolute, out uri))
-                    return uri;
-                return null;
-            }
-        }
-
-        public virtual string Thumbnail
-        {
-            get
-            {
-
-                if (Thumbnails != null && Thumbnails.Count > 0)
-                    return Thumbnails[0].Url;
-                return null;
-            }
-        }
-
-        public virtual Uri ThumbnailUri
-        {
-            get
-            {
-                if (Thumbnail == null)
-                    return null;
-
-                Uri uri;
-                if (Uri.TryCreate(Thumbnail, UriKind.RelativeOrAbsolute, out uri))
-                    return uri;
-
-                return null;
-            }
-        }
-
-        IEnumerable<Core.Category> IMediaItem.Categories
-        {
-            get { return coreCategories; }
-        }
-
-        #endregion Properties
     }
 }

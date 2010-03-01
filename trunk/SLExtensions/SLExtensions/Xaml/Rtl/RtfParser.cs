@@ -1,23 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Windows;
-using System.Windows.Media;
-using System.IO;
-using System.Xml;
-
-using SLExtensions.Text.Parsers;
-
-namespace SLExtensions.Xaml.Rtf
+﻿namespace SLExtensions.Xaml.Rtf
 {
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Windows;
+    using System.Windows.Media;
+    using System.Xml;
+
+    using SLExtensions.Text.Parsers;
+
     /// <summary>
     /// Implements the RTF parser
     /// </summary>
-    public class RtfParser
-        : Parser
+    public class RtfParser : Parser
     {
+        #region Fields
+
         private static Dictionary<string, object> destinations = CreateDestinations();
+
         private List<Color> colorTable = new List<Color>();
         private Dictionary<int, string> fontTable = new Dictionary<int, string>();
+
+        #endregion Fields
+
+        #region Constructors
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RtfParser"/> class.
@@ -32,46 +38,68 @@ namespace SLExtensions.Xaml.Rtf
             this.FontSize = 12 / 1.5;
         }
 
-        /// <summary>
-        /// Creates the lexer.
-        /// </summary>
-        /// <param name="reader">The reader.</param>
-        /// <returns></returns>
-        protected override ILexer CreateLexer(TextReader reader)
-        {
-            return new RtfLexer(reader);
-        }
+        #endregion Constructors
+
+        #region Properties
 
         /// <summary>
         /// Gets the current font family.
         /// </summary>
         /// <value>The font family.</value>
-        public string FontFamily { get; private set; }
+        public string FontFamily
+        {
+            get; private set;
+        }
+
         /// <summary>
         /// Gets the current size of the font.
         /// </summary>
         /// <value>The size of the font.</value>
-        public double FontSize { get; private set; }
-        /// <summary>
-        /// Gets the current font weight.
-        /// </summary>
-        /// <value>The font weight.</value>
-        public FontWeight FontWeight { get; private set; }
+        public double FontSize
+        {
+            get; private set;
+        }
+
         /// <summary>
         /// Gets the current font style.
         /// </summary>
         /// <value>The font style.</value>
-        public FontStyle FontStyle { get; private set; }
+        public FontStyle FontStyle
+        {
+            get; private set;
+        }
+
+        /// <summary>
+        /// Gets the current font weight.
+        /// </summary>
+        /// <value>The font weight.</value>
+        public FontWeight FontWeight
+        {
+            get; private set;
+        }
+
         /// <summary>
         /// Gets the current foreground.
         /// </summary>
         /// <value>The foreground.</value>
-        public Color Foreground { get; private set; }
+        public Color Foreground
+        {
+            get; private set;
+        }
+
         /// <summary>
         /// Gets the current text decorations.
         /// </summary>
         /// <value>The text decorations.</value>
-        public TextDecorationCollection TextDecorations { get; private set; }
+        public TextDecorationCollection TextDecorations
+        {
+            get; private set;
+        }
+
+        #endregion Properties
+
+        #region Methods
+
         /// <summary>
         /// Gets the next token.
         /// </summary>
@@ -136,16 +164,47 @@ namespace SLExtensions.Xaml.Rtf
                 }
             }
             while (!token.IsEof);
-            
+
             return token;
         }
 
-        private void ResetFont()
+        /// <summary>
+        /// Creates the lexer.
+        /// </summary>
+        /// <param name="reader">The reader.</param>
+        /// <returns></returns>
+        protected override ILexer CreateLexer(TextReader reader)
         {
-            this.FontSize = 12;
-            this.FontStyle = FontStyles.Normal;
-            this.FontWeight = FontWeights.Normal;
-            this.TextDecorations = null;
+            return new RtfLexer(reader);
+        }
+
+        private static Dictionary<string, object> CreateDestinations()
+        {
+            Dictionary<string, object> destinations = new Dictionary<string, object>();
+            destinations["info"] = null;
+            destinations["stylesheet"] = null;
+
+            return destinations;
+        }
+
+        private RtfToken Match(RtfTokenType type)
+        {
+            RtfToken token = (RtfToken)Read();
+            if (token.Type != type) {
+                throw new ParseException("Unexpected token");
+            }
+
+            return token;
+        }
+
+        private RtfToken Match(RtfTokenType type, string value)
+        {
+            RtfToken token = (RtfToken)Read();
+            if (token.Type != type || token.Value != value) {
+                throw new ParseException("Unexpected token");
+            }
+
+            return token;
         }
 
         private void ParseColorTable()
@@ -202,6 +261,14 @@ namespace SLExtensions.Xaml.Rtf
             while (!token.IsEof && groups > 0);
         }
 
+        private void ResetFont()
+        {
+            this.FontSize = 12;
+            this.FontStyle = FontStyles.Normal;
+            this.FontWeight = FontWeights.Normal;
+            this.TextDecorations = null;
+        }
+
         private void SkipGroup()
         {
             int groups = 1;
@@ -218,33 +285,6 @@ namespace SLExtensions.Xaml.Rtf
             while (!token.IsEof && groups > 0);
         }
 
-        private RtfToken Match(RtfTokenType type)
-        {
-            RtfToken token = (RtfToken)Read();
-            if (token.Type != type) {
-                throw new ParseException("Unexpected token");
-            }
-
-            return token;
-        }
-
-        private RtfToken Match(RtfTokenType type, string value)
-        {
-            RtfToken token = (RtfToken)Read();
-            if (token.Type != type || token.Value != value) {
-                throw new ParseException("Unexpected token");
-            }
-
-            return token;
-        }
-
-        private static Dictionary<string, object> CreateDestinations()
-        {
-            Dictionary<string, object> destinations = new Dictionary<string, object>();
-            destinations["info"] = null;
-            destinations["stylesheet"] = null;
-
-            return destinations;
-        }
+        #endregion Methods
     }
 }

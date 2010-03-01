@@ -141,7 +141,7 @@ namespace SLExtensions.Controls.Animation
             GeneralTransform transform = this.SLElement.TransformToVisual(Application.Current.RootVisual as UIElement);
             Point newLocation = transform.Transform(new Point());
             Point newBottomRight = transform.Transform(new Point(this.SLElement.ActualWidth, this.SLElement.ActualHeight));
-            
+
             //Size newSize = new Size(this.SLElement.ActualWidth, this.SLElement.ActualHeight);
             Size newSize = new Size(newBottomRight.X - newLocation.X, newBottomRight.Y - newLocation.Y);
 

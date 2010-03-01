@@ -42,7 +42,6 @@
             this.Exit += this.Application_Exit;
             this.UnhandledException += this.Application_UnhandledException;
 
-            SLMedia.SmoothStreaming.SmoothStreamingVideoSourceAdapter.Initialize();
             InitializeComponent();
         }
 
@@ -56,7 +55,6 @@
 
         private void Application_Startup(object sender, StartupEventArgs e)
         {
-            //VisualStateCommands.Initialize();
             MouseInactivityCommand.Initialize();
 
             FrameworkElement currentPlayer = null;
@@ -249,9 +247,11 @@
                             {
                                 MediaRssProvider rssProvider = new MediaRssProvider();
                                 string url;
-                                if (initParams.TryGetValue("url", out url))
+                                Uri uri;
+                                if (initParams.TryGetValue("url", out url)
+                                    && Uri.TryCreate(url, UriKind.RelativeOrAbsolute, out uri))
                                 {
-                                    rssProvider.Source = url;
+                                    rssProvider.ContentSource = uri;
                                     mediaController.PlaylistSource = rssProvider;
                                 }
                             }
@@ -263,7 +263,7 @@
                                 Uri uri;
                                 if (initParams.TryGetValue("url", out url) && Uri.TryCreate(url, UriKind.RelativeOrAbsolute, out uri))
                                 {
-                                    msnProvider.Source = uri;
+                                    msnProvider.ContentSource = uri;
                                     mediaController.PlaylistSource = msnProvider;
                                 }
                             }

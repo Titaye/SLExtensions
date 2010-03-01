@@ -177,6 +177,21 @@ namespace SLExtensions.Input
             }
         }
 
+        public Command(string commandName, Action<T> executed)
+        {
+            this.Name = commandName;
+
+            if (!CommandService.CommandCache.ContainsKey(commandName))
+            {
+                CommandService.CommandCache.Add(commandName, this);
+            }
+
+            if (executed == null)
+                throw new ArgumentNullException();
+
+            Executed += (snd, e) => executed(e.Parameter);
+        }
+
         #endregion Constructors
 
         #region Events

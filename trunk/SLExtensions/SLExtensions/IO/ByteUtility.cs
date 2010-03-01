@@ -1,45 +1,18 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
-using SLExtensions;
-
 namespace SLExtensions.IO
 {
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Text;
+
+    using SLExtensions;
+
     /// <summary>
     /// Provides various byte utility methods.
     /// </summary>
     public static class ByteUtility
     {
-        /// <summary>
-        /// Validates the specified array.
-        /// </summary>
-        /// <param name="data">The data.</param>
-        /// <param name="index">The index.</param>
-        public static void ValidateArray(byte[] data, int index)
-        {
-            if (data == null) {
-                throw new ArgumentNullException("data");
-            }
-            if (index < 0 || index >= data.Length) {
-                throw new ArgumentOutOfRangeException("index");
-            }
-        }
-
-        /// <summary>
-        /// Validates the specified array.
-        /// </summary>
-        /// <param name="data">The data.</param>
-        /// <param name="index">The index.</param>
-        /// <param name="count">The count.</param>
-        public static void ValidateArray(byte[] data, int index, int count)
-        {
-            ValidateArray(data, index);
-
-            if (count < 0 || index + count > data.Length) {
-                throw new ArgumentOutOfRangeException("count");
-            }
-        }
+        #region Methods
 
         /// <summary>
         /// Determines whether the specified stream contains the given data at the current position.
@@ -88,6 +61,24 @@ namespace SLExtensions.IO
         }
 
         /// <summary>
+        /// Gets the number of bytes for specified string in given encoding.
+        /// </summary>
+        /// <param name="encoding">The encoding.</param>
+        /// <param name="value">The value.</param>
+        /// <returns></returns>
+        public static int GetByteCount(Encoding encoding, string value)
+        {
+            if (encoding == null) {
+                throw new ArgumentNullException("encoding");
+            }
+            if (value == null) {
+                throw new ArgumentNullException("value");
+            }
+
+            return encoding.GetByteCount(value);
+        }
+
+        /// <summary>
         /// Reads the specified number of bytes from specified stream and return them.
         /// </summary>
         /// <param name="stream">The stream.</param>
@@ -102,45 +93,6 @@ namespace SLExtensions.IO
             }
 
             return data;
-        }
-
-        /// <summary>
-        /// Tries seeking to specified offset.
-        /// </summary>
-        /// <param name="stream">The stream.</param>
-        /// <param name="offset">The offset.</param>
-        /// <param name="origin">The origin.</param>
-        /// <returns></returns>
-        public static bool TrySeek(Stream stream, long offset, SeekOrigin origin)
-        {
-            if (stream == null) {
-                throw new ArgumentNullException("stream");
-            }
-
-            try {
-                stream.Seek(offset, origin);
-                return true;
-            }
-            catch (IOException) {
-                return false;
-            }
-        }
-
-        /// <summary>
-        /// Try reading the specified number of bytes from specified stream.
-        /// </summary>
-        /// <param name="stream">The stream.</param>
-        /// <param name="count">The count.</param>
-        /// <param name="data">The data.</param>
-        /// <returns>False if the specified number of bytes could not be read</returns>
-        public static bool TryRead(Stream stream, int count, out byte[] data)
-        {
-            if (stream == null) {
-                throw new ArgumentNullException("stream");
-            }
-
-            data = new byte[count];
-            return stream.Read(data, 0, count) == count;
         }
 
         /// <summary>
@@ -163,109 +115,64 @@ namespace SLExtensions.IO
         }
 
         /// <summary>
-        /// Reads a signed short (2 bytes) from given array using specified byte order.
+        /// Reads an deflated string.
         /// </summary>
+        /// <param name="encoding">The encoding.</param>
         /// <param name="data">The data.</param>
         /// <param name="index">The index.</param>
-        /// <param name="order">The byte order.</param>
         /// <returns></returns>
-        public static short ReadInt16(byte[] data, int index, ByteOrder order)
+        public static string ReadDeflatedString(Encoding encoding, byte[] data, int index)
         {
-            ValidateArray(data, index, 2);
+            if (encoding == null) {
+                throw new ArgumentNullException("encoding");
+            }
 
-            if (order == ByteOrder.BigEndian) {
-                return (short)(data[index] * 0x100 + data[checked(index + 1)]);
-            }
-            else if (order == ByteOrder.LittleEndian) {
-                return (short)(data[index] + data[checked(index + 1)] * 0x100);
-            }
-            else{
-                throw new ArgumentOutOfRangeException("order");
-            }
+            throw new NotSupportedException();
+
+            //index = checked(index + 2);    // skip Compression flags code and Additional flags bits (2 bytes)
+
+            //ValidateArray(data, index);
+
+            //try {
+            //    using (MemoryStream mStream = new MemoryStream(data, index, data.Length - index)) {
+            //        using (DeflateStream dStream = new DeflateStream(mStream, CompressionMode.Decompress)) {
+            //            using (MemoryStream stream = new MemoryStream()) {
+            //                byte[] buffer = new byte[256];
+
+            //                while (true) {
+            //                    int bytesRead = dStream.Read(buffer, 0, buffer.Length);
+            //                    if (bytesRead != 0) {
+            //                        stream.Write(buffer, 0, bytesRead);
+            //                    }
+            //                    else {
+            //                        return encoding.GetString(stream.ToArray());
+            //                    }
+            //                }
+            //            }
+            //        }
+            //    }
+            //}
+            //catch (InvalidDataException e) {
+            //    throw new MetadataReadException(Properties.Resources.ExceptionDecompressFailed, e);
+            //}
         }
 
         /// <summary>
-        /// Reads a signed short (2 bytes) from given array using specified byte order.
+        /// Reads a double value.
         /// </summary>
         /// <param name="data">The data.</param>
         /// <param name="index">The index.</param>
-        /// <param name="order">The byte order.</param>
+        /// <param name="order">The order.</param>
         /// <returns></returns>
-        public static int ReadUInt16(byte[] data, int index, ByteOrder order)
+        public static double ReadDouble(byte[] data, int index, ByteOrder order)
         {
-            ValidateArray(data, index, 2);
+            ValidateArray(data, index);
 
             if (order == ByteOrder.BigEndian) {
-                return (ushort)(data[index] * 0x100 + data[checked(index + 1)]);
+                throw new NotImplementedException();
             }
             else if (order == ByteOrder.LittleEndian) {
-                return (ushort)(data[index] + data[checked(index + 1)] * 0x100);
-            }
-            else{
-                throw new ArgumentOutOfRangeException("order");
-            }
-        }
-
-        /// <summary>
-        /// Reads a signed integer (4 bytes) from given array using specified byte order.
-        /// </summary>
-        /// <param name="data">The data.</param>
-        /// <param name="index">The index.</param>
-        /// <param name="order">The byte order.</param>
-        /// <returns></returns>
-        public static int ReadInt32(byte[] data, int index, ByteOrder order)
-        {
-            ValidateArray(data, index, 4);
-
-            if (order == ByteOrder.BigEndian) {
-                return (int)(data[index] * 0x1000000 + data[checked(index + 1)] * 0x10000 + data[checked(index + 2)] * 0x100 + data[checked(index + 3)]);
-            }
-            else if (order == ByteOrder.LittleEndian) {
-                return (int)(data[index] + data[checked(index + 1)] * 0x100 + data[checked(index + 2)] * 0x10000 + data[checked(index + 3)] * 0x1000000);
-            }
-            else{
-                throw new ArgumentOutOfRangeException("order");
-            }
-        }
-
-        /// <summary>
-        /// Reads an unsigned integer (4 bytes) from given array using specified byte order.
-        /// </summary>
-        /// <param name="data">The data.</param>
-        /// <param name="index">The index.</param>
-        /// <param name="order">The byte order.</param>
-        /// <returns></returns>
-        public static long ReadUInt32(byte[] data, int index, ByteOrder order)
-        {
-            ValidateArray(data, index, 4);
-
-            if (order == ByteOrder.BigEndian) {
-                return (uint)(data[index] * 0x1000000 + data[checked(index + 1)] * 0x10000 + data[checked(index + 2)] * 0x100 + data[checked(index + 3)]);
-            }
-            else if (order == ByteOrder.LittleEndian) {
-                return (uint)(data[index] + data[checked(index + 1)] * 0x100 + data[checked(index + 2)] * 0x10000 + data[checked(index + 3)] * 0x1000000);
-            }
-            else {
-                throw new ArgumentOutOfRangeException("order");
-            }
-        }
-
-        /// <summary>
-        /// Reads a signed 64 bit integer (8 bytes) from given array using specified byte order.
-        /// </summary>
-        /// <param name="data">The data.</param>
-        /// <param name="index">The index.</param>
-        /// <param name="order">The byte order.</param>
-        /// <returns></returns>
-        public static long ReadInt64(byte[] data, int index, ByteOrder order)
-        {
-            ValidateArray(data, index, 8);
-
-            if (order == ByteOrder.BigEndian) {
-                return (long)(data[index] * 0x100000000000000 + data[checked(index + 1)] * 0x1000000000000 + data[checked(index + 2)] * 0x10000000000 + data[checked(index + 3)] * 0x100000000 + data[checked(index + 4)] * 0x1000000 + data[checked(index + 5)] * 0x10000 + data[checked(index + 6)] * 0x100 + data[checked(index + 7)]);
-            }
-            else if (order == ByteOrder.LittleEndian) {
-                return (long)(data[index] + data[checked(index + 1)] * 0x100 + data[checked(index + 2)] * 0x10000 + data[checked(index + 3)] * 0x1000000 + data[checked(index + 4)] * 0x100000000 + data[checked(index + 5)] * 0x10000000000 + data[checked(index + 6)] * 0x1000000000000 + data[checked(index + 7)] * 0x100000000000000);
+                throw new NotImplementedException();
             }
             else {
                 throw new ArgumentOutOfRangeException("order");
@@ -295,21 +202,65 @@ namespace SLExtensions.IO
         }
 
         /// <summary>
-        /// Reads a double value.
+        /// Reads a signed short (2 bytes) from given array using specified byte order.
         /// </summary>
         /// <param name="data">The data.</param>
         /// <param name="index">The index.</param>
-        /// <param name="order">The order.</param>
+        /// <param name="order">The byte order.</param>
         /// <returns></returns>
-        public static double ReadDouble(byte[] data, int index, ByteOrder order)
+        public static short ReadInt16(byte[] data, int index, ByteOrder order)
         {
-            ValidateArray(data, index);
+            ValidateArray(data, index, 2);
 
             if (order == ByteOrder.BigEndian) {
-                throw new NotImplementedException();
+                return (short)(data[index] * 0x100 + data[checked(index + 1)]);
             }
             else if (order == ByteOrder.LittleEndian) {
-                throw new NotImplementedException();
+                return (short)(data[index] + data[checked(index + 1)] * 0x100);
+            }
+            else{
+                throw new ArgumentOutOfRangeException("order");
+            }
+        }
+
+        /// <summary>
+        /// Reads a signed integer (4 bytes) from given array using specified byte order.
+        /// </summary>
+        /// <param name="data">The data.</param>
+        /// <param name="index">The index.</param>
+        /// <param name="order">The byte order.</param>
+        /// <returns></returns>
+        public static int ReadInt32(byte[] data, int index, ByteOrder order)
+        {
+            ValidateArray(data, index, 4);
+
+            if (order == ByteOrder.BigEndian) {
+                return (int)(data[index] * 0x1000000 + data[checked(index + 1)] * 0x10000 + data[checked(index + 2)] * 0x100 + data[checked(index + 3)]);
+            }
+            else if (order == ByteOrder.LittleEndian) {
+                return (int)(data[index] + data[checked(index + 1)] * 0x100 + data[checked(index + 2)] * 0x10000 + data[checked(index + 3)] * 0x1000000);
+            }
+            else{
+                throw new ArgumentOutOfRangeException("order");
+            }
+        }
+
+        /// <summary>
+        /// Reads a signed 64 bit integer (8 bytes) from given array using specified byte order.
+        /// </summary>
+        /// <param name="data">The data.</param>
+        /// <param name="index">The index.</param>
+        /// <param name="order">The byte order.</param>
+        /// <returns></returns>
+        public static long ReadInt64(byte[] data, int index, ByteOrder order)
+        {
+            ValidateArray(data, index, 8);
+
+            if (order == ByteOrder.BigEndian) {
+                return (long)(data[index] * 0x100000000000000 + data[checked(index + 1)] * 0x1000000000000 + data[checked(index + 2)] * 0x10000000000 + data[checked(index + 3)] * 0x100000000 + data[checked(index + 4)] * 0x1000000 + data[checked(index + 5)] * 0x10000 + data[checked(index + 6)] * 0x100 + data[checked(index + 7)]);
+            }
+            else if (order == ByteOrder.LittleEndian) {
+                return (long)(data[index] + data[checked(index + 1)] * 0x100 + data[checked(index + 2)] * 0x10000 + data[checked(index + 3)] * 0x1000000 + data[checked(index + 4)] * 0x100000000 + data[checked(index + 5)] * 0x10000000000 + data[checked(index + 6)] * 0x1000000000000 + data[checked(index + 7)] * 0x100000000000000);
             }
             else {
                 throw new ArgumentOutOfRangeException("order");
@@ -444,6 +395,50 @@ namespace SLExtensions.IO
         }
 
         /// <summary>
+        /// Reads a signed short (2 bytes) from given array using specified byte order.
+        /// </summary>
+        /// <param name="data">The data.</param>
+        /// <param name="index">The index.</param>
+        /// <param name="order">The byte order.</param>
+        /// <returns></returns>
+        public static int ReadUInt16(byte[] data, int index, ByteOrder order)
+        {
+            ValidateArray(data, index, 2);
+
+            if (order == ByteOrder.BigEndian) {
+                return (ushort)(data[index] * 0x100 + data[checked(index + 1)]);
+            }
+            else if (order == ByteOrder.LittleEndian) {
+                return (ushort)(data[index] + data[checked(index + 1)] * 0x100);
+            }
+            else{
+                throw new ArgumentOutOfRangeException("order");
+            }
+        }
+
+        /// <summary>
+        /// Reads an unsigned integer (4 bytes) from given array using specified byte order.
+        /// </summary>
+        /// <param name="data">The data.</param>
+        /// <param name="index">The index.</param>
+        /// <param name="order">The byte order.</param>
+        /// <returns></returns>
+        public static long ReadUInt32(byte[] data, int index, ByteOrder order)
+        {
+            ValidateArray(data, index, 4);
+
+            if (order == ByteOrder.BigEndian) {
+                return (uint)(data[index] * 0x1000000 + data[checked(index + 1)] * 0x10000 + data[checked(index + 2)] * 0x100 + data[checked(index + 3)]);
+            }
+            else if (order == ByteOrder.LittleEndian) {
+                return (uint)(data[index] + data[checked(index + 1)] * 0x100 + data[checked(index + 2)] * 0x10000 + data[checked(index + 3)] * 0x1000000);
+            }
+            else {
+                throw new ArgumentOutOfRangeException("order");
+            }
+        }
+
+        /// <summary>
         /// Reads the stream until a byte not equal to 0 is read.
         /// </summary>
         /// <param name="stream">The stream.</param>
@@ -455,49 +450,6 @@ namespace SLExtensions.IO
             while (stream.ReadByte() == 0) {
             }
             stream.Seek(-1, SeekOrigin.Current);
-        }
-
-        /// <summary>
-        /// Reads an deflated string.
-        /// </summary>
-        /// <param name="encoding">The encoding.</param>
-        /// <param name="data">The data.</param>
-        /// <param name="index">The index.</param>
-        /// <returns></returns>
-        public static string ReadDeflatedString(Encoding encoding, byte[] data, int index)
-        {
-            if (encoding == null) {
-                throw new ArgumentNullException("encoding");
-            }
-
-            throw new NotSupportedException();
-
-            //index = checked(index + 2);    // skip Compression flags code and Additional flags bits (2 bytes)
-
-            //ValidateArray(data, index);
-
-            //try {
-            //    using (MemoryStream mStream = new MemoryStream(data, index, data.Length - index)) {
-            //        using (DeflateStream dStream = new DeflateStream(mStream, CompressionMode.Decompress)) {
-            //            using (MemoryStream stream = new MemoryStream()) {
-            //                byte[] buffer = new byte[256];
-
-            //                while (true) {
-            //                    int bytesRead = dStream.Read(buffer, 0, buffer.Length);
-            //                    if (bytesRead != 0) {
-            //                        stream.Write(buffer, 0, bytesRead);
-            //                    }
-            //                    else {
-            //                        return encoding.GetString(stream.ToArray());
-            //                    }
-            //                }
-            //            }
-            //        }
-            //    }
-            //}
-            //catch (InvalidDataException e) {
-            //    throw new MetadataReadException(Properties.Resources.ExceptionDecompressFailed, e);
-            //}
         }
 
         /// <summary>
@@ -522,27 +474,80 @@ namespace SLExtensions.IO
                 throw new ArgumentOutOfRangeException("maxByteCount");
             }
 
-			byte[] data = encoding.GetBytes(value);
+            byte[] data = encoding.GetBytes(value);
 
             return encoding.GetString(data, 0, Math.Min(data.Length, maxByteCount));
         }
 
         /// <summary>
-        /// Gets the number of bytes for specified string in given encoding.
+        /// Try reading the specified number of bytes from specified stream.
         /// </summary>
-        /// <param name="encoding">The encoding.</param>
-        /// <param name="value">The value.</param>
-        /// <returns></returns>
-        public static int GetByteCount(Encoding encoding, string value)
+        /// <param name="stream">The stream.</param>
+        /// <param name="count">The count.</param>
+        /// <param name="data">The data.</param>
+        /// <returns>False if the specified number of bytes could not be read</returns>
+        public static bool TryRead(Stream stream, int count, out byte[] data)
         {
-            if (encoding == null) {
-                throw new ArgumentNullException("encoding");
-            }
-            if (value == null) {
-                throw new ArgumentNullException("value");
+            if (stream == null) {
+                throw new ArgumentNullException("stream");
             }
 
-            return encoding.GetByteCount(value);
+            data = new byte[count];
+            return stream.Read(data, 0, count) == count;
         }
+
+        /// <summary>
+        /// Tries seeking to specified offset.
+        /// </summary>
+        /// <param name="stream">The stream.</param>
+        /// <param name="offset">The offset.</param>
+        /// <param name="origin">The origin.</param>
+        /// <returns></returns>
+        public static bool TrySeek(Stream stream, long offset, SeekOrigin origin)
+        {
+            if (stream == null) {
+                throw new ArgumentNullException("stream");
+            }
+
+            try {
+                stream.Seek(offset, origin);
+                return true;
+            }
+            catch (IOException) {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Validates the specified array.
+        /// </summary>
+        /// <param name="data">The data.</param>
+        /// <param name="index">The index.</param>
+        public static void ValidateArray(byte[] data, int index)
+        {
+            if (data == null) {
+                throw new ArgumentNullException("data");
+            }
+            if (index < 0 || index >= data.Length) {
+                throw new ArgumentOutOfRangeException("index");
+            }
+        }
+
+        /// <summary>
+        /// Validates the specified array.
+        /// </summary>
+        /// <param name="data">The data.</param>
+        /// <param name="index">The index.</param>
+        /// <param name="count">The count.</param>
+        public static void ValidateArray(byte[] data, int index, int count)
+        {
+            ValidateArray(data, index);
+
+            if (count < 0 || index + count > data.Length) {
+                throw new ArgumentOutOfRangeException("count");
+            }
+        }
+
+        #endregion Methods
     }
 }

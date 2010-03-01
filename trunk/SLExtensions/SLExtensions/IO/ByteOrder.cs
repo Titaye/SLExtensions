@@ -1,9 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 namespace SLExtensions.IO
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Text;
+
+    #region Enumerations
+
     /// <summary>
     /// Defines the byte order.
     /// </summary>
@@ -18,4 +20,6 @@ namespace SLExtensions.IO
         /// </summary>
         LittleEndian
     }
+
+    #endregion Enumerations
 }

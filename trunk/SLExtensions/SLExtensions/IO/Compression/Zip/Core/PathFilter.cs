@@ -1,3 +1,5 @@
+#region Header
+
 // PathFilter.cs
 //
 // Copyright 2005 John Reilly
@@ -20,7 +22,7 @@
 // making a combined work based on this library.  Thus, the terms and
 // conditions of the GNU General Public License cover the whole
 // combination.
-// 
+//
 // As a special exception, the copyright holders of this library give you
 // permission to link this library with independent modules to produce an
 // executable, regardless of the license terms of these independent
@@ -33,297 +35,326 @@
 // obligated to do so.  If you do not wish to do so, delete this
 // exception statement from your version.
 
-using System;
-using System.IO;
+#endregion Header
 
 namespace SLExtensions.IO.Compression.Zip.Core
 {
-	/// <summary>
-	/// PathFilter filters directories and files using a form of <see cref="System.Text.RegularExpressions.Regex">regular expressions</see>
-	/// by full path name.
-	/// See <see cref="NameFilter">NameFilter</see> for more detail on filtering.
-	/// </summary>
-	public class PathFilter : IScanFilter
-	{
-		#region Constructors
-		/// <summary>
-		/// Initialise a new instance of <see cref="PathFilter"></see>.
-		/// </summary>
-		/// <param name="filter">The <see cref="NameFilter">filter</see> expression to apply.</param>
-		public PathFilter(string filter)
-		{
-			nameFilter_ = new NameFilter(filter);
-		}
-		#endregion
+    using System;
+    using System.IO;
 
-		#region IScanFilter Members
-		/// <summary>
-		/// Test a name to see if it matches the filter.
-		/// </summary>
-		/// <param name="name">The name to test.</param>
-		/// <returns>True if the name matches, false otherwise.</returns>
-		public virtual bool IsMatch(string name)
-		{
-			bool result = false;
+    /// <summary>
+    /// ExtendedPathFilter filters based on name, file size, and the last write time of the file.
+    /// </summary>
+    /// <remarks>Provides an example of how to customise filtering.</remarks>
+    public class ExtendedPathFilter : PathFilter
+    {
+        #region Fields
 
-			if ( name != null ) {
-				string cooked = (name.Length > 0) ? Path.GetFullPath(name) : "";
-				result = nameFilter_.IsMatch(cooked);
-			}
-			return result;
-		}
-		#endregion
+        DateTime maxDate_ = DateTime.MaxValue;
+        long maxSize_ = long.MaxValue;
+        DateTime minDate_ = DateTime.MinValue;
+        long minSize_;
 
-		#region Instance Fields
-		NameFilter nameFilter_;
-		#endregion
-	}
+        #endregion Fields
 
-	/// <summary>
-	/// ExtendedPathFilter filters based on name, file size, and the last write time of the file.
-	/// </summary>
-	/// <remarks>Provides an example of how to customise filtering.</remarks>
-	public class ExtendedPathFilter : PathFilter
-	{
-		#region Constructors
-		/// <summary>
-		/// Initialise a new instance of ExtendedPathFilter.
-		/// </summary>
-		/// <param name="filter">The filter to apply.</param>
-		/// <param name="minSize">The minimum file size to include.</param>
-		/// <param name="maxSize">The maximum file size to include.</param>
-		public ExtendedPathFilter(string filter,
-			long minSize, long maxSize)
-			: base(filter)
-		{
-			MinSize = minSize;
-			MaxSize = maxSize;
-		}
+        #region Constructors
 
-		/// <summary>
-		/// Initialise a new instance of ExtendedPathFilter.
-		/// </summary>
-		/// <param name="filter">The filter to apply.</param>
-		/// <param name="minDate">The minimum <see cref="DateTime"/> to include.</param>
-		/// <param name="maxDate">The maximum <see cref="DateTime"/> to include.</param>
-		public ExtendedPathFilter(string filter,
-			DateTime minDate, DateTime maxDate)
-			: base(filter)
-		{
-			MinDate = minDate;
-			MaxDate = maxDate;
-		}
+        /// <summary>
+        /// Initialise a new instance of ExtendedPathFilter.
+        /// </summary>
+        /// <param name="filter">The filter to apply.</param>
+        /// <param name="minSize">The minimum file size to include.</param>
+        /// <param name="maxSize">The maximum file size to include.</param>
+        public ExtendedPathFilter(string filter,
+            long minSize, long maxSize)
+            : base(filter)
+        {
+            MinSize = minSize;
+            MaxSize = maxSize;
+        }
 
-		/// <summary>
-		/// Initialise a new instance of ExtendedPathFilter.
-		/// </summary>
-		/// <param name="filter">The filter to apply.</param>
-		/// <param name="minSize">The minimum file size to include.</param>
-		/// <param name="maxSize">The maximum file size to include.</param>
-		/// <param name="minDate">The minimum <see cref="DateTime"/> to include.</param>
-		/// <param name="maxDate">The maximum <see cref="DateTime"/> to include.</param>
-		public ExtendedPathFilter(string filter,
-			long minSize, long maxSize,
-			DateTime minDate, DateTime maxDate)
-			: base(filter)
-		{
-			MinSize = minSize;
-			MaxSize = maxSize;
-			MinDate = minDate;
-			MaxDate = maxDate;
-		}
-		#endregion
+        /// <summary>
+        /// Initialise a new instance of ExtendedPathFilter.
+        /// </summary>
+        /// <param name="filter">The filter to apply.</param>
+        /// <param name="minDate">The minimum <see cref="DateTime"/> to include.</param>
+        /// <param name="maxDate">The maximum <see cref="DateTime"/> to include.</param>
+        public ExtendedPathFilter(string filter,
+            DateTime minDate, DateTime maxDate)
+            : base(filter)
+        {
+            MinDate = minDate;
+            MaxDate = maxDate;
+        }
 
-		#region IScanFilter Members
-		/// <summary>
-		/// Test a filename to see if it matches the filter.
-		/// </summary>
-		/// <param name="name">The filename to test.</param>
-		/// <returns>True if the filter matches, false otherwise.</returns>
-		public override bool IsMatch(string name)
-		{
-			bool result = base.IsMatch(name);
+        /// <summary>
+        /// Initialise a new instance of ExtendedPathFilter.
+        /// </summary>
+        /// <param name="filter">The filter to apply.</param>
+        /// <param name="minSize">The minimum file size to include.</param>
+        /// <param name="maxSize">The maximum file size to include.</param>
+        /// <param name="minDate">The minimum <see cref="DateTime"/> to include.</param>
+        /// <param name="maxDate">The maximum <see cref="DateTime"/> to include.</param>
+        public ExtendedPathFilter(string filter,
+            long minSize, long maxSize,
+            DateTime minDate, DateTime maxDate)
+            : base(filter)
+        {
+            MinSize = minSize;
+            MaxSize = maxSize;
+            MinDate = minDate;
+            MaxDate = maxDate;
+        }
 
-			if ( result )
-			{
-				FileInfo fileInfo = new FileInfo(name);
-				result = 
-					(MinSize <= fileInfo.Length) &&
-					(MaxSize >= fileInfo.Length) &&
-					(MinDate <= fileInfo.LastWriteTime) &&
-					(MaxDate >= fileInfo.LastWriteTime)
-					;
-			}
-			return result;
-		}
-		#endregion
+        #endregion Constructors
 
-		#region Properties
-		/// <summary>
-		/// Get/set the minimum size for a file that will match this filter.
-		/// </summary>
-		public long MinSize
-		{
-			get { return minSize_; }
-			set
-			{
-				if ( (value < 0) || (maxSize_ < value) )
-				{
-					throw new ArgumentOutOfRangeException("value");
-				}
+        #region Properties
 
-				minSize_ = value;
-			}
-		}
-		
-		/// <summary>
-		/// Get/set the maximum size for a file that will match this filter.
-		/// </summary>
-		public long MaxSize
-		{
-			get { return maxSize_; }
-			set
-			{
-				if ( (value < 0) || (minSize_ > value) )
-				{
-					throw new ArgumentOutOfRangeException("value");
-				}
+        /// <summary>
+        /// Get/set the maximum <see cref="DateTime"/> value that will match for this filter.
+        /// </summary>
+        /// <remarks>Files with a LastWrite time greater than this value are excluded by the filter.</remarks>
+        public DateTime MaxDate
+        {
+            get
+            {
+                return maxDate_;
+            }
 
-				maxSize_ = value;
-			}
-		}
+            set
+            {
+                if ( minDate_ > value )
+                {
+                    throw new ArgumentException("Exceeds MinDate", "value");
+                }
 
-		/// <summary>
-		/// Get/set the minimum <see cref="DateTime"/> value that will match for this filter.
-		/// </summary>
-		/// <remarks>Files with a LastWrite time less than this value are excluded by the filter.</remarks>
-		public DateTime MinDate
-		{
-			get
-			{
-				return minDate_;
-			}
+                maxDate_ = value;
+            }
+        }
 
-			set
-			{
-				if ( value > maxDate_ )
-				{
-					throw new ArgumentException("Exceeds MaxDate", "value");
-				}
+        /// <summary>
+        /// Get/set the maximum size for a file that will match this filter.
+        /// </summary>
+        public long MaxSize
+        {
+            get { return maxSize_; }
+            set
+            {
+                if ( (value < 0) || (minSize_ > value) )
+                {
+                    throw new ArgumentOutOfRangeException("value");
+                }
 
-				minDate_ = value;
-			}
-		}
+                maxSize_ = value;
+            }
+        }
 
-		/// <summary>
-		/// Get/set the maximum <see cref="DateTime"/> value that will match for this filter.
-		/// </summary>
-		/// <remarks>Files with a LastWrite time greater than this value are excluded by the filter.</remarks>
-		public DateTime MaxDate
-		{
-			get
-			{
-				return maxDate_;
-			}
+        /// <summary>
+        /// Get/set the minimum <see cref="DateTime"/> value that will match for this filter.
+        /// </summary>
+        /// <remarks>Files with a LastWrite time less than this value are excluded by the filter.</remarks>
+        public DateTime MinDate
+        {
+            get
+            {
+                return minDate_;
+            }
 
-			set
-			{
-				if ( minDate_ > value )
-				{
-					throw new ArgumentException("Exceeds MinDate", "value");
-				}
+            set
+            {
+                if ( value > maxDate_ )
+                {
+                    throw new ArgumentException("Exceeds MaxDate", "value");
+                }
 
-				maxDate_ = value;
-			}
-		}
-		#endregion
+                minDate_ = value;
+            }
+        }
 
-		#region Instance Fields
-		long minSize_;
-		long maxSize_ = long.MaxValue;
-		DateTime minDate_ = DateTime.MinValue;
-		DateTime maxDate_ = DateTime.MaxValue;
-		#endregion
-	}
+        /// <summary>
+        /// Get/set the minimum size for a file that will match this filter.
+        /// </summary>
+        public long MinSize
+        {
+            get { return minSize_; }
+            set
+            {
+                if ( (value < 0) || (maxSize_ < value) )
+                {
+                    throw new ArgumentOutOfRangeException("value");
+                }
 
-	/// <summary>
-	/// NameAndSizeFilter filters based on name and file size.
-	/// </summary>
-	/// <remarks>A sample showing how filters might be extended.</remarks>
-	[Obsolete("Use ExtendedPathFilter instead")]
-	public class NameAndSizeFilter : PathFilter
-	{
+                minSize_ = value;
+            }
+        }
 
-		/// <summary>
-		/// Initialise a new instance of NameAndSizeFilter.
-		/// </summary>
-		/// <param name="filter">The filter to apply.</param>
-		/// <param name="minSize">The minimum file size to include.</param>
-		/// <param name="maxSize">The maximum file size to include.</param>
-		public NameAndSizeFilter(string filter, long minSize, long maxSize)
-			: base(filter)
-		{
-			MinSize = minSize;
-			MaxSize = maxSize;
-		}
-		
-		/// <summary>
-		/// Test a filename to see if it matches the filter.
-		/// </summary>
-		/// <param name="name">The filename to test.</param>
-		/// <returns>True if the filter matches, false otherwise.</returns>
-		public override bool IsMatch(string name)
-		{
-			bool result = base.IsMatch(name);
+        #endregion Properties
 
-			if ( result )
-			{
-				FileInfo fileInfo = new FileInfo(name);
-				long length = fileInfo.Length;
-				result = 
-					(MinSize <= length) &&
-					(MaxSize >= length);
-			}
-			return result;
-		}
-		
-		/// <summary>
-		/// Get/set the minimum size for a file that will match this filter.
-		/// </summary>
-		public long MinSize
-		{
-			get { return minSize_; }
-			set
-			{
-				if ( (value < 0) || (maxSize_ < value) )
-				{
-					throw new ArgumentOutOfRangeException("value");
-				}
+        #region Methods
 
-				minSize_ = value;
-			}
-		}
-		
-		/// <summary>
-		/// Get/set the maximum size for a file that will match this filter.
-		/// </summary>
-		public long MaxSize
-		{
-			get { return maxSize_; }
-			set
-			{
-				if ( (value < 0) || (minSize_ > value) )
-				{
-					throw new ArgumentOutOfRangeException("value");
-				}
+        /// <summary>
+        /// Test a filename to see if it matches the filter.
+        /// </summary>
+        /// <param name="name">The filename to test.</param>
+        /// <returns>True if the filter matches, false otherwise.</returns>
+        public override bool IsMatch(string name)
+        {
+            bool result = base.IsMatch(name);
 
-				maxSize_ = value;
-			}
-		}
+            if ( result )
+            {
+                FileInfo fileInfo = new FileInfo(name);
+                result =
+                    (MinSize <= fileInfo.Length) &&
+                    (MaxSize >= fileInfo.Length) &&
+                    (MinDate <= fileInfo.LastWriteTime) &&
+                    (MaxDate >= fileInfo.LastWriteTime)
+                    ;
+            }
+            return result;
+        }
 
-		#region Instance Fields
-		long minSize_;
-		long maxSize_ = long.MaxValue;
-		#endregion
-	}
+        #endregion Methods
+    }
+
+    /// <summary>
+    /// NameAndSizeFilter filters based on name and file size.
+    /// </summary>
+    /// <remarks>A sample showing how filters might be extended.</remarks>
+    [Obsolete("Use ExtendedPathFilter instead")]
+    public class NameAndSizeFilter : PathFilter
+    {
+        #region Fields
+
+        long maxSize_ = long.MaxValue;
+        long minSize_;
+
+        #endregion Fields
+
+        #region Constructors
+
+        /// <summary>
+        /// Initialise a new instance of NameAndSizeFilter.
+        /// </summary>
+        /// <param name="filter">The filter to apply.</param>
+        /// <param name="minSize">The minimum file size to include.</param>
+        /// <param name="maxSize">The maximum file size to include.</param>
+        public NameAndSizeFilter(string filter, long minSize, long maxSize)
+            : base(filter)
+        {
+            MinSize = minSize;
+            MaxSize = maxSize;
+        }
+
+        #endregion Constructors
+
+        #region Properties
+
+        /// <summary>
+        /// Get/set the maximum size for a file that will match this filter.
+        /// </summary>
+        public long MaxSize
+        {
+            get { return maxSize_; }
+            set
+            {
+                if ( (value < 0) || (minSize_ > value) )
+                {
+                    throw new ArgumentOutOfRangeException("value");
+                }
+
+                maxSize_ = value;
+            }
+        }
+
+        /// <summary>
+        /// Get/set the minimum size for a file that will match this filter.
+        /// </summary>
+        public long MinSize
+        {
+            get { return minSize_; }
+            set
+            {
+                if ( (value < 0) || (maxSize_ < value) )
+                {
+                    throw new ArgumentOutOfRangeException("value");
+                }
+
+                minSize_ = value;
+            }
+        }
+
+        #endregion Properties
+
+        #region Methods
+
+        /// <summary>
+        /// Test a filename to see if it matches the filter.
+        /// </summary>
+        /// <param name="name">The filename to test.</param>
+        /// <returns>True if the filter matches, false otherwise.</returns>
+        public override bool IsMatch(string name)
+        {
+            bool result = base.IsMatch(name);
+
+            if ( result )
+            {
+                FileInfo fileInfo = new FileInfo(name);
+                long length = fileInfo.Length;
+                result =
+                    (MinSize <= length) &&
+                    (MaxSize >= length);
+            }
+            return result;
+        }
+
+        #endregion Methods
+    }
+
+    /// <summary>
+    /// PathFilter filters directories and files using a form of <see cref="System.Text.RegularExpressions.Regex">regular expressions</see>
+    /// by full path name.
+    /// See <see cref="NameFilter">NameFilter</see> for more detail on filtering.
+    /// </summary>
+    public class PathFilter : IScanFilter
+    {
+        #region Fields
+
+        NameFilter nameFilter_;
+
+        #endregion Fields
+
+        #region Constructors
+
+        /// <summary>
+        /// Initialise a new instance of <see cref="PathFilter"></see>.
+        /// </summary>
+        /// <param name="filter">The <see cref="NameFilter">filter</see> expression to apply.</param>
+        public PathFilter(string filter)
+        {
+            nameFilter_ = new NameFilter(filter);
+        }
+
+        #endregion Constructors
+
+        #region Methods
+
+        /// <summary>
+        /// Test a name to see if it matches the filter.
+        /// </summary>
+        /// <param name="name">The name to test.</param>
+        /// <returns>True if the name matches, false otherwise.</returns>
+        public virtual bool IsMatch(string name)
+        {
+            bool result = false;
+
+            if ( name != null ) {
+                string cooked = (name.Length > 0) ? Path.GetFullPath(name) : "";
+                result = nameFilter_.IsMatch(cooked);
+            }
+            return result;
+        }
+
+        #endregion Methods
+    }
 }

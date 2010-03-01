@@ -1,4 +1,5 @@
-﻿<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup Condition="'$(MSBuildToolsVersion)' == '3.5'">
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
   </PropertyGroup>
@@ -15,10 +16,14 @@
     <AssemblyName>SLExtensions</AssemblyName>
     <TargetFrameworkVersion>v3.0</TargetFrameworkVersion>
     <SilverlightApplication>false</SilverlightApplication>
-    <SccProjectName>%24/SLExtensions/trunk/SLExtensions/SLExtensions</SccProjectName>
-    <SccLocalPath>.</SccLocalPath>
-    <SccAuxPath>https://tfs07.codeplex.com</SccAuxPath>
-    <SccProvider>{4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}</SccProvider>
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+    <SccAuxPath>
+    </SccAuxPath>
+    <SccProvider>
+    </SccProvider>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <OldToolsVersion>3.5</OldToolsVersion>
@@ -78,8 +83,11 @@
   <ItemGroup>
     <Compile Include="AnimationExtensions.cs" />
     <Compile Include="ApplicationExtensions.cs" />
+    <Compile Include="BindingHelper.cs" />
+    <Compile Include="BindingListener.cs" />
     <Compile Include="CancelEventArgs.cs" />
     <Compile Include="Collections\ObjectModel\ObservableCollection.cs" />
+    <Compile Include="DataEventArgs.cs" />
     <Compile Include="Diagnostics\Debug.cs" />
     <Compile Include="DisposeHelper.cs" />
     <Compile Include="DraggableExtensions.cs" />
@@ -149,6 +157,8 @@
     <Compile Include="IO\Compression\Zip\ZipOutputStream.cs" />
     <Compile Include="IsolatedStorageExtensions.cs" />
     <Compile Include="LoginProvider\Infocard.cs" />
+    <Compile Include="MarkupContent.cs" />
+    <Compile Include="MarkupType.cs" />
     <Compile Include="NotifyingObject.cs" />
     <Compile Include="NotifyingObjectExtensions.cs">
       <SubType>Code</SubType>
@@ -164,6 +174,7 @@
     <Compile Include="SLExtension.cs" />
     <Compile Include="Stats\GoogleAnalytics.cs" />
     <Compile Include="StringBuilderExtensions.cs" />
+    <Compile Include="StringExtensions.cs" />
     <Compile Include="StringReaderExtensions.cs" />
     <Compile Include="Text\Parsers\ILexer.cs" />
     <Compile Include="Text\Parsers\IToken.cs" />
@@ -171,9 +182,11 @@
     <Compile Include="Text\Parsers\ParseException.cs" />
     <Compile Include="Text\Parsers\Parser.cs" />
     <Compile Include="Text\StringUtility.cs" />
+    <Compile Include="Tuple.cs" />
     <Compile Include="Tweener\Equations.cs" />
     <Compile Include="Tweener\TransitionType.cs" />
     <Compile Include="Tweener\Tween.cs" />
+    <Compile Include="UriExtensions.cs" />
     <Compile Include="Utilities\ClipboardHelper\ClipboardHelper.cs" />
     <Compile Include="Utilities\MouseWheelListener\WheelMouseListener.cs" />
     <Compile Include="Vector.cs" />
@@ -208,7 +221,7 @@
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
       <Visible>False</Visible>
-      <ProductName>.NET Framework Client Profile</ProductName>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
     <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">
@@ -229,6 +242,11 @@
     <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
       <Visible>False</Visible>
       <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.VisualBasic.PowerPacks.10.0">
+      <Visible>False</Visible>
+      <ProductName>Microsoft Visual Basic PowerPacks 10.0</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
     <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">

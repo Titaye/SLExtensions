@@ -1,22 +1,24 @@
-﻿using System;
-using System.Globalization;
-using System.Text;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Ink;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Animation;
-using System.Windows.Shapes;
-
-namespace SLExtensions.Xaml
+﻿namespace SLExtensions.Xaml
 {
+    using System;
+    using System.Globalization;
+    using System.Text;
+    using System.Windows;
+    using System.Windows.Controls;
+    using System.Windows.Documents;
+    using System.Windows.Ink;
+    using System.Windows.Input;
+    using System.Windows.Media;
+    using System.Windows.Media.Animation;
+    using System.Windows.Shapes;
+
     /// <summary>
     /// Provides XAML formatting functions.
     /// </summary>
     public static class Formatter
     {
+        #region Methods
+
         /// <summary>
         /// Formats the specified value.
         /// </summary>
@@ -289,5 +291,7 @@ namespace SLExtensions.Xaml
             }
             return b.ToString();
         }
+
+        #endregion Methods
     }
 }

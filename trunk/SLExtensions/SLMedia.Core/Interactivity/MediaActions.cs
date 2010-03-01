@@ -19,7 +19,8 @@
         Pause,
         Stop,
         Next,
-        Previous
+        Previous,
+        GoToPosition,
     }
 
     #endregion Enumerations

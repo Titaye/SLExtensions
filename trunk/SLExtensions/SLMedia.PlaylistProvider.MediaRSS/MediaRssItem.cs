@@ -13,7 +13,7 @@
     using System.Windows.Media.Animation;
     using System.Windows.Shapes;
 
-    public class MediaRssItem
+    public class MediaRssItem : SLMedia.Core.MediaItem
     {
         #region Constructors
 
@@ -22,35 +22,19 @@
             Content = new Content[0];
             Keywords = new string[0];
             Thumbnails = new List<Thumbnail>();
-            Categories = new List<Category>();
         }
 
         #endregion Constructors
 
         #region Properties
 
-        [ScriptableMember]
-        public List<Category> Categories
-        {
-            get; protected set;
-        }
+      
 
         public IEnumerable<Content> Content
         {
             get; set;
         }
 
-        [ScriptableMember]
-        public string Description
-        {
-            get; set;
-        }
-
-        [ScriptableMember]
-        public string Id
-        {
-            get; set;
-        }
 
         [ScriptableMember]
         public IEnumerable<string> Keywords
@@ -65,12 +49,6 @@
         }
 
         public IList<Thumbnail> Thumbnails
-        {
-            get; set;
-        }
-
-        [ScriptableMember]
-        public string Title
         {
             get; set;
         }

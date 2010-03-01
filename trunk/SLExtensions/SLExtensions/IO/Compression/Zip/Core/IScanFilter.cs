@@ -1,4 +1,6 @@
-﻿// IScanFilter.cs
+﻿#region Header
+
+// IScanFilter.cs
 //
 // Copyright 2006 John Reilly
 //
@@ -20,7 +22,7 @@
 // making a combined work based on this library.  Thus, the terms and
 // conditions of the GNU General Public License cover the whole
 // combination.
-// 
+//
 // As a special exception, the copyright holders of this library give you
 // permission to link this library with independent modules to produce an
 // executable, regardless of the license terms of these independent
@@ -33,20 +35,26 @@
 // obligated to do so.  If you do not wish to do so, delete this
 // exception statement from your version.
 
-using System;
+#endregion Header
 
 namespace SLExtensions.IO.Compression.Zip.Core
 {
-	/// <summary>
-	/// Scanning filters support filtering of names.
-	/// </summary>
-	public interface IScanFilter
-	{
-		/// <summary>
-		/// Test a name to see if it 'matches' the filter.
-		/// </summary>
-		/// <param name="name">The name to test.</param>
-		/// <returns>Returns true if the name matches the filter, false if it does not match.</returns>
-		bool IsMatch(string name);
-	}
+    using System;
+
+    /// <summary>
+    /// Scanning filters support filtering of names.
+    /// </summary>
+    public interface IScanFilter
+    {
+        #region Methods
+
+        /// <summary>
+        /// Test a name to see if it 'matches' the filter.
+        /// </summary>
+        /// <param name="name">The name to test.</param>
+        /// <returns>Returns true if the name matches the filter, false if it does not match.</returns>
+        bool IsMatch(string name);
+
+        #endregion Methods
+    }
 }

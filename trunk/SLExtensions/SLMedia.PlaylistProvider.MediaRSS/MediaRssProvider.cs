@@ -24,7 +24,7 @@
 
     using SLMedia.Core;
 
-    public class MediaRssProvider : NotifyingObject, IPlaylistSource
+    public class MediaRssProvider : PlaylistSource, IPlaylistSource
     {
         #region Fields
 
@@ -51,8 +51,6 @@
 
         private string[] extensionArrays;
         private string extensionFilter;
-        private IEnumerable<IMediaItem> playlist;
-        private string source;
 
         #endregion Fields
 
@@ -89,33 +87,6 @@
             }
         }
 
-        public IEnumerable<IMediaItem> Playlist
-        {
-            get { return playlist; }
-            set
-            {
-                if (playlist != value)
-                {
-                    playlist = value;
-                    this.OnPropertyChanged(this.GetPropertyName(n => n.Playlist));
-                }
-            }
-        }
-
-        public string Source
-        {
-            get { return source; }
-            set
-            {
-                if (source != value)
-                {
-                    source = value;
-                    this.OnPropertyChanged(this.GetPropertyName(n => n.Source));
-                    ReloadPlaylist();
-                }
-            }
-        }
-
         #endregion Properties
 
         #region Methods
@@ -141,12 +112,12 @@
                     {
                         XElement groupNode = (XElement)XDocument.ReadFrom(extensions.GetReader());
                         item.Content = (from g in groupNode.Elements(XName.Get(MediaContent, MediaRssNamespace))
-                                        select Content.FromXml(g)).ToArray();
+                                        select MediaRSS.Content.FromXml(g)).ToArray();
                     }
                     else if (extensions.OuterName == MediaContent)
                     {
                         XElement contentNode = (XElement)XDocument.ReadFrom(extensions.GetReader());
-                        item.Content = new Content[] { Content.FromXml(contentNode) };
+                        item.Content = new Content[] { MediaRSS.Content.FromXml(contentNode) };
                     }
                     else if (extensions.OuterName == MediaTitle)
                     {
@@ -195,7 +166,7 @@
                     else if (extensions.OuterName == MediaCategory)
                     {
                         XElement category = (XElement)extensions.GetReader().GetXNode();
-                        item.Categories.Add(Category.FromXml(category));
+                        item.Categories.Add(MediaRSS.Category.FromXml(category));
                     }
 
                     //MediaHash
@@ -238,59 +209,21 @@
             return null;
         }
 
-        public void LoadPlaylist(Action<IEnumerable<IMediaItem>> callback)
+        protected override IEnumerable<IMediaItem> ParseContent(string content)
         {
-            Uri uriSource;
+            StringReader stringReader = new StringReader(content);
+            Rss20FeedFormatter feedformatter = new Rss20FeedFormatter();
+            feedformatter.PreserveAttributeExtensions = true;
+            feedformatter.PreserveElementExtensions = true;
+            XmlReader reader = XmlReader.Create(stringReader);
+            feedformatter.ReadFrom(reader);
 
-            if (Source == null || !Uri.TryCreate(Source, UriKind.RelativeOrAbsolute, out uriSource))
-            {
-                callback(null);
-            }
-            else
-            {
-                WebClient wcRss = new WebClient();
-                wcRss.DownloadStringCompleted += new DownloadStringCompletedEventHandler(wcRss_DownloadStringCompleted);
-                wcRss.DownloadStringAsync(uriSource, callback);
-            }
-        }
+            var result = from item in FromFeed(feedformatter.Feed)
+                         let media = GetMediaItemFromRssItem(item, extensionArrays)
+                         where media != null
+                         select media;
 
-        public void ReloadPlaylist()
-        {
-            LoadPlaylist(pl => this.Playlist = pl);
-        }
-
-        void wcRss_DownloadStringCompleted(object sender, DownloadStringCompletedEventArgs e)
-        {
-            Action<IEnumerable<IMediaItem>> callback = e.UserState as Action<IEnumerable<IMediaItem>>;
-            try
-            {
-                if (e.Error != null)
-                {
-                    if (callback != null)
-                        callback(null);
-                    return;
-                }
-
-                StringReader stringReader = new StringReader(e.Result);
-                Rss20FeedFormatter feedformatter = new Rss20FeedFormatter();
-                feedformatter.PreserveAttributeExtensions = true;
-                feedformatter.PreserveElementExtensions = true;
-                XmlReader reader = XmlReader.Create(stringReader);
-                feedformatter.ReadFrom(reader);
-
-                var result = from item in FromFeed(feedformatter.Feed)
-                             let media = GetMediaItemFromRssItem(item, extensionArrays)
-                             where media != null
-                             select media;
-
-                if(callback != null)
-                    callback(result.ToArray());
-            }
-            catch
-            {
-                if (callback != null)
-                    callback(null);
-            }
+            return result.ToArray();
         }
 
         #endregion Methods

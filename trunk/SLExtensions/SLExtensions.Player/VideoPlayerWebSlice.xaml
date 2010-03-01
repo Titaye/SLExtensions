@@ -3,7 +3,9 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
     xmlns:mediaCore="clr-namespace:SLMedia.Core;assembly=SLMedia.Core"
     xmlns:mediaVideo="clr-namespace:SLMedia.Video;assembly=SLMedia.Video"
+    xmlns:mediaSmooth="clr-namespace:SLMedia.SmoothStreaming;assembly=SLMedia.SmoothStreaming"
     xmlns:mediaInt="clr-namespace:SLMedia.Core.Interactivity;assembly=SLMedia.Core"
+             
     xmlns:slec="clr-namespace:SLExtensions.Controls;assembly=SLExtensions.Controls"
     xmlns:sleca="clr-namespace:SLExtensions.Controls.Animation;assembly=SLExtensions.Controls"
     xmlns:sled="clr-namespace:SLExtensions.Data;assembly=SLExtensions.Data"
@@ -18,8 +20,14 @@
              Loaded="UserControl_Loaded"
              >
     <UserControl.Resources>
-        <mediaVideo:VideoController x:Key="controller" />
-       
+        <mediaCore:PlaylistSource x:Name="playlistSource">
+            <mediaSmooth:XItemParserSmoothVideo />
+            <mediaVideo:XItemParserVideo />
+        </mediaCore:PlaylistSource>
+
+
+        <mediaVideo:VideoController x:Name="controller" PlaylistSource="{StaticResource playlistSource}" />
+
         <Style x:Key="BtnPlay" TargetType="CheckBox">
             <Setter Property="Background" Value="#FF448DCA"/>
             <Setter Property="Foreground" Value="#FF000000"/>
@@ -2721,7 +2729,7 @@
 
             <Grid x:Name="g"
                 MinWidth="480" MinHeight="360">
-                                                   
+
                 <Border x:Name="border" BorderThickness="1,1,1,1" BorderBrush="{x:Null}" CornerRadius="20" Background="{x:Null}" >
                     <Grid x:Name="grid">
 
@@ -2740,15 +2748,13 @@
                                     <GradientStop Color="#FF0A0A0A" Offset="0.70999997854232788"/>
                                 </RadialGradientBrush>
                             </Border.Background>
-                            
+
                             <HyperlinkButton x:Name="hlVideoLink" TargetName="_blank">
-<MediaElement x:Name="media"  mediaVideo:VideoSourceAdapter.Source="{Binding Path=CurrentItem.SourceUri, Source={StaticResource controller}}"
-						IsMuted="{Binding Path=IsMuted, Source={StaticResource controller}}"
-						Volume="{Binding Path=Volume, Source={StaticResource controller}}"
-						mediaVideo:VideoController.MediaElement="{StaticResource controller}" MediaFailed="media_MediaFailed" AutoPlay="{Binding Path=AutoPlay, Source={StaticResource controller}}" 
-						/>
+                                <ContentControl Content="{Binding VideoAdapter.Content, Source={StaticResource controller}}"
+                                                VerticalContentAlignment="Stretch" 
+                                                HorizontalContentAlignment="Stretch" />
                             </HyperlinkButton>
-                            
+
                         </Border>
                         <Canvas HorizontalAlignment="Center" Width="Auto" Grid.Row="1" d:LayoutOverrides="Height"/>
 
@@ -2903,7 +2909,7 @@
                                         </TransformGroup>
                                     </Slider.RenderTransform>
                                 </Slider>
-                                
+
                                 <slec:Slider Height="20"  x:Name="sliderTimeline"
         					Maximum="{Binding Path=End, Converter={StaticResource timeSpanConverter}, Source={StaticResource controller}}"
                          Minimum="{Binding Path=Start, Converter={StaticResource timeSpanConverter}, Source={StaticResource controller}}"

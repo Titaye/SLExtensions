@@ -1,29 +1,35 @@
-﻿using System;
-using System.Net;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Ink;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Animation;
-using System.Windows.Shapes;
-using System.IO;
-using System.Windows.Browser;
-
-namespace SLExtensions.Imaging
+﻿namespace SLExtensions.Imaging
 {
+    using System;
+    using System.IO;
+    using System.Net;
+    using System.Windows;
+    using System.Windows.Browser;
+    using System.Windows.Controls;
+    using System.Windows.Documents;
+    using System.Windows.Ink;
+    using System.Windows.Input;
+    using System.Windows.Media;
+    using System.Windows.Media.Animation;
+    using System.Windows.Shapes;
+
     /// <summary>
     /// Bitmap decoder for decoding bitmaps into instances of EditableImage.
     /// </summary>
     public class BmpDecoder
     {
+        #region Fields
+
+        private const int _BLUEMASK = 0x001F;
+        private const int _GREENMASK = 0x07E0;
+
         /// Original EditableImage and PngEncoder classes courtesy Joe Stegman.
         /// http://blogs.msdn.com/jstegman
-
         private const int _REDMASK = 0xF800;
-        private const int _GREENMASK = 0x07E0;
-        private const int _BLUEMASK = 0x001F;
+
+        #endregion Fields
+
+        #region Methods
 
         /// <summary>
         /// Decodes a bitmap stream into an editable image.
@@ -141,6 +147,74 @@ namespace SLExtensions.Imaging
             return colors;
         }
 
+        private static EditableImage Read24BitBmp(byte[] buffer, BmpInfoHeader header)
+        {
+            int alignment = (header.Width * 3) % 4;       // Rows are aligned on 4 byte boundaries
+            int rowbase = 0;
+            int offset;
+            int realRow;
+
+            EditableImage image = new EditableImage(header.Width, header.Height);
+
+            if (alignment != 0)
+            {
+                alignment = 4 - alignment;                        // Calculate row padding
+            }
+
+            for (int row = 0; row < header.Height; row++)
+            {
+                rowbase = (row * ((header.Width * 3) + alignment));
+                for (int col = 0; col < header.Width; col++)
+                {
+                    offset = rowbase + (col * 3);
+                    realRow = header.Height - row - 1;          // Reverse row
+                    if (offset >= buffer.Length)
+                    {
+                        HtmlPage.Window.Alert("Error - outside of bounds and not sure why");
+                    }
+                    image.SetPixel(col, realRow, buffer[offset + 2], buffer[offset + 1], buffer[offset], 255);
+                }
+            }
+
+            return image;
+        }
+
+        private static EditableImage Read4BitBmp(byte[] buffer, Color[] palette, BmpInfoHeader header)
+        {
+            int width = (header.Width + 1) / 2;
+            int alignment = width % 4;       // Rows are aligned on 4 byte boundaries
+            int rowbase = 0;
+            int colbase = 0;
+            int offset;
+            int realRow;
+            Color color1;
+            Color color2;
+
+            EditableImage image = new EditableImage(header.Width, header.Height);
+
+            if (alignment != 0)
+            {
+                alignment = 4 - alignment;                        // Calculate row padding
+            }
+
+            for (int row = 0; row < header.Height; row++)
+            {
+                rowbase = (row * (width + alignment));
+                for (int col = 0; col < width; col++)
+                {
+                    colbase = col * 2;
+                    offset = rowbase + col;
+                    realRow = header.Height - row - 1;          // Reverse row
+                    color1 = palette[(buffer[offset]) >> 4];
+                    color2 = palette[(buffer[offset]) & 0x0F];
+                    image.SetPixel(colbase, realRow, color1.R, color1.G, color1.B, 255);
+                    image.SetPixel(colbase + 1, realRow, color2.R, color2.G, color2.B, 255);
+                }
+            }
+
+            return image;
+        }
+
         private static EditableImage Read565Bmp(byte[] buffer, BmpInfoHeader header)
         {
             int rowbase = 0;
@@ -171,6 +245,36 @@ namespace SLExtensions.Imaging
 
                     // Set pixel
                     image.SetPixel(col, realRow, red, green, blue, 255);
+                }
+            }
+
+            return image;
+        }
+
+        private static EditableImage Read8BitBmp(byte[] buffer, Color[] palette, BmpInfoHeader header)
+        {
+            int alignment = header.Width % 4;       // Rows are aligned on 4 byte boundaries
+            int rowbase = 0;
+            int offset;
+            int realRow;
+            Color color;
+
+            EditableImage image = new EditableImage(header.Width, header.Height);
+
+            if (alignment != 0)
+            {
+                alignment = 4 - alignment;                        // Calculate row padding
+            }
+
+            for (int row = 0; row < header.Height; row++)
+            {
+                rowbase = (row * (header.Width + alignment));
+                for (int col = 0; col < header.Width; col++)
+                {
+                    offset = rowbase + col;
+                    realRow = header.Height - row - 1;          // Reverse row
+                    color = palette[buffer[offset]];
+                    image.SetPixel(col, realRow, color.R, color.G, color.B, color.A);
                 }
             }
 
@@ -215,102 +319,6 @@ namespace SLExtensions.Imaging
             return image;
         }
 
-        private static EditableImage Read4BitBmp(byte[] buffer, Color[] palette, BmpInfoHeader header)
-        {
-            int width = (header.Width + 1) / 2;
-            int alignment = width % 4;       // Rows are aligned on 4 byte boundaries
-            int rowbase = 0;
-            int colbase = 0;
-            int offset;
-            int realRow;
-            Color color1;
-            Color color2;
-
-            EditableImage image = new EditableImage(header.Width, header.Height);
-
-            if (alignment != 0)
-            {
-                alignment = 4 - alignment;                        // Calculate row padding
-            }
-
-            for (int row = 0; row < header.Height; row++)
-            {
-                rowbase = (row * (width + alignment));
-                for (int col = 0; col < width; col++)
-                {
-                    colbase = col * 2;
-                    offset = rowbase + col;
-                    realRow = header.Height - row - 1;          // Reverse row
-                    color1 = palette[(buffer[offset]) >> 4];
-                    color2 = palette[(buffer[offset]) & 0x0F];
-                    image.SetPixel(colbase, realRow, color1.R, color1.G, color1.B, 255);
-                    image.SetPixel(colbase + 1, realRow, color2.R, color2.G, color2.B, 255);
-                }
-            }
-
-            return image;
-        }
-
-        private static EditableImage Read8BitBmp(byte[] buffer, Color[] palette, BmpInfoHeader header)
-        {
-            int alignment = header.Width % 4;       // Rows are aligned on 4 byte boundaries
-            int rowbase = 0;
-            int offset;
-            int realRow;
-            Color color;
-
-            EditableImage image = new EditableImage(header.Width, header.Height);
-
-            if (alignment != 0)
-            {
-                alignment = 4 - alignment;                        // Calculate row padding
-            }
-
-            for (int row = 0; row < header.Height; row++)
-            {
-                rowbase = (row * (header.Width + alignment));
-                for (int col = 0; col < header.Width; col++)
-                {
-                    offset = rowbase + col;
-                    realRow = header.Height - row - 1;          // Reverse row
-                    color = palette[buffer[offset]];
-                    image.SetPixel(col, realRow, color.R, color.G, color.B, color.A);
-                }
-            }
-
-            return image;
-        }
-
-        private static EditableImage Read24BitBmp(byte[] buffer, BmpInfoHeader header)
-        {
-            int alignment = (header.Width * 3) % 4;       // Rows are aligned on 4 byte boundaries
-            int rowbase = 0;
-            int offset;
-            int realRow;
-
-            EditableImage image = new EditableImage(header.Width, header.Height);
-
-            if (alignment != 0)
-            {
-                alignment = 4 - alignment;                        // Calculate row padding
-            }
-
-            for (int row = 0; row < header.Height; row++)
-            {
-                rowbase = (row * ((header.Width * 3) + alignment));
-                for (int col = 0; col < header.Width; col++)
-                {
-                    offset = rowbase + (col * 3);
-                    realRow = header.Height - row - 1;          // Reverse row
-                    if (offset >= buffer.Length)
-                    {
-                        HtmlPage.Window.Alert("Error - outside of bounds and not sure why");
-                    }
-                    image.SetPixel(col, realRow, buffer[offset + 2], buffer[offset + 1], buffer[offset], 255);
-                }
-            }
-
-            return image;
-        }
+        #endregion Methods
     }
 }

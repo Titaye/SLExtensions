@@ -1,22 +1,28 @@
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Media;
-
-
 namespace SLExtensions.Controls
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.Linq;
+    using System.Windows;
+    using System.Windows.Controls;
+    using System.Windows.Media;
+
     /// <summary>
     /// Representation of the ItemContainerGenerator.  Contains utilities for mapping items
     /// of a ItemsControl to a generated container.
     /// </summary>
     public class CoolMenuItemContainerGenerator
     {
-        private Panel m_itemsHost;
+        #region Fields
+
         private readonly IDictionary<DependencyObject, object> m_itemContainer;
+
+        private Panel m_itemsHost;
+
+        #endregion Fields
+
+        #region Constructors
 
         /// <summary>
         /// Initializes an instance of CoolMenuItemContainerGenerator.
@@ -26,21 +32,9 @@ namespace SLExtensions.Controls
             m_itemContainer = new Dictionary<DependencyObject, object>();
         }
 
-        internal void ClearContainerForItemOverride(DependencyObject element, object item)
-        {
-            m_itemContainer.Remove(element);
-        }
+        #endregion Constructors
 
-        internal void PrepareContainerForItemOverride(DependencyObject element, object item, Style parentItemContainerStyle)
-        {
-            m_itemContainer[element] = item;
-
-            Control control = element as Control;
-            if (parentItemContainerStyle != null && control != null && control.Style == null)
-            {
-                control.SetValue(Control.StyleProperty, parentItemContainerStyle);
-            }
-        }
+        #region Properties
 
         internal Panel ItemsHost
         {
@@ -59,6 +53,10 @@ namespace SLExtensions.Controls
             }
         }
 
+        #endregion Properties
+
+        #region Methods
+
         /// <summary>
         /// Gets a item container from a specified index.
         /// </summary>
@@ -71,6 +69,16 @@ namespace SLExtensions.Controls
                 return null;
 
             return host.Children[index];
+        }
+
+        /// <summary>
+        /// Gets a list of containers.
+        /// </summary>
+        /// <returns>Returns a ReadOnlyCollection of containers.</returns>
+        public ReadOnlyCollection<DependencyObject> GetContainerList()
+        {
+            List<DependencyObject> containers = new List<DependencyObject>(m_itemContainer.Keys);
+            return new ReadOnlyCollection<DependencyObject>(containers);
         }
 
         /// <summary>
@@ -94,14 +102,20 @@ namespace SLExtensions.Controls
             return host.Children.IndexOf(element);
         }
 
-        /// <summary>
-        /// Gets a list of containers.
-        /// </summary>
-        /// <returns>Returns a ReadOnlyCollection of containers.</returns>
-        public ReadOnlyCollection<DependencyObject> GetContainerList()
+        internal void ClearContainerForItemOverride(DependencyObject element, object item)
         {
-            List<DependencyObject> containers = new List<DependencyObject>(m_itemContainer.Keys);
-            return new ReadOnlyCollection<DependencyObject>(containers);
+            m_itemContainer.Remove(element);
+        }
+
+        internal void PrepareContainerForItemOverride(DependencyObject element, object item, Style parentItemContainerStyle)
+        {
+            m_itemContainer[element] = item;
+
+            Control control = element as Control;
+            if (parentItemContainerStyle != null && control != null && control.Style == null)
+            {
+                control.SetValue(Control.StyleProperty, parentItemContainerStyle);
+            }
         }
 
         internal void UpdateItemContainerStyle(Style itemContainerStyle)
@@ -122,5 +136,7 @@ namespace SLExtensions.Controls
                 }
             }
         }
+
+        #endregion Methods
     }
 }

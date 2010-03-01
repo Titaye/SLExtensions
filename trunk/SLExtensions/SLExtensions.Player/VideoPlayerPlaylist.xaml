@@ -4,6 +4,7 @@
     xmlns:mediaCore="clr-namespace:SLMedia.Core;assembly=SLMedia.Core"
     xmlns:mediaVideo="clr-namespace:SLMedia.Video;assembly=SLMedia.Video"
     xmlns:mediaInt="clr-namespace:SLMedia.Core.Interactivity;assembly=SLMedia.Core"
+    xmlns:mediaSmooth="clr-namespace:SLMedia.SmoothStreaming;assembly=SLMedia.SmoothStreaming"
     xmlns:videoProvider="clr-namespace:SLMedia.PlaylistProvider.MediaRSS;assembly=SLMedia.PlaylistProvider.MediaRSS"
     xmlns:slec="clr-namespace:SLExtensions.Controls;assembly=SLExtensions.Controls"
     xmlns:sleca="clr-namespace:SLExtensions.Controls.Animation;assembly=SLExtensions.Controls"
@@ -18,7 +19,13 @@
              d:DesignHeight="708" d:DesignWidth="628"
              >
     <UserControl.Resources>
-        <mediaVideo:VideoController x:Key="controller" />
+        <mediaCore:PlaylistSource x:Name="playlistSource">
+            <mediaSmooth:XItemParserSmoothVideo />
+            <mediaVideo:XItemParserVideo />
+        </mediaCore:PlaylistSource>
+
+
+        <mediaVideo:VideoController x:Name="controller" PlaylistSource="{StaticResource playlistSource}" />
     </UserControl.Resources>
 
     <Grid x:Name="LayoutRoot" >
@@ -157,11 +164,9 @@
                         </LinearGradientBrush>
                     </Border.Background>
 
-                    <MediaElement x:Name="media"  mediaVideo:VideoSourceAdapter.Source="{Binding Path=CurrentItem.SourceUri, Source={StaticResource controller}}"
-						IsMuted="{Binding Path=IsMuted, Source={StaticResource controller}}"
-						Volume="{Binding Path=Volume, Source={StaticResource controller}}"
-						mediaVideo:VideoController.MediaElement="{StaticResource controller}" MediaFailed="media_MediaFailed" AutoPlay="{Binding Path=AutoPlay, Source={StaticResource controller}}" 
-						/>
+                    <ContentControl Content="{Binding VideoAdapter.Content, Source={StaticResource controller}}" 
+                                                VerticalContentAlignment="Stretch" 
+                                                HorizontalContentAlignment="Stretch" />
                 </Border>
                 <Canvas Margin="0,0.128,0,-36.128" Grid.Row="1" Width="1064" HorizontalAlignment="Center">
 

@@ -1,35 +1,36 @@
-﻿using System;
-using System.Net;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Ink;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Animation;
-using System.Windows.Shapes;
-using System.IO;
-
-namespace SLExtensions.Imaging
+﻿namespace SLExtensions.Imaging
 {
+    using System;
+    using System.IO;
+    using System.Net;
+    using System.Windows;
+    using System.Windows.Controls;
+    using System.Windows.Documents;
+    using System.Windows.Ink;
+    using System.Windows.Input;
+    using System.Windows.Media;
+    using System.Windows.Media.Animation;
+    using System.Windows.Shapes;
+
     /// <summary>
     /// Creates an class for building dynamic images.
     /// </summary>
     public class EditableImage
     {
-        /// Original EditableImage and PngEncoder classes courtesy Joe Stegman.
-        /// http://blogs.msdn.com/jstegman
+        #region Fields
 
-        private int _width = 0;
+        private byte[] _buffer;
         private int _height = 0;
         private bool _init = false;
-        private byte[] _buffer;
         private int _rowLength;
 
-        /// <summary>
-        /// Event fired when the editable image encounters an error condition.
-        /// </summary>
-        public event EventHandler<EditableImageErrorEventArgs> ImageError;
+        /// Original EditableImage and PngEncoder classes courtesy Joe Stegman.
+        /// http://blogs.msdn.com/jstegman
+        private int _width = 0;
+
+        #endregion Fields
+
+        #region Constructors
 
         /// <summary>
         /// Creates a new EditableImage with the specified witdth and height.
@@ -40,6 +41,45 @@ namespace SLExtensions.Imaging
         {
             this.Width = width;
             this.Height = height;
+        }
+
+        #endregion Constructors
+
+        #region Events
+
+        /// <summary>
+        /// Event fired when the editable image encounters an error condition.
+        /// </summary>
+        public event EventHandler<EditableImageErrorEventArgs> ImageError;
+
+        #endregion Events
+
+        #region Properties
+
+        /// <summary>
+        /// Gets or sets the height of the image.
+        /// </summary>
+        public int Height
+        {
+            get
+            {
+                return _height;
+            }
+            set
+            {
+                if (_init)
+                {
+                    OnImageError("Error: Cannot change Height after the EditableImage has been initialized");
+                }
+                else if ((value <= 0) || (value > 3000))
+                {
+                    OnImageError("Error: Height must be between 0 and 3000");
+                }
+                else
+                {
+                    _height = value;
+                }
+            }
         }
 
         /// <summary>
@@ -76,30 +116,57 @@ namespace SLExtensions.Imaging
             }
         }
 
+        #endregion Properties
+
+        #region Methods
+
         /// <summary>
-        /// Gets or sets the height of the image.
+        /// Gets the color in the desired row/column pair.
         /// </summary>
-        public int Height
+        /// <param name="col">The column for which to get the pixel.</param>
+        /// <param name="row">The row for which to get the pixel.</param>
+        /// <returns>Returns a color for the specified column/row pair.</returns>
+        public Color GetPixel(int col, int row)
         {
-            get
+            if ((col > _width) || (col < 0))
             {
-                return _height;
+                OnImageError("Error: Column must be greater than 0 and less than the Width");
             }
-            set
+            else if ((row > _height) || (row < 0))
             {
-                if (_init)
-                {
-                    OnImageError("Error: Cannot change Height after the EditableImage has been initialized");
-                }
-                else if ((value <= 0) || (value > 3000))
-                {
-                    OnImageError("Error: Height must be between 0 and 3000");
-                }
-                else
-                {
-                    _height = value;
-                }
+                OnImageError("Error: Row must be greater than 0 and less than the Height");
             }
+
+            Color color = new Color();
+            int start = _rowLength * row + col * 4 + 1;   // +1 is for the filter byte
+
+            color.R = _buffer[start];
+            color.G = _buffer[start + 1];
+            color.B = _buffer[start + 2];
+            color.A = _buffer[start + 3];
+
+            return color;
+        }
+
+        /// <summary>
+        /// Gets a PNG encoded stream from the image data.
+        /// </summary>
+        /// <returns>Returns a PNG encoded stream.</returns>
+        public Stream GetStream()
+        {
+            Stream stream;
+
+            if (!_init)
+            {
+                OnImageError("Error: Image has not been initialized");
+                stream = null;
+            }
+            else
+            {
+                stream = PngEncoder.Encode(_buffer, _width, _height);
+            }
+
+            return stream;
         }
 
         /// <summary>
@@ -155,55 +222,6 @@ namespace SLExtensions.Imaging
             _buffer[start + 3] = alpha;
         }
 
-        /// <summary>
-        /// Gets the color in the desired row/column pair.
-        /// </summary>
-        /// <param name="col">The column for which to get the pixel.</param>
-        /// <param name="row">The row for which to get the pixel.</param>
-        /// <returns>Returns a color for the specified column/row pair.</returns>
-        public Color GetPixel(int col, int row)
-        {
-            if ((col > _width) || (col < 0))
-            {
-                OnImageError("Error: Column must be greater than 0 and less than the Width");
-            }
-            else if ((row > _height) || (row < 0))
-            {
-                OnImageError("Error: Row must be greater than 0 and less than the Height");
-            }
-
-            Color color = new Color();
-            int start = _rowLength * row + col * 4 + 1;   // +1 is for the filter byte
-
-            color.R = _buffer[start];
-            color.G = _buffer[start + 1];
-            color.B = _buffer[start + 2];
-            color.A = _buffer[start + 3];
-
-            return color;
-        }
-
-        /// <summary>
-        /// Gets a PNG encoded stream from the image data.
-        /// </summary>
-        /// <returns>Returns a PNG encoded stream.</returns>
-        public Stream GetStream()
-        {
-            Stream stream;
-
-            if (!_init)
-            {
-                OnImageError("Error: Image has not been initialized");
-                stream = null;
-            }
-            else
-            {
-                stream = PngEncoder.Encode(_buffer, _width, _height);
-            }
-
-            return stream;
-        }
-
         private void OnImageError(string msg)
         {
             if (null != ImageError)
@@ -214,5 +232,6 @@ namespace SLExtensions.Imaging
             }
         }
 
+        #endregion Methods
     }
 }

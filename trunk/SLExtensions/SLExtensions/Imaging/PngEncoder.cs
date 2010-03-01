@@ -1,35 +1,42 @@
-﻿using System;
-using System.Net;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Ink;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Animation;
-using System.Windows.Shapes;
-using System.IO;
-
-namespace SLExtensions.Imaging
+﻿namespace SLExtensions.Imaging
 {
+    using System;
+    using System.IO;
+    using System.Net;
+    using System.Windows;
+    using System.Windows.Controls;
+    using System.Windows.Documents;
+    using System.Windows.Ink;
+    using System.Windows.Input;
+    using System.Windows.Media;
+    using System.Windows.Media.Animation;
+    using System.Windows.Shapes;
+
     /// <summary>
     /// Utility class for encoding PNG image data.
     /// </summary>
     public class PngEncoder
     {
+        #region Fields
+
         /// Original EditableImage and PngEncoder classes courtesy Joe Stegman.
         /// http://blogs.msdn.com/jstegman
-
         private const int _ADLER32_BASE = 65521;
         private const int _MAXBLOCK = 0xFFFF;
-        private static byte[] _HEADER = { 0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A };
-        private static byte[] _IHDR = { (byte)'I', (byte)'H', (byte)'D', (byte)'R' };
-        private static byte[] _GAMA = { (byte)'g', (byte)'A', (byte)'M', (byte)'A' };
-        private static byte[] _IDAT = { (byte)'I', (byte)'D', (byte)'A', (byte)'T' };
-        private static byte[] _IEND = { (byte)'I', (byte)'E', (byte)'N', (byte)'D' };
+
         private static byte[] _4BYTEDATA = { 0, 0, 0, 0 };
         private static byte[] _ARGB = { 0, 0, 0, 0, 0, 0, 0, 0, 8, 6, 0, 0, 0 };
+        private static byte[] _GAMA = { (byte)'g', (byte)'A', (byte)'M', (byte)'A' };
+        private static byte[] _HEADER = { 0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A };
+        private static byte[] _IDAT = { (byte)'I', (byte)'D', (byte)'A', (byte)'T' };
+        private static byte[] _IEND = { (byte)'I', (byte)'E', (byte)'N', (byte)'D' };
+        private static byte[] _IHDR = { (byte)'I', (byte)'H', (byte)'D', (byte)'R' };
+        private static uint[] _crcTable = new uint[256];
+        private static bool _crcTableComputed = false;
 
+        #endregion Fields
+
+        #region Methods
 
         /// <summary>
         /// Encodes the provided buffer into PNG format and returns a stream.
@@ -165,47 +172,26 @@ namespace SLExtensions.Imaging
             // See ftp://ftp.uu.net/pub/archiving/zip/doc/rfc1951.txt (ZLIB compression format)
         }
 
-        private static void WriteReversedBuffer(Stream stream, byte[] data)
+        private static uint ComputeAdler32(byte[] buf)
         {
-            int size = data.Length;
-            byte[] reorder = new byte[size];
+            uint s1 = 1;
+            uint s2 = 0;
+            int length = buf.Length;
 
-            for (int idx = 0; idx < size; idx++)
+            for (int idx = 0; idx < length; idx++)
             {
-                reorder[idx] = data[size - idx - 1];
+                s1 = (s1 + (uint)buf[idx]) % _ADLER32_BASE;
+                s2 = (s2 + s1) % _ADLER32_BASE;
             }
-            stream.Write(reorder, 0, size);
+
+            return (s2 << 16) + s1;
         }
 
-        private static void WriteChunk(Stream stream, byte[] type, byte[] data)
+        /* Return the CRC of the bytes buf[0..len-1]. */
+        private static uint GetCRC(byte[] buf)
         {
-            int idx;
-            int size = type.Length;
-            byte[] buffer = new byte[type.Length + data.Length];
-
-            // Initialize buffer
-            for (idx = 0; idx < type.Length; idx++)
-            {
-                buffer[idx] = type[idx];
-            }
-
-            for (idx = 0; idx < data.Length; idx++)
-            {
-                buffer[idx + size] = data[idx];
-            }
-
-            // Write length
-            WriteReversedBuffer(stream, BitConverter.GetBytes(data.Length));
-
-            // Write type and data
-            stream.Write(buffer, 0, buffer.Length);   // Should always be 4 bytes
-
-            // Compute and write the CRC
-            WriteReversedBuffer(stream, BitConverter.GetBytes(GetCRC(buffer)));
+            return UpdateCRC(0xFFFFFFFF, buf, buf.Length) ^ 0xFFFFFFFF;
         }
-
-        private static uint[] _crcTable = new uint[256];
-        private static bool _crcTableComputed = false;
 
         private static void MakeCRCTable()
         {
@@ -244,25 +230,45 @@ namespace SLExtensions.Imaging
             return c;
         }
 
-        /* Return the CRC of the bytes buf[0..len-1]. */
-        private static uint GetCRC(byte[] buf)
+        private static void WriteChunk(Stream stream, byte[] type, byte[] data)
         {
-            return UpdateCRC(0xFFFFFFFF, buf, buf.Length) ^ 0xFFFFFFFF;
-        }
+            int idx;
+            int size = type.Length;
+            byte[] buffer = new byte[type.Length + data.Length];
 
-        private static uint ComputeAdler32(byte[] buf)
-        {
-            uint s1 = 1;
-            uint s2 = 0;
-            int length = buf.Length;
-
-            for (int idx = 0; idx < length; idx++)
+            // Initialize buffer
+            for (idx = 0; idx < type.Length; idx++)
             {
-                s1 = (s1 + (uint)buf[idx]) % _ADLER32_BASE;
-                s2 = (s2 + s1) % _ADLER32_BASE;
+                buffer[idx] = type[idx];
             }
 
-            return (s2 << 16) + s1;
+            for (idx = 0; idx < data.Length; idx++)
+            {
+                buffer[idx + size] = data[idx];
+            }
+
+            // Write length
+            WriteReversedBuffer(stream, BitConverter.GetBytes(data.Length));
+
+            // Write type and data
+            stream.Write(buffer, 0, buffer.Length);   // Should always be 4 bytes
+
+            // Compute and write the CRC
+            WriteReversedBuffer(stream, BitConverter.GetBytes(GetCRC(buffer)));
         }
+
+        private static void WriteReversedBuffer(Stream stream, byte[] data)
+        {
+            int size = data.Length;
+            byte[] reorder = new byte[size];
+
+            for (int idx = 0; idx < size; idx++)
+            {
+                reorder[idx] = data[size - idx - 1];
+            }
+            stream.Write(reorder, 0, size);
+        }
+
+        #endregion Methods
     }
 }

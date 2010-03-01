@@ -1,33 +1,92 @@
-﻿using System;
-using System.Net;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Ink;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Animation;
-using System.Windows.Shapes;
-
-namespace SLExtensions.Controls
+﻿namespace SLExtensions.Controls
 {
-    public enum StarSelectState { NotSelected, HalfSelected, Selected }
+    using System;
+    using System.Net;
+    using System.Windows;
+    using System.Windows.Controls;
+    using System.Windows.Documents;
+    using System.Windows.Ink;
+    using System.Windows.Input;
+    using System.Windows.Media;
+    using System.Windows.Media.Animation;
+    using System.Windows.Shapes;
+
+    #region Enumerations
+
+    public enum StarSelectState
+    {
+        NotSelected, HalfSelected, Selected
+    }
+
+    #endregion Enumerations
 
     public class Star : Control
     {
-        private const string StateNormal = "StateNormal";
-        private const string StateHalfSelected = "StateHalfSelected";
-        private const string StateFullSelected = "StateFullSelected";
+        #region Fields
+
+        /// <summary>
+        /// Disabled Dependency Property.
+        /// </summary>
+        public static readonly DependencyProperty DisabledProperty = 
+            DependencyProperty.Register(
+                "Disabled",
+                typeof(bool),
+                typeof(Star),
+                new PropertyMetadata(false, DisabledChanged));
+
+        /// <summary>
+        /// Value Dependency Property.
+        /// </summary>
+        public static readonly DependencyProperty ValueProperty = 
+            DependencyProperty.Register(
+                "Value",
+                typeof(StarSelectState),
+                typeof(Star),
+                new PropertyMetadata(StarSelectState.NotSelected, ValueChanged));
+
         private const string StateDisabled = "StateDisabled";
+        private const string StateFullSelected = "StateFullSelected";
+        private const string StateHalfSelected = "StateHalfSelected";
+        private const string StateNormal = "StateNormal";
         private const string StateNotDisabled = "StateNotDisabled";
 
         private UIElement m_fullItem;
         private UIElement m_halfItem;
 
+        #endregion Fields
+
+        #region Constructors
+
         public Star()
         {
             DefaultStyleKey = typeof(Star);
         }
+
+        #endregion Constructors
+
+        #region Properties
+
+        /// <summary>
+        /// Disabled
+        /// </summary>
+        public bool Disabled
+        {
+            get { return (bool)GetValue(DisabledProperty); }
+            set { SetValue(DisabledProperty, value); }
+        }
+
+        /// <summary>
+        /// Value
+        /// </summary>
+        public StarSelectState Value
+        {
+            get { return (StarSelectState)GetValue(ValueProperty); }
+            set { SetValue(ValueProperty, value); }
+        }
+
+        #endregion Properties
+
+        #region Methods
 
         public override void OnApplyTemplate()
         {
@@ -35,6 +94,24 @@ namespace SLExtensions.Controls
             m_fullItem = GetTemplateChild("FullItem") as UIElement;
             m_halfItem = GetTemplateChild("HalfItem") as UIElement;
             UpdateVisuals();
+        }
+
+        private static void DisabledChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            Star c = d as Star;
+            if (c != null)
+            {
+                c.UpdateVisuals();
+            }
+        }
+
+        private static void ValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            Star c = d as Star;
+            if (c != null)
+            {
+                c.UpdateVisuals();
+            }
         }
 
         private void UpdateVisuals()
@@ -66,68 +143,6 @@ namespace SLExtensions.Controls
             }
         }
 
-        #region Value Dependency Property
-
-        /// <summary>
-        /// Value
-        /// </summary>
-        public StarSelectState Value
-        {
-            get { return (StarSelectState)GetValue(ValueProperty); }
-            set { SetValue(ValueProperty, value); }
-        }
-
-        /// <summary>
-        /// Value Dependency Property.
-        /// </summary>
-        public static readonly DependencyProperty ValueProperty =
-            DependencyProperty.Register(
-                "Value",
-                typeof(StarSelectState),
-                typeof(Star),
-                new PropertyMetadata(StarSelectState.NotSelected, ValueChanged));
-
-        private static void ValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            Star c = d as Star;
-            if (c != null)
-            {
-                c.UpdateVisuals();
-            }
-        }
-
-        #endregion
-
-        #region Disabled Dependency Property
-
-        /// <summary>
-        /// Disabled
-        /// </summary>
-        public bool Disabled
-        {
-            get { return (bool)GetValue(DisabledProperty); }
-            set { SetValue(DisabledProperty, value); }
-        }
-
-        /// <summary>
-        /// Disabled Dependency Property.
-        /// </summary>
-        public static readonly DependencyProperty DisabledProperty =
-            DependencyProperty.Register(
-                "Disabled",
-                typeof(bool),
-                typeof(Star),
-                new PropertyMetadata(false, DisabledChanged));
-
-        private static void DisabledChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            Star c = d as Star;
-            if (c != null)
-            {
-                c.UpdateVisuals();
-            }
-        }
-
-        #endregion
+        #endregion Methods
     }
 }

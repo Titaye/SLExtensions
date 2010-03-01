@@ -1,18 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Text;
-using System.Xml;
-
-namespace SLExtensions.Xaml.Rtf
+﻿namespace SLExtensions.Xaml.Rtf
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Diagnostics;
+    using System.IO;
+    using System.Text;
+    using System.Xml;
+
     /// <summary>
     /// Converts Rich Text Format streams to XAML.
     /// </summary>
-    public class RtfConverter
-        : StringConverterBase
+    public class RtfConverter : StringConverterBase
     {
+        #region Methods
+
         /// <summary>
         /// Converts the data from the input string to XAML and writes the output to specified writer.
         /// </summary>
@@ -64,5 +65,7 @@ namespace SLExtensions.Xaml.Rtf
 
             return settings;
         }
+
+        #endregion Methods
     }
 }

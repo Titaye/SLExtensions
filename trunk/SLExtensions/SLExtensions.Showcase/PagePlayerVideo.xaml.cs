@@ -26,7 +26,7 @@
 
             MSNVideoProvider msnProvider = new MSNVideoProvider();
             Uri uri = new Uri("http://edge1.catalog.video.msn.com/videoByTag.aspx?tag=frfr_cinetv&ns=MSNVideo_Top_Cat&mk=fr-fr&sf=ActiveStartDate&sd=-1&vs=0&ind=&ps=&rct=&ff=99");
-            msnProvider.Source = uri;
+            msnProvider.ContentSource = uri;
             player.Controller.PlaylistSource = msnProvider;
         }
 

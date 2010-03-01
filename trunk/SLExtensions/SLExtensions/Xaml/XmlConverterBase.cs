@@ -1,15 +1,16 @@
-﻿using System;
-using System.IO;
-using System.Xml;
-
-namespace SLExtensions.Xaml
+﻿namespace SLExtensions.Xaml
 {
+    using System;
+    using System.IO;
+    using System.Xml;
+
     /// <summary>
     /// Represents a base converter capable of converting XML input into XAML.
     /// </summary>
-    public abstract class XmlConverterBase
-        : StringConverterBase
+    public abstract class XmlConverterBase : StringConverterBase
     {
+        #region Methods
+
         /// <summary>
         /// Converts the data from the input stream to XAML and writes the output to specified writer.
         /// </summary>
@@ -54,5 +55,7 @@ namespace SLExtensions.Xaml
 
             return settings;
         }
+
+        #endregion Methods
     }
 }

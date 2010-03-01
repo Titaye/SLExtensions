@@ -1,17 +1,19 @@
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Text;
-
-using SLExtensions.IO;
-
 namespace SLExtensions.Text
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Globalization;
+    using System.Text;
+
+    using SLExtensions.IO;
+
     /// <summary>
     /// Provides several string utility methods.
     /// </summary>
     public static class StringUtility
     {
+        #region Methods
+
         /// <summary>
         /// Formats the specified message using the invariant culture.
         /// </summary>
@@ -47,25 +49,6 @@ namespace SLExtensions.Text
             }
 
             return new string(chars);
-        }
-
-        /// <summary>
-        /// Validates the value.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <param name="nullAllowed">if set to <c>true</c> [null allowed].</param>
-        /// <param name="encoding">The encoding.</param>
-        /// <param name="minLength">The minimum number of bytes when encoded using specified encoding.</param>
-        /// <param name="maxLength">The maximum number of bytes when encoded using specified encoding.</param>
-        public static void ValidateValue(string value, bool nullAllowed, Encoding encoding, int minLength, int maxLength)
-        {
-            if (!nullAllowed || value != null) {
-                int length = ByteUtility.GetByteCount(encoding, value);
-
-                if (length < minLength || length > maxLength) {
-                    throw new ArgumentOutOfRangeException(StringUtility.Format(Resource.ExceptionStringLength, value, minLength, maxLength));
-                }
-           } 
         }
 
         /// <summary>
@@ -105,5 +88,26 @@ namespace SLExtensions.Text
             }
             return result;
         }
+
+        /// <summary>
+        /// Validates the value.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <param name="nullAllowed">if set to <c>true</c> [null allowed].</param>
+        /// <param name="encoding">The encoding.</param>
+        /// <param name="minLength">The minimum number of bytes when encoded using specified encoding.</param>
+        /// <param name="maxLength">The maximum number of bytes when encoded using specified encoding.</param>
+        public static void ValidateValue(string value, bool nullAllowed, Encoding encoding, int minLength, int maxLength)
+        {
+            if (!nullAllowed || value != null) {
+                int length = ByteUtility.GetByteCount(encoding, value);
+
+                if (length < minLength || length > maxLength) {
+                    throw new ArgumentOutOfRangeException(StringUtility.Format(Resource.ExceptionStringLength, value, minLength, maxLength));
+                }
+               }
+        }
+
+        #endregion Methods
     }
 }

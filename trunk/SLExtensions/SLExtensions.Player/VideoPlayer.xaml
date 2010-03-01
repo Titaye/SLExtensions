@@ -4,6 +4,8 @@
     xmlns:mediaCore="clr-namespace:SLMedia.Core;assembly=SLMedia.Core"
     xmlns:mediaVideo="clr-namespace:SLMedia.Video;assembly=SLMedia.Video"
     xmlns:mediaInt="clr-namespace:SLMedia.Core.Interactivity;assembly=SLMedia.Core"
+    xmlns:mediaSmooth="clr-namespace:SLMedia.SmoothStreaming;assembly=SLMedia.SmoothStreaming"
+             
     xmlns:slec="clr-namespace:SLExtensions.Controls;assembly=SLExtensions.Controls"
     xmlns:sleca="clr-namespace:SLExtensions.Controls.Animation;assembly=SLExtensions.Controls"
     xmlns:sled="clr-namespace:SLExtensions.Data;assembly=SLExtensions.Data"
@@ -17,7 +19,13 @@
              Background="#FF000000" d:DesignHeight="722.5" d:DesignWidth="1082.5"
              >
     <UserControl.Resources>
-        <mediaVideo:VideoController x:Key="controller" />
+        <mediaCore:PlaylistSource x:Name="playlistSource">
+            <mediaSmooth:XItemParserSmoothVideo />
+            <mediaVideo:XItemParserVideo />
+        </mediaCore:PlaylistSource>
+
+
+        <mediaVideo:VideoController x:Name="controller" PlaylistSource="{StaticResource playlistSource}" />
 
         <Style x:Key="BtnPlay" TargetType="CheckBox">
             <Setter Property="Background" Value="#FF448DCA"/>
@@ -2729,15 +2737,9 @@
                         </RadialGradientBrush>
                     </Border.Background>
 
-                    <MediaElement x:Name="media"  
-                        mediaVideo:VideoSourceAdapter.Source="{Binding Path=CurrentItem.SourceUri, Source={StaticResource controller}}"
-						IsMuted="{Binding Path=IsMuted, Source={StaticResource controller}}"
-						Volume="{Binding Path=Volume, Source={StaticResource controller}}"
-                        AutoPlay="{Binding Path=AutoPlay, Source={StaticResource controller}}" 
-						mediaVideo:VideoController.MediaElement="{StaticResource controller}" 
-                                  MediaFailed="media_MediaFailed" 
-                                  
-						/>
+                    <ContentControl Content="{Binding VideoAdapter.Content, Source={StaticResource controller}}"
+                                                VerticalContentAlignment="Stretch" 
+                                                HorizontalContentAlignment="Stretch" />
                 </Border>
                 <Canvas HorizontalAlignment="Center" Width="Auto" Grid.Row="1" d:LayoutOverrides="Height"/>
 

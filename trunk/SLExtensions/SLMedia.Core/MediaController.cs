@@ -23,6 +23,7 @@
 
     using SLExtensions;
     using SLExtensions.Collections.ObjectModel;
+    using SLExtensions.Input;
 
     public abstract class MediaController : NotifyingObject, IDisposable
     {
@@ -32,10 +33,12 @@
         public static readonly DependencyProperty ContentPubProperty = 
             DependencyProperty.RegisterAttached("ContentPub", typeof(MediaController), typeof(MediaController), new PropertyMetadata(ContentPubChangedCallback));
 
+        private Dictionary<string, object> autoActivedMarkers = new Dictionary<string,object>();
         private bool autoPlay;
         private ContentControl contentPub;
         private IMediaItem currentItem;
         private int currentItemIndex = -1;
+        private Dictionary<IMarkerSelector, int> currentMarkerIndexes = new Dictionary<IMarkerSelector, int>();
         private double downloadProgress;
         private Duration duration;
         private Popup fullscreenPopup = null;
@@ -51,7 +54,6 @@
         private IMediaItem lastSelectedItem;
         private string mediaName;
         private IEnumerable<IMediaItem> nextItems;
-        private bool pauseOnClick = true;
         private PlayStates playState;
         private ObservableCollection<IMediaItem> playlist;
         private IPlaylistSource playlistSource;
@@ -77,6 +79,15 @@
 
             Application.Current.Host.Content.FullScreenChanged += new EventHandler(Content_FullScreenChanged);
             IsFullscreen = Application.Current.Host.Content.IsFullScreen;
+
+            SetMarkerSelectorActive = new Command();
+            SetMarkerSelectorActive.Executed += new EventHandler<ExecutedEventArgs>(SetMarkerSelectorActive_Executed);
+            SetMarkerSelectorUnactive = new Command();
+            SetMarkerSelectorUnactive.Executed += new EventHandler<ExecutedEventArgs>(SetMarkerSelectorUnactive_Executed);
+            GoToPosition = new Command();
+            GoToPosition.Executed += new EventHandler<ExecutedEventArgs>(GoToPosition_Executed);
+
+            AutoActivatedMarkers.Add(MarkerMetadata.Chapter, "");
         }
 
         #endregion Constructors
@@ -93,6 +104,19 @@
         #endregion Events
 
         #region Properties
+
+        public Dictionary<string, object> AutoActivatedMarkers
+        {
+            get { return this.autoActivedMarkers; }
+            set
+            {
+                if (this.autoActivedMarkers != value)
+                {
+                    this.autoActivedMarkers = value;
+                    this.OnPropertyChanged(this.GetPropertyName(n => n.AutoActivatedMarkers));
+                }
+            }
+        }
 
         public bool AutoPlay
         {
@@ -147,7 +171,6 @@
                 if (currentItemIndex != value)
                 {
                     currentItemIndex = value;
-
                     if (Playlist != null && currentItemIndex >= 0 && currentItemIndex < Playlist.Count)
                     {
                         CurrentItem = Playlist[currentItemIndex];
@@ -214,6 +237,11 @@
                     OnPropertyChanged(this.GetPropertyName(n => n.FullscreenPopupTemplate));
                 }
             }
+        }
+
+        public Command GoToPosition
+        {
+            get; private set;
         }
 
         [ScriptableMemberAttribute]
@@ -371,35 +399,6 @@
             }
         }
 
-        //[ScriptableMemberAttribute]
-        //public FrameworkElement NextElement
-        //{
-        //    get { return nextElement; }
-        //    set
-        //    {
-        //        if (nextElement != value)
-        //        {
-        //            if (this.nextElement != null)
-        //            {
-        //                ButtonBase nextButton = this.nextElement as ButtonBase;
-        //                if (nextButton != null)
-        //                    nextButton.Click -= new RoutedEventHandler(nextButton_Click);
-        //                else
-        //                    nextButton.MouseLeftButtonDown -= new MouseButtonEventHandler(nextButton_MouseLeftButtonDown);
-        //            }
-        //            nextElement = value;
-        //            OnPropertyChanged(this.GetPropertyName(n => n.NextElement));
-        //            if (this.nextElement != null)
-        //            {
-        //                ButtonBase nextButton = this.nextElement as ButtonBase;
-        //                if (nextButton != null)
-        //                    nextButton.Click += new RoutedEventHandler(nextButton_Click);
-        //                else
-        //                    nextButton.MouseLeftButtonDown += new MouseButtonEventHandler(nextButton_MouseLeftButtonDown);
-        //            }
-        //        }
-        //    }
-        //}
         public IEnumerable<IMediaItem> NextItems
         {
             get { return nextItems; }
@@ -409,20 +408,6 @@
                 {
                     nextItems = value;
                     OnPropertyChanged(this.GetPropertyName(n => n.NextItems));
-                }
-            }
-        }
-
-        [ScriptableMemberAttribute]
-        public bool PauseOnClick
-        {
-            get { return pauseOnClick; }
-            set
-            {
-                if (pauseOnClick != value)
-                {
-                    pauseOnClick = value;
-                    OnPropertyChanged(this.GetPropertyName(n => n.PauseOnClick));
                 }
             }
         }
@@ -574,6 +559,16 @@
             }
         }
 
+        public Command SetMarkerSelectorActive
+        {
+            get; private set;
+        }
+
+        public Command SetMarkerSelectorUnactive
+        {
+            get; private set;
+        }
+
         [ScriptableMemberAttribute]
         public double Volume
         {
@@ -683,6 +678,113 @@
             Playlist.RemoveAt(index);
         }
 
+        /// <summary>
+        /// Returns a -1 if there is marker following the one at currentIdx with a position lower than the given position
+        /// Returns 0 if the marker position at currentIdx is lower than the given position and next marker is null or greater
+        /// Return 1 if the marker position at currentIdx is greater than the given position
+        /// </summary>
+        /// <param name="markers"></param>
+        /// <param name="currentIdx"></param>
+        /// <param name="position"></param>
+        /// <returns></returns>
+        internal static int CompareMarkerPosition(IList<IMarker> markers, int currentIdx, TimeSpan position)
+        {
+            if (markers == null)
+                throw new ArgumentNullException("markers");
+
+            IMarker marker = null;
+            IMarker nextMarker = null;
+            var markersLength = markers.Count();
+
+            if (currentIdx < 0)
+                throw new ArgumentOutOfRangeException("currentIdx");
+
+            if (currentIdx > markersLength)
+                throw new ArgumentOutOfRangeException("currentIdx");
+
+            marker = markers[currentIdx];
+
+            var nextMarkerIdx = currentIdx + 1;
+            if (nextMarkerIdx >= 0 && nextMarkerIdx < markersLength)
+                nextMarker = markers[nextMarkerIdx];
+
+            if (marker != null && marker.Position <= position
+                && (nextMarker == null
+                   || nextMarker.Position > position))
+            {
+                return 0;
+            }
+
+            if (nextMarker != null && nextMarker.Position < position)
+                return -1;
+
+            if (marker.Position > position)
+                return 1;
+
+            return 0;
+        }
+
+        internal static void SetActiveMarkerForSelector(List<IMarkerSelector> notProcessedMarkerSelector, IMarkerSelector markerSelector, TimeSpan position
+            , Dictionary<IMarkerSelector, int> cacheCurrentMarkerIndexes)
+        {
+            var currentIdx = -1;
+            if (notProcessedMarkerSelector.Remove(markerSelector))
+            {
+                currentIdx = cacheCurrentMarkerIndexes[markerSelector];
+            }
+
+            int markersLength;
+            IMarker markerActive = null;
+            if (markerSelector.Markers != null && (markersLength = markerSelector.Markers.Count()) > 0)
+            {
+                int compareResult;
+
+                if (currentIdx < 0)
+                    currentIdx = 0;
+                if (currentIdx >= markersLength)
+                    currentIdx = markersLength - 1;
+
+                while ((compareResult = CompareMarkerPosition(markerSelector.Markers, currentIdx, position)) != 0)
+                {
+                    if (compareResult > 1)
+                    {
+                        currentIdx--;
+                        if (currentIdx < 0)
+                        {
+                            currentIdx = -1;
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        currentIdx++;
+                        if (currentIdx >= markersLength)
+                        {
+                            currentIdx = -1;
+                            break;
+                        }
+                    }
+                }
+
+                if (currentIdx >= 0 && currentIdx < markersLength)
+                {
+                    markerActive = markerSelector.Markers[currentIdx];
+                    if (markerActive.Duration.HasTimeSpan && !markerActive.IsMarkerActiveAtPosition(position).GetValueOrDefault())
+                        markerActive = null;
+                }
+            }
+            if (markerSelector.ActiveMarker != markerActive)
+            {
+                if (markerSelector.ActiveMarker != null)
+                    markerSelector.ActiveMarker.IsActive = false;
+                if (markerActive != null)
+                    markerActive.IsActive = true;
+
+                markerSelector.ActiveMarker = markerActive;
+            }
+            cacheCurrentMarkerIndexes[markerSelector] = currentIdx;
+        }
+
         protected virtual FrameworkElement CreateFullscreenPopupContent()
         {
             if (FullscreenPopupTemplate != null)
@@ -703,6 +805,11 @@
             return this;
         }
 
+        protected virtual void GoToPositionExecuted(TimeSpan position)
+        {
+            this.Position = position;
+        }
+
         protected virtual void IsPlayingChanged()
         {
             if (IsPlaying)
@@ -717,6 +824,11 @@
             DownloadProgress = 1;
 
             RefreshNexPrevious();
+
+            if (CurrentItem != null)
+            {
+                CurrentItem.LoadMarkers(AutoActivatedMarkers);
+            }
 
             if (CurrentItemChanged != null)
             {
@@ -750,21 +862,7 @@
 
         protected virtual void RefreshPosition()
         {
-        }
-
-        protected virtual void SwitchPauseOnClick()
-        {
-            if (PauseOnClick)
-            {
-                if (IsPlaying)
-                {
-                    IsPlaying = false;
-                }
-                else
-                {
-                    IsPlaying = true;
-                }
-            }
+            SetMarkers();
         }
 
         protected virtual void TickScriptCommands()
@@ -779,10 +877,9 @@
 
         private void BindPlaylistSource()
         {
-            INotifyPropertyChanged playlistSource = PlaylistSource as INotifyPropertyChanged;
-            if (playlistSource != null)
+            if (PlaylistSource != null)
             {
-                playlistSource.PropertyChanged += new PropertyChangedEventHandler(playlistSource_PropertyChanged);
+                PlaylistSource.PlaylistChanged += new EventHandler(PlaylistSource_PlaylistChanged);
             }
         }
 
@@ -816,6 +913,17 @@
 
                 IsFullscreen = true;
             }
+        }
+
+        void GoToPosition_Executed(object sender, ExecutedEventArgs e)
+        {
+            TimeSpan? ts = e.Parameter as TimeSpan?;
+            GoToPositionExecuted(ts.GetValueOrDefault(TimeSpan.Zero));
+        }
+
+        void PlaylistSource_PlaylistChanged(object sender, EventArgs e)
+        {
+            Playlist = new ObservableCollection<IMediaItem>(((PlaylistSource)sender).Playlist);
         }
 
         private void RefreshNexPrevious()
@@ -854,6 +962,73 @@
             IsNextEnabled = nextIsEnabled;
         }
 
+        void SetMarkerSelectorActive_Executed(object sender, ExecutedEventArgs e)
+        {
+            var prm = e.Parameter as MarkerSelectorCommandParameter;
+            if (prm != null && CurrentItem != null && CurrentItem.MarkerSelectors !=null)
+            {
+                var markerSelectorsForType = (CurrentItem.MarkerSelectors.Where(s => s.Metadata != null && s.Metadata.ContainsKey(prm.Key))).ToList();
+
+                IMarkerSelector toBeSelected = null;
+                if (prm.Value != null)
+                    toBeSelected = markerSelectorsForType.FirstOrDefault(s => s.Metadata.ContainsKey(prm.Key) && prm.Value.Equals(s.Metadata[prm.Key]));
+
+                if (toBeSelected != null)
+                    markerSelectorsForType.Remove(toBeSelected);
+
+                if (!prm.AllowMultipleActive)
+                {
+                    foreach (var item in markerSelectorsForType)
+                    {
+                        item.IsActive = false;
+                    }
+                }
+
+                if (toBeSelected != null)
+                    toBeSelected.IsActive = true;
+            }
+        }
+
+        void SetMarkerSelectorUnactive_Executed(object sender, ExecutedEventArgs e)
+        {
+            var prm = e.Parameter as MarkerSelectorCommandParameter;
+            if (prm != null && CurrentItem != null && CurrentItem.MarkerSelectors != null
+                && prm.Value != null)
+            {
+                var toBeUnselected = CurrentItem.MarkerSelectors.FirstOrDefault(s => s.Metadata != null && s.Metadata.ContainsKey(prm.Key) && prm.Value.Equals(s.Metadata[prm.Key]));
+
+                if (toBeUnselected != null)
+                    toBeUnselected.IsActive = false;
+            }
+        }
+
+        private void SetMarkers()
+        {
+            var item = CurrentItem;
+            if (item == null)
+            {
+                currentMarkerIndexes.Clear();
+                return;
+            }
+            // Store cached sources in a list and remove them if still in CurrentItem MarkerSources
+            // Remaining items will be removed from cache
+            var notProcessedMarkerSources = currentMarkerIndexes.Keys.ToList();
+
+            var markerSelectors = item.MarkerSelectors;
+            if (item != null && markerSelectors != null)
+            {
+                foreach (var markerSelector in markerSelectors.Where(s => s.IsActive))
+                {
+                    SetActiveMarkerForSelector(notProcessedMarkerSources, markerSelector, position, currentMarkerIndexes);
+                }
+            }
+
+            foreach (var markerSource in notProcessedMarkerSources)
+            {
+                currentMarkerIndexes.Remove(markerSource);
+            }
+        }
+
         private void SwitchFullscreenPopup()
         {
             if (fullscreenPopup == null && IsPopupFullscreen)
@@ -866,7 +1041,6 @@
 
                 FrameworkElement child = CreateFullscreenPopupContent();
                 grid.Children.Add(child);
-                child.MouseLeftButtonDown += new MouseButtonEventHandler(fullscreenPopup_MouseLeftButtonDown);
 
                 fullscreenPopup.Child = grid;
                 fullscreenPopup.IsOpen = true;
@@ -880,23 +1054,9 @@
 
         private void UnbindPlaylistSource()
         {
-            INotifyPropertyChanged playlistSource = PlaylistSource as INotifyPropertyChanged;
-            if (playlistSource != null)
+            if (PlaylistSource != null)
             {
-                playlistSource.PropertyChanged -= new PropertyChangedEventHandler(playlistSource_PropertyChanged);
-            }
-        }
-
-        void fullscreenPopup_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            SwitchPauseOnClick();
-        }
-
-        void playlistSource_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName == PlaylistSource.GetPropertyName(p => p.Playlist))
-            {
-                Playlist = new ObservableCollection<IMediaItem>(PlaylistSource.Playlist);
+                PlaylistSource.PlaylistChanged -= new EventHandler(PlaylistSource_PlaylistChanged);
             }
         }
 

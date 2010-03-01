@@ -64,8 +64,8 @@
     //  <usageItem counterType="1" hourlyCount="2" hourlyChange="0" dailyCount="15" weeklyCount="15" monthlyCount="15" totalCount="15" totalAverage="1.266667" />
     //  </usage>
     //  </video>
-    public class Video : IMediaItem
-    {
+    public class Video : SLMedia.Video.VideoItem
+    { 
         #region Fields
 
         public const string NamespaceMsnVideoCatalog = "urn:schemas-microsoft-com:msnvideo:catalog";
@@ -74,43 +74,33 @@
 
         #endregion Fields
 
-        #region Constructors
-
-        public Video()
-        {
-            Categories = new List<Category>();
-        }
-
-        #endregion Constructors
-
         #region Properties
 
-        [ScriptableMemberAttribute]
-        public IEnumerable<Category> Categories
-        {
-            get;
-            private set;
-        }
 
-        [ScriptableMemberAttribute]
-        public string Description
-        {
-            get;
-            set;
-        }
+        private IEnumerable<File> files;
 
         public IEnumerable<File> Files
         {
-            get;
-            set;
+            get
+            {
+                return this.files;
+            }
+
+            set
+            {
+                if (this.files != value)
+                {
+                    this.files = value;
+                    if (value != null)
+                        Thumbnail = (from f in value
+                                     select Convert.ToString(f.Url)).FirstOrDefault();
+                    else
+                        Thumbnail = null;
+                }
+            }
         }
 
-        [ScriptableMemberAttribute]
-        public string Id
-        {
-            get { return UUID; }
-        }
-
+        
         [ScriptableMemberAttribute]
         public string LCID
         {
@@ -132,59 +122,6 @@
             set;
         }
 
-        [ScriptableMemberAttribute]
-        public string Source
-        {
-            get
-            {
-                return Convert.ToString(SourceUri);
-            }
-        }
-
-        public Uri SourceUri
-        {
-            get
-            {
-                if (Videos == null)
-                    return null;
-
-                return (from v in Videos
-                        where v.Url.Scheme == UriSchemeMMS
-                        || System.IO.Path.GetExtension(v.Url.LocalPath) == ".wmv"
-                        select v.Url).FirstOrDefault();
-            }
-        }
-
-        [ScriptableMemberAttribute]
-        public string Thumbnail
-        {
-            get
-            {
-                return Convert.ToString(ThumbnailUri);
-            }
-        }
-
-        public Uri ThumbnailUri
-        {
-            get
-            {
-                if (Files == null)
-                    return null;
-
-                Uri uri = (from f in Files
-                           select f.Url).FirstOrDefault();
-
-                return uri;
-            }
-        }
-
-        [ScriptableMemberAttribute]
-        public string Title
-        {
-            get;
-            set;
-        }
-
         public string UUID
         {
             get;
@@ -197,19 +134,38 @@
             set;
         }
 
+        private IEnumerable<VideoFile> videos;
+
         public IEnumerable<VideoFile> Videos
         {
-            get;
-            set;
+            get
+            {
+                return this.videos;
+            }
+
+            set
+            {
+                if (this.videos != value)
+                {
+                    this.videos = value;
+                    if (value != null)
+                        Source = (from v in value
+                                  where v.Url.Scheme == UriSchemeMMS
+                                  || System.IO.Path.GetExtension(v.Url.LocalPath) == ".wmv"
+                                  select Convert.ToString(v.Url)).FirstOrDefault();
+                    else
+                        Source = null;
+                }
+            }
         }
 
         #endregion Properties
 
         #region Methods
 
-        public static IEnumerable<Video> FromXml(XDocument doc)
+        public static Video[] FromXml(XDocument doc)
         {
-            return from videos in doc.Elements(XName.Get("videos", NamespaceMsnVideoCatalog))
+            return (from videos in doc.Elements(XName.Get("videos", NamespaceMsnVideoCatalog))
                    from v in videos.Elements(XName.Get("video", NamespaceMsnVideoCatalog))
                    select new Video
                    {
@@ -226,10 +182,10 @@
                        Files = (from files in v.Elements(XName.Get("files", NamespaceMsnVideoCatalog))
                                 from file in files.Elements(XName.Get("file", NamespaceMsnVideoCatalog))
                                 select File.FromXml(file)).ToArray(),
-                       Categories = (from tags in v.Elements(XName.Get("tags", NamespaceMsnVideoCatalog))
+                       Categories = new SLExtensions.Collections.ObjectModel.ObservableCollection<Category>((from tags in v.Elements(XName.Get("tags", NamespaceMsnVideoCatalog))
                                      from tag in tags.Elements(XName.Get("tag", NamespaceMsnVideoCatalog))
-                                     select new Category { Name = tag.Value })
-                   };
+                                     select new Category { Name = tag.Value }))
+                   }).ToArray();
         }
 
         #endregion Methods

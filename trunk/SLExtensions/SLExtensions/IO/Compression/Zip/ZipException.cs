@@ -1,3 +1,5 @@
+#region Header
+
 // ZipException.cs
 //
 // Copyright (C) 2001 Mike Krueger
@@ -23,7 +25,7 @@
 // making a combined work based on this library.  Thus, the terms and
 // conditions of the GNU General Public License cover the whole
 // combination.
-// 
+//
 // As a special exception, the copyright holders of this library give you
 // permission to link this library with independent modules to produce an
 // executable, regardless of the license terms of these independent
@@ -36,49 +38,50 @@
 // obligated to do so.  If you do not wish to do so, delete this
 // exception statement from your version.
 
-using System;
-using System.Runtime.Serialization;
-using System.Xml.Serialization;
-
+#endregion Header
 
 namespace SLExtensions.IO.Compression.Zip
 {
-	
-	/// <summary>
-	/// Represents exception conditions specific to Zip archive handling
-	/// </summary>
+    using System;
+    using System.Runtime.Serialization;
+    using System.Xml.Serialization;
 
-	public class ZipException : SharpZipBaseException
-	{
+    /// <summary>
+    /// Represents exception conditions specific to Zip archive handling
+    /// </summary>
+    public class ZipException : SharpZipBaseException
+    {
+        #region Constructors
 
         /*
-            HACK: Removed deserializtion constructor due to lack of supported libraries (Serialization)            
+            HACK: Removed deserializtion constructor due to lack of supported libraries (Serialization)
          */
+        /// <summary>
+        /// Initializes a new instance of the ZipException class.
+        /// </summary>
+        public ZipException()
+        {
+        }
 
-		/// <summary>
-		/// Initializes a new instance of the ZipException class.
-		/// </summary>
-		public ZipException()
-		{
-		}
-		
-		/// <summary>
-		/// Initializes a new instance of the ZipException class with a specified error message.
-		/// </summary>
-		/// <param name="message">The error message that explains the reason for the exception.</param>
-		public ZipException(string message)
-			: base(message)
-		{
-		}
+        /// <summary>
+        /// Initializes a new instance of the ZipException class with a specified error message.
+        /// </summary>
+        /// <param name="message">The error message that explains the reason for the exception.</param>
+        public ZipException(string message)
+            : base(message)
+        {
+        }
 
-		/// <summary>
-		/// Initialise a new instance of ZipException.
-		/// </summary>
-		/// <param name="message">A message describing the error.</param>
-		/// <param name="exception">The exception that is the cause of the current exception.</param>
-		public ZipException(string message, Exception exception)
-			: base(message, exception)
-		{
-		}
-	}
+        /// <summary>
+        /// Initialise a new instance of ZipException.
+        /// </summary>
+        /// <param name="message">A message describing the error.</param>
+        /// <param name="exception">The exception that is the cause of the current exception.</param>
+        public ZipException(string message, Exception exception)
+            : base(message, exception)
+        {
+        }
+
+        #endregion Constructors
+    }
 }

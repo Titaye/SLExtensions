@@ -1,0 +1,263 @@
+﻿<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Condition="'$(MSBuildToolsVersion)' == '3.5'">
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{A6D5DC26-6631-4780-ADB9-87C1F5E405DD}</ProjectGuid>
+    <ProjectTypeGuids>{A1591282-1198-4647-A2B1-27E5FF5F6F3B};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>SLExtensions</RootNamespace>
+    <AssemblyName>SLExtensions</AssemblyName>
+    <TargetFrameworkVersion>v3.0</TargetFrameworkVersion>
+    <SilverlightApplication>false</SilverlightApplication>
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+    <SccAuxPath>
+    </SccAuxPath>
+    <SccProvider>
+    </SccProvider>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <TargetFrameworkIdentifier>Silverlight</TargetFrameworkIdentifier>
+    <SilverlightVersion>$(TargetFrameworkVersion)</SilverlightVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>ClientBin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;SILVERLIGHT</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>ClientBin\</OutputPath>
+    <DefineConstants>TRACE;SILVERLIGHT</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System.Net" />
+    <Reference Include="System.Windows" />
+    <Reference Include="mscorlib" />
+    <Reference Include="system" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Windows.Browser" />
+    <Reference Include="System.Xml.Linq, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AnimationExtensions.cs" />
+    <Compile Include="ApplicationExtensions.cs" />
+    <Compile Include="BindingHelper.cs" />
+    <Compile Include="BindingListener.cs" />
+    <Compile Include="CancelEventArgs.cs" />
+    <Compile Include="Collections\ObjectModel\ObservableCollection.cs" />
+    <Compile Include="Diagnostics\Debug.cs" />
+    <Compile Include="DisposeHelper.cs" />
+    <Compile Include="DraggableExtensions.cs" />
+    <Compile Include="Globalization\DefaultResourceManager.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Globalization\Localizer.cs" />
+    <Compile Include="Globalization\ResourceLoader.cs" />
+    <Compile Include="Imaging\BmpDecoder.cs" />
+    <Compile Include="Imaging\BmpFileHeader.cs" />
+    <Compile Include="Imaging\BmpInfoHeader.cs" />
+    <Compile Include="Imaging\EditableImage.cs" />
+    <Compile Include="Imaging\EditableImageErrorEventArgs.cs" />
+    <Compile Include="Imaging\PngEncoder.cs" />
+    <Compile Include="Input\CanExecuteEventArgs.cs" />
+    <Compile Include="Input\Command.cs" />
+    <Compile Include="Input\CommandService.cs" />
+    <Compile Include="Input\CommandSubscription.cs" />
+    <Compile Include="Input\IProvideCommandSubscription.cs" />
+    <Compile Include="Input\MouseInactivityCommandParameter.cs" />
+    <Compile Include="Input\MouseInactivityCommandSubscription.cs" />
+    <Compile Include="Input\MouseInactivityCommand.cs" />
+    <Compile Include="Input\MouseLeaveCommandSubscription.cs" />
+    <Compile Include="Input\MouseLeaveCommand.cs" />
+    <Compile Include="Input\ExecutedEventArgs.cs" />
+    <Compile Include="Input\MouseEnterCommandSubscription.cs" />
+    <Compile Include="Input\MouseEnterCommand.cs" />
+    <Compile Include="Input\StateEventArgs.cs" />
+    <Compile Include="IO\ByteOrder.cs" />
+    <Compile Include="IO\ByteUtility.cs" />
+    <Compile Include="IO\Compression\Zip\Checksums\Adler32.cs" />
+    <Compile Include="IO\Compression\Zip\Checksums\CRC32.cs" />
+    <Compile Include="IO\Compression\Zip\Checksums\IChecksum.cs" />
+    <Compile Include="IO\Compression\Zip\Checksums\StrangeCRC.cs" />
+    <Compile Include="IO\Compression\Zip\Core\FileSystemScanner.cs" />
+    <Compile Include="IO\Compression\Zip\Core\INameTransform.cs" />
+    <Compile Include="IO\Compression\Zip\Core\IScanFilter.cs" />
+    <Compile Include="IO\Compression\Zip\Core\NameFilter.cs" />
+    <Compile Include="IO\Compression\Zip\Core\PathFilter.cs" />
+    <Compile Include="IO\Compression\Zip\Core\StreamUtils.cs" />
+    <Compile Include="IO\Compression\Zip\Encryption\PkzipClassic.cs" />
+    <Compile Include="IO\Compression\Zip\FastZip.cs" />
+    <Compile Include="IO\Compression\Zip\IEntryFactory.cs" />
+    <Compile Include="IO\Compression\Zip\SharpZipBaseException.cs" />
+    <Compile Include="IO\Compression\Zip\ZipCompression\Deflater.cs" />
+    <Compile Include="IO\Compression\Zip\ZipCompression\DeflaterConstants.cs" />
+    <Compile Include="IO\Compression\Zip\ZipCompression\DeflaterEngine.cs" />
+    <Compile Include="IO\Compression\Zip\ZipCompression\DeflaterHuffman.cs" />
+    <Compile Include="IO\Compression\Zip\ZipCompression\DeflaterPending.cs" />
+    <Compile Include="IO\Compression\Zip\ZipCompression\Inflater.cs" />
+    <Compile Include="IO\Compression\Zip\ZipCompression\InflaterDynHeader.cs" />
+    <Compile Include="IO\Compression\Zip\ZipCompression\InflaterHuffmanTree.cs" />
+    <Compile Include="IO\Compression\Zip\ZipCompression\PendingBuffer.cs" />
+    <Compile Include="IO\Compression\Zip\ZipCompression\Streams\DeflaterOutputStream.cs" />
+    <Compile Include="IO\Compression\Zip\ZipCompression\Streams\InflaterInputStream.cs" />
+    <Compile Include="IO\Compression\Zip\ZipCompression\Streams\OutputWindow.cs" />
+    <Compile Include="IO\Compression\Zip\ZipCompression\Streams\StreamManipulator.cs" />
+    <Compile Include="IO\Compression\Zip\ZipConstants.cs" />
+    <Compile Include="IO\Compression\Zip\ZipEntry.cs" />
+    <Compile Include="IO\Compression\Zip\ZipEntryFactory.cs" />
+    <Compile Include="IO\Compression\Zip\ZipException.cs" />
+    <Compile Include="IO\Compression\Zip\ZipExtraData.cs" />
+    <Compile Include="IO\Compression\Zip\ZipFile.cs" />
+    <Compile Include="IO\Compression\Zip\ZipHelperStream.cs" />
+    <Compile Include="IO\Compression\Zip\ZipInputStream.cs" />
+    <Compile Include="IO\Compression\Zip\ZipNameTransform.cs" />
+    <Compile Include="IO\Compression\Zip\ZipOutputStream.cs" />
+    <Compile Include="IsolatedStorageExtensions.cs" />
+    <Compile Include="LoginProvider\Infocard.cs" />
+    <Compile Include="MarkupContent.cs" />
+    <Compile Include="MarkupType.cs" />
+    <Compile Include="NotifyingObject.cs" />
+    <Compile Include="NotifyingObjectExtensions.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="PasswordHelper.cs" />
+    <Compile Include="PointExtensions.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Resource.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resource.resx</DependentUpon>
+    </Compile>
+    <Compile Include="SLExtension.cs" />
+    <Compile Include="Stats\GoogleAnalytics.cs" />
+    <Compile Include="StringBuilderExtensions.cs" />
+    <Compile Include="StringReaderExtensions.cs" />
+    <Compile Include="Text\Parsers\ILexer.cs" />
+    <Compile Include="Text\Parsers\IToken.cs" />
+    <Compile Include="Text\Parsers\Lexer.cs" />
+    <Compile Include="Text\Parsers\ParseException.cs" />
+    <Compile Include="Text\Parsers\Parser.cs" />
+    <Compile Include="Text\StringUtility.cs" />
+    <Compile Include="Tweener\Equations.cs" />
+    <Compile Include="Tweener\TransitionType.cs" />
+    <Compile Include="Tweener\Tween.cs" />
+    <Compile Include="Utilities\ClipboardHelper\ClipboardHelper.cs" />
+    <Compile Include="Utilities\MouseWheelListener\WheelMouseListener.cs" />
+    <Compile Include="Vector.cs" />
+    <Compile Include="Xaml\ConverterBase.cs" />
+    <Compile Include="Xaml\ConverterException.cs" />
+    <Compile Include="Xaml\ConverterWarningEventArgs.cs" />
+    <Compile Include="Xaml\Emf\Brush.cs" />
+    <Compile Include="Xaml\Emf\EmfContext.cs" />
+    <Compile Include="Xaml\Emf\EmfConverter.cs" />
+    <Compile Include="Xaml\Emf\Pen.cs" />
+    <Compile Include="Xaml\Formatter.cs" />
+    <Compile Include="Xaml\Rtl\RtfConverter.cs" />
+    <Compile Include="Xaml\Rtl\RtfLexer.cs" />
+    <Compile Include="Xaml\Rtl\RtfLexerState.cs" />
+    <Compile Include="Xaml\Rtl\RtfParser.cs" />
+    <Compile Include="Xaml\Rtl\RtfToken.cs" />
+    <Compile Include="Xaml\Rtl\RtfTokenType.cs" />
+    <Compile Include="Xaml\StringConverterBase.cs" />
+    <Compile Include="Xaml\XamlWriter.cs" />
+    <Compile Include="Xaml\XamlWriterSettings.cs" />
+    <Compile Include="Xaml\XmlConverterBase.cs" />
+    <Compile Include="XElementExtensions.cs" />
+    <Compile Include="XmlReaderExtensions.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resource.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resource.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 2.0 %28x86%29</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.0 %28x86%29</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\Silverlight\$(SilverlightVersion)\Microsoft.Silverlight.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{A1591282-1198-4647-A2B1-27E5FF5F6F3B}">
+        <SilverlightProjectProperties />
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>

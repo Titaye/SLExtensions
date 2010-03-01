@@ -12,7 +12,6 @@
     using System.Windows.Media.Animation;
     using System.Windows.Shapes;
 
-    using SLExtensions.Controls.Media;
     using SLExtensions.Input;
 
     public partial class App : Application
@@ -72,8 +71,7 @@
             var host = new ShowcaseHost();
             this.RootVisual = host;
 
-            InitScripts();
-            StoryboardCommands.Initialize();
+            InitScripts();            
         }
 
         private void Application_UnhandledException(object sender, ApplicationUnhandledExceptionEventArgs e)

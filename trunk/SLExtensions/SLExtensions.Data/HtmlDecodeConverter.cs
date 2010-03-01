@@ -1,14 +1,16 @@
-﻿using System;
-using System.Globalization;
-using System.Windows.Data;
-
-namespace SLExtensions.Data
+﻿namespace SLExtensions.Data
 {
+    using System;
+    using System.Globalization;
+    using System.Windows.Data;
+
     /// <summary>
     /// Used to decode Html Entities during databinding.
     /// </summary>
     public class HtmlDecodeConverter : IValueConverter
     {
+        #region Methods
+
         /// <summary>
         /// Called during data binding.  Decodes any Html entities in the provided string.
         /// </summary>
@@ -34,5 +36,7 @@ namespace SLExtensions.Data
         {
             throw new NotImplementedException();
         }
+
+        #endregion Methods
     }
 }

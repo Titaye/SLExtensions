@@ -32,12 +32,16 @@
         {
             get
             {
-                if (Thumbnails == null || Thumbnails.Count == 0)
+                if (string.IsNullOrEmpty(Thumbnail) || Thumbnails == null || Thumbnails.Count == 0)
                 {
                     return Source;
                 }
 
                 return base.Thumbnail;
+            }
+            set
+            {
+                base.Thumbnail = value;
             }
         }
 

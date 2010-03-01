@@ -20,6 +20,7 @@
 
     using SLExtensions;
     using SLExtensions.Collections.ObjectModel;
+    using SLExtensions.Input;
 
     using SLMedia.Core;
 
@@ -27,18 +28,14 @@
     {
         #region Fields
 
-        // Using a DependencyProperty as the backing store for MediaElement.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty MediaElementProperty = 
-            DependencyProperty.RegisterAttached("MediaElement", typeof(VideoController), typeof(VideoController), new PropertyMetadata(MediaElementChangedCallback));
-
         private double bufferingProgress;
         private TimeSpan end;
         private double fps;
         private bool inRefreshPosition = false;
         private bool isBuffering;
-        private MediaElement mediaElement;
         private TimeSpan start;
         private VideoAdapter videoAdapter;
+        private object videoContent;
 
         #endregion Fields
 
@@ -52,6 +49,9 @@
             </DataTemplate>";
 
             this.FullscreenPopupTemplate = XamlReader.Load(datatemplate) as DataTemplate;
+            var setAudioTrack = new Command();
+            setAudioTrack.Executed += new EventHandler<ExecutedEventArgs>(setAudioTrack_Executed);
+            SetAudioTrack = setAudioTrack;
         }
 
         #endregion Constructors
@@ -118,39 +118,9 @@
             }
         }
 
-        public virtual MediaElement MediaElement
+        public ICommand SetAudioTrack
         {
-            get { return mediaElement; }
-            set
-            {
-                if (mediaElement != value)
-                {
-                    if (this.mediaElement != null)
-                    {
-                        this.mediaElement.CurrentStateChanged -= new RoutedEventHandler(MediaElement_CurrentStateChanged);
-                        this.mediaElement.BufferingProgressChanged -= new RoutedEventHandler(mediaElement_BufferingProgressChanged);
-                        this.mediaElement.DownloadProgressChanged -= new RoutedEventHandler(mediaElement_DownloadProgressChanged);
-                        this.mediaElement.MediaOpened -= new RoutedEventHandler(mediaElement_MediaOpened);
-                        this.mediaElement.MediaEnded -= new RoutedEventHandler(mediaElement_MediaEnded);
-                        this.mediaElement.MouseLeftButtonDown -= new MouseButtonEventHandler(mediaElement_MouseLeftButtonDown);
-                    }
-
-                    this.mediaElement = value;
-
-                    if (this.mediaElement != null)
-                    {
-                        this.mediaElement.CurrentStateChanged += new RoutedEventHandler(MediaElement_CurrentStateChanged);
-                        this.mediaElement.BufferingProgressChanged += new RoutedEventHandler(mediaElement_BufferingProgressChanged);
-                        this.mediaElement.DownloadProgressChanged += new RoutedEventHandler(mediaElement_DownloadProgressChanged);
-                        this.mediaElement.MediaOpened += new RoutedEventHandler(mediaElement_MediaOpened);
-                        this.mediaElement.MediaEnded += new RoutedEventHandler(mediaElement_MediaEnded);
-                        this.mediaElement.MouseLeftButtonDown += new MouseButtonEventHandler(mediaElement_MouseLeftButtonDown);
-                    }
-                    RefreshStates();
-                    this.OnPropertyChanged(this.GetPropertyName(n => n.MediaElement));
-                    this.OnPropertyChanged(this.GetPropertyName(n => n.VideoBrush));
-                }
-            }
+            get; private set;
         }
 
         public TimeSpan Start
@@ -166,41 +136,49 @@
             }
         }
 
-        public VideoAdapter VideoAdapter
+        public virtual VideoAdapter VideoAdapter
         {
-            get { return this.videoAdapter; }
-            protected set
+            get { return videoAdapter; }
+            set
             {
-                if (this.videoAdapter != value)
+                if (videoAdapter != value)
                 {
                     if (this.videoAdapter != null)
                     {
-                        this.videoAdapter.Controller = null;
-                        this.videoAdapter.Dispose();
+                        this.videoAdapter.CurrentStateChanged -= new RoutedEventHandler(VideoAdapter_CurrentStateChanged);
+                        this.videoAdapter.BufferingProgressChanged -= new RoutedEventHandler(videoAdapter_BufferingProgressChanged);
+                        this.videoAdapter.DownloadProgressChanged -= new RoutedEventHandler(videoAdapter_DownloadProgressChanged);
+                        this.videoAdapter.MediaOpened -= new RoutedEventHandler(videoAdapter_MediaOpened);
+                        this.videoAdapter.MediaEnded -= new RoutedEventHandler(videoAdapter_MediaEnded);
                     }
 
                     this.videoAdapter = value;
+
                     if (this.videoAdapter != null)
                     {
-                        this.videoAdapter.Controller = this;
+                        this.videoAdapter.CurrentStateChanged += new RoutedEventHandler(VideoAdapter_CurrentStateChanged);
+                        this.videoAdapter.BufferingProgressChanged += new RoutedEventHandler(videoAdapter_BufferingProgressChanged);
+                        this.videoAdapter.DownloadProgressChanged += new RoutedEventHandler(videoAdapter_DownloadProgressChanged);
+                        this.videoAdapter.MediaOpened += new RoutedEventHandler(videoAdapter_MediaOpened);
+                        this.videoAdapter.MediaEnded += new RoutedEventHandler(videoAdapter_MediaEnded);
                     }
-
+                    RefreshStates();
                     this.OnPropertyChanged(this.GetPropertyName(n => n.VideoAdapter));
+                    //this.OnPropertyChanged(this.GetPropertyName(n => n.VideoBrush));
                 }
             }
         }
 
-        public VideoBrush VideoBrush
+        public object VideoContent
         {
-            get
+            get { return this.videoContent; }
+            set
             {
-                if (MediaElement == null)
-                    return null;
-
-                VideoBrush videobrush = new VideoBrush();
-                videobrush.Stretch = Stretch.Uniform;
-                videobrush.SetSource(MediaElement);
-                return videobrush;
+                if (this.videoContent != value)
+                {
+                    this.videoContent = value;
+                    this.OnPropertyChanged(this.GetPropertyName(n => n.VideoContent));
+                }
             }
         }
 
@@ -208,27 +186,11 @@
 
         #region Methods
 
-        public static VideoController GetMediaElement(DependencyObject obj)
-        {
-            return (VideoController)obj.GetValue(MediaElementProperty);
-        }
-
-        public static void SetMediaElement(DependencyObject obj, VideoController value)
-        {
-            obj.SetValue(MediaElementProperty, value);
-        }
-
         protected override void IsPlayingChanged()
         {
             base.IsPlayingChanged();
 
-            if (MediaElement == null)
-                return;
-
-            if (IsPlaying == true)
-                MediaElement.Play();
-            else
-                MediaElement.Pause();
+            SetPlayStateToVideoAdapter();
         }
 
         protected override void OnCurrentItemChanged()
@@ -236,39 +198,62 @@
             Start = TimeSpan.Zero;
             End = TimeSpan.Zero;
 
-            base.OnCurrentItemChanged();
-            if (MediaElement != null)
+            VideoAdapter newAdapter = null;
+            IVideoItem videoItem = CurrentItem as IVideoItem;
+            if (videoItem != null)
             {
-                VideoAdapter = VideoSourceAdapter.GetVideoAdapter(MediaElement);
+                newAdapter = videoItem.VideoAdapter;
             }
+
+            if (VideoAdapter != null
+                && VideoAdapter != newAdapter)
+            {
+                VideoAdapter.Release();
+            }
+
+            if (newAdapter != null)
+            {
+                newAdapter.Controller = this;
+            }
+            VideoAdapter = newAdapter;
+            if (VideoAdapter != null)
+            {
+                VideoAdapter.Adapt(this);
+            }
+            
+            base.OnCurrentItemChanged();
         }
 
         protected override void OnPositionChanged(TimeSpan oldValue, TimeSpan newValue)
         {
-            if (!inRefreshPosition && MediaElement != null)
+            if (!inRefreshPosition && VideoAdapter != null)
             {
-                MediaElement.Position = Position;
-                Debug.WriteLine("Set position " + Position + " " + MediaElement.Position);
-                //Debug.WriteLine("Get position " + Position);
+                VideoAdapter.Position = Position;
             }
             base.OnPositionChanged(oldValue, newValue);
         }
 
         protected override void RefreshPosition()
         {
-            if (MediaElement != null)
+            if (VideoAdapter != null)
             {
-                FPS = MediaElement.RenderedFramesPerSecond;
+                FPS = VideoAdapter.RenderedFramesPerSecond;
             }
 
             inRefreshPosition = true;
             try
             {
                 base.RefreshPosition();
-                if (MediaElement != null)
+                if (VideoAdapter != null)
                 {
-                    Position = MediaElement.Position;
-                    Debug.WriteLine("GetTime " + MediaElement.Position);
+                    Duration = VideoAdapter.Duration;
+                    End = VideoAdapter.EndPosition;
+                    Start = VideoAdapter.StartPosition;
+
+                    if (VideoAdapter.Position > End)
+                        End = VideoAdapter.Position;
+
+                    Position = VideoAdapter.Position;
                 }
             }
             finally
@@ -279,11 +264,10 @@
 
         protected override void TickScriptCommands()
         {
-            double seconds = MediaElement.Position.TotalSeconds;
+            double seconds = VideoAdapter.Position.TotalSeconds;
 
             var q = from c in ScriptCommands
-                    where //c.Type == TypeCommand.Pub &&
-                          seconds > c.Time && seconds < (c.Time + c.Duration)
+                    where seconds > c.Time && seconds < (c.Time + c.Duration)
                     select c;
 
             if (q.Any())
@@ -323,23 +307,9 @@
             }
         }
 
-        private static void MediaElementChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            VideoController controller = e.NewValue as VideoController;
-            if (controller != null)
-            {
-                controller.MediaElement = (MediaElement)d;
-            }
-        }
-
-        void MediaElement_CurrentStateChanged(object sender, RoutedEventArgs e)
-        {
-            RefreshMediaElementState();
-        }
-
         private void RefreshMediaElementState()
         {
-            if (MediaElement.CurrentState == MediaElementState.Buffering)
+            if (VideoAdapter.CurrentState == MediaElementState.Buffering)
             {
                 IsBuffering = true;
             }
@@ -348,7 +318,7 @@
                 IsBuffering = false;
             }
 
-            switch (MediaElement.CurrentState)
+            switch (VideoAdapter.CurrentState)
             {
                 case MediaElementState.AcquiringLicense:
                     break;
@@ -361,11 +331,11 @@
                 case MediaElementState.Opening:
                     break;
                 case MediaElementState.Paused:
-                    if (mediaElement.NaturalDuration.HasTimeSpan)
+                    if (VideoAdapter.Duration.HasTimeSpan)
                     {
-                        if (mediaElement.NaturalDuration.HasTimeSpan && mediaElement.Position == mediaElement.NaturalDuration.TimeSpan)
+                        if (VideoAdapter.Duration.HasTimeSpan && videoAdapter.Position == VideoAdapter.Duration.TimeSpan)
                         {
-                            mediaElement.Stop();
+                            videoAdapter.Stop();
                             PlayState = PlayStates.Stopped;
                             break;
                         }
@@ -377,7 +347,7 @@
                     PlayState = PlayStates.Playing;
                     break;
                 case MediaElementState.Stopped:
-                    mediaElement.Stop();
+                    videoAdapter.Stop();
                     PlayState = PlayStates.Stopped;
                     break;
                 default:
@@ -390,21 +360,54 @@
             RefreshMediaElementState();
         }
 
-        void mediaElement_BufferingProgressChanged(object sender, RoutedEventArgs e)
+        private void SetPlayStateToVideoAdapter()
         {
-            BufferingProgress = MediaElement.BufferingProgress;
+            if (VideoAdapter == null)
+                return;
+
+            if (IsPlaying == true)
+                VideoAdapter.Play();
+            else
+                VideoAdapter.Pause();
         }
 
-        void mediaElement_DownloadProgressChanged(object sender, RoutedEventArgs e)
+        void VideoAdapter_CurrentStateChanged(object sender, RoutedEventArgs e)
         {
-            DownloadProgress = this.MediaElement.DownloadProgress;
+            RefreshMediaElementState();
+        }
+
+        void setAudioTrack_Executed(object sender, ExecutedEventArgs e)
+        {
+            AudioTrack track = e.Parameter as AudioTrack;
+            if (track != null && track.Index >= 0 && track.Index < VideoAdapter.AudioStreamCount)
+            {
+                VideoAdapter.AudioStreamIndex = track.Index;
+            }
+            else if (e.Parameter is int)
+            {
+                int trackIndex = (int)e.Parameter;
+                if (trackIndex >= 0 && trackIndex < VideoAdapter.AudioStreamCount)
+                {
+                    VideoAdapter.AudioStreamIndex = trackIndex;
+                }
+            }
+        }
+
+        void videoAdapter_BufferingProgressChanged(object sender, RoutedEventArgs e)
+        {
+            BufferingProgress = VideoAdapter.BufferingProgress;
+        }
+
+        void videoAdapter_DownloadProgressChanged(object sender, RoutedEventArgs e)
+        {
+            DownloadProgress = this.VideoAdapter.DownloadProgress;
             if (DownloadProgress > 0 && DownloadProgress < 1)
                 IsDownloading = true;
             else
                 IsDownloading = false;
         }
 
-        void mediaElement_MediaEnded(object sender, RoutedEventArgs e)
+        void videoAdapter_MediaEnded(object sender, RoutedEventArgs e)
         {
             if (IsChaining)
             {
@@ -412,16 +415,14 @@
             }
         }
 
-        void mediaElement_MediaOpened(object sender, RoutedEventArgs e)
+        void videoAdapter_MediaOpened(object sender, RoutedEventArgs e)
         {
             Start = TimeSpan.Zero;
-            End = Start.Add(MediaElement.NaturalDuration.TimeSpan);
-            Duration = MediaElement.NaturalDuration;
-        }
-
-        void mediaElement_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            SwitchPauseOnClick();
+            if (VideoAdapter.Duration.HasTimeSpan)
+            {
+                End = Start.Add(VideoAdapter.Duration.TimeSpan);
+            }
+            Duration = VideoAdapter.Duration;
         }
 
         void wcLoadContentLink_DownloadStringCompleted(object sender, DownloadStringCompletedEventArgs e)
@@ -457,5 +458,47 @@
         }
 
         #endregion Methods
+
+        #region Other
+
+        //public VideoAdapter VideoAdapter
+        //{
+        //    get { return this.videoAdapter; }
+        //    protected set
+        //    {
+        //        if (this.videoAdapter != value)
+        //        {
+        //            if (this.videoAdapter != null)
+        //            {
+        //                this.videoAdapter.Controller = null;
+        //                this.videoAdapter.Dispose();
+        //            }
+        //            this.videoAdapter = value;
+        //            if (this.videoAdapter != null)
+        //            {
+        //                this.videoAdapter.Controller = this;
+        //            }
+        //            this.OnPropertyChanged(this.GetPropertyName(n => n.VideoAdapter));
+        //        }
+        //    }
+        //}
+        //public VideoBrush VideoBrush
+        //{
+        //    get
+        //    {
+        //        if (VideoAdapter == null)
+        //            return null;
+        //        VideoBrush videobrush = new VideoBrush();
+        //        videobrush.Stretch = Stretch.Uniform;
+        //        videobrush.SetSource(VideoAdapter);
+        //        return videobrush;
+        //    }
+        //}
+        //protected override void GoToPositionExecuted(object sender, TimeSpan position)
+        //{
+        //    base.GoToPositionExecuted(sender, position);
+        //}
+
+        #endregion Other
     }
 }

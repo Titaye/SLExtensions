@@ -13,9 +13,16 @@
     using System.Windows.Media.Animation;
     using System.Windows.Shapes;
 
+    using SLExtensions.Collections.ObjectModel;
+
     public interface IMediaItem
     {
         #region Properties
+
+        ObservableCollection<IMarkerSelector> ActiveMarkerSelectors
+        {
+            get;
+        }
 
         [ScriptableMemberAttribute]
         IEnumerable<Category> Categories
@@ -31,6 +38,16 @@
 
         [ScriptableMemberAttribute]
         string Id
+        {
+            get;
+        }
+
+        ObservableCollection<IMarkerSelector> MarkerSelectors
+        {
+            get;
+        }
+
+        IEnumerable<IMarkerSource> MarkerSources
         {
             get;
         }
@@ -66,5 +83,11 @@
         }
 
         #endregion Properties
+
+        #region Methods
+
+        void LoadMarkers(IDictionary<string, object> autoactivatedMarkers);
+
+        #endregion Methods
     }
 }

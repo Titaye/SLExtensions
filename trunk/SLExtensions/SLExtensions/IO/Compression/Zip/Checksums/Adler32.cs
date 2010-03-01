@@ -1,3 +1,5 @@
+#region Header
+
 // Adler32.cs - Computes Adler32 data checksum of a data stream
 // Copyright (C) 2001 Mike Krueger
 //
@@ -22,7 +24,7 @@
 // making a combined work based on this library.  Thus, the terms and
 // conditions of the GNU General Public License cover the whole
 // combination.
-// 
+//
 // As a special exception, the copyright holders of this library give you
 // permission to link this library with independent modules to produce an
 // executable, regardless of the license terms of these independent
@@ -35,10 +37,11 @@
 // obligated to do so.  If you do not wish to do so, delete this
 // exception statement from your version.
 
-using System;
+#endregion Header
 
 namespace SLExtensions.IO.Compression.Zip.Checksums
 {
+    using System;
 
     /// <summary>
     /// Computes Adler32 checksum for a stream of data. An Adler32
@@ -77,153 +80,167 @@ namespace SLExtensions.IO.Compression.Zip.Checksums
     /// </summary>
     /// <see cref="SLExtensions.IO.Compression.Zip.ZipCompression.Streams.InflaterInputStream"/>
     /// <see cref="SLExtensions.IO.Compression.Zip.ZipCompression.Streams.DeflaterOutputStream"/>
-	public sealed class Adler32 : IChecksum
-	{
-        
-		/// <summary>
-		/// largest prime smaller than 65536
-		/// </summary>
-		const uint BASE = 65521;
-		
-		/// <summary>
-		/// Returns the Adler32 data checksum computed so far.
-		/// </summary>
-		public long Value {
-			get {
-				return checksum;
-			}
-		}
-		
-		/// <summary>
-		/// Creates a new instance of the Adler32 class.
-		/// The checksum starts off with a value of 1.
-		/// </summary>
-		public Adler32()
-		{
-			Reset();
-		}
-		
-		/// <summary>
-		/// Resets the Adler32 checksum to the initial value.
-		/// </summary>
-		public void Reset()
-		{
-			checksum = 1;
-		}
-		
-		/// <summary>
-		/// Updates the checksum with a byte value.
-		/// </summary>
-		/// <param name="value">
-		/// The data value to add. The high byte of the int is ignored.
-		/// </param>
-		public void Update(int value)
-		{
-			// We could make a length 1 byte array and call update again, but I
-			// would rather not have that overhead
-			uint s1 = checksum & 0xFFFF;
-			uint s2 = checksum >> 16;
-			
-			s1 = (s1 + ((uint)value & 0xFF)) % BASE;
-			s2 = (s1 + s2) % BASE;
-			
-			checksum = (s2 << 16) + s1;
-		}
-		
-		/// <summary>
-		/// Updates the checksum with an array of bytes.
-		/// </summary>
-		/// <param name="buffer">
-		/// The source of the data to update with.
-		/// </param>
-		public void Update(byte[] buffer)
-		{
-			if ( buffer == null ) {
-				throw new ArgumentNullException("buffer");
-			}
+    public sealed class Adler32 : IChecksum
+    {
+        #region Fields
 
-			Update(buffer, 0, buffer.Length);
-		}
-		
-		/// <summary>
-		/// Updates the checksum with the bytes taken from the array.
-		/// </summary>
-		/// <param name="buffer">
-		/// an array of bytes
-		/// </param>
-		/// <param name="offset">
-		/// the start of the data used for this update
-		/// </param>
-		/// <param name="count">
-		/// the number of bytes to use for this update
-		/// </param>
-		public void Update(byte[] buffer, int offset, int count)
-		{
-			if (buffer == null) {
-				throw new ArgumentNullException("buffer");
-			}
-			
-			if (offset < 0) {
-#if NETCF_1_0
-				throw new ArgumentOutOfRangeException("offset");
-#else
-				throw new ArgumentOutOfRangeException("offset", "cannot be negative");
-#endif				
-			}
+        /// <summary>
+        /// largest prime smaller than 65536
+        /// </summary>
+        const uint BASE = 65521;
 
-			if ( count < 0 ) 
-			{
-#if NETCF_1_0
-				throw new ArgumentOutOfRangeException("count");
-#else
-				throw new ArgumentOutOfRangeException("count", "cannot be negative");
-#endif				
-			}
+        uint checksum;
 
-			if (offset >= buffer.Length) 
-			{
-#if NETCF_1_0
-				throw new ArgumentOutOfRangeException("offset");
-#else
-				throw new ArgumentOutOfRangeException("offset", "not a valid index into buffer");
-#endif				
-			}
-			
-			if (offset + count > buffer.Length) 
-			{
-#if NETCF_1_0
-				throw new ArgumentOutOfRangeException("count");
-#else
-				throw new ArgumentOutOfRangeException("count", "exceeds buffer size");
-#endif				
-			}
+        #endregion Fields
 
-			//(By Per Bothner)
-			uint s1 = checksum & 0xFFFF;
-			uint s2 = checksum >> 16;
-			
-			while (count > 0) {
-				// We can defer the modulo operation:
-				// s1 maximally grows from 65521 to 65521 + 255 * 3800
-				// s2 maximally grows by 3800 * median(s1) = 2090079800 < 2^31
-				int n = 3800;
-				if (n > count) {
-					n = count;
-				}
-				count -= n;
-				while (--n >= 0) {
-					s1 = s1 + (uint)(buffer[offset++] & 0xff);
-					s2 = s2 + s1;
-				}
-				s1 %= BASE;
-				s2 %= BASE;
-			}
-			
-			checksum = (s2 << 16) | s1;
-		}
-		
-		#region Instance Fields
-		uint checksum;
-		#endregion
-	}
+        #region Constructors
+
+        /// <summary>
+        /// Creates a new instance of the Adler32 class.
+        /// The checksum starts off with a value of 1.
+        /// </summary>
+        public Adler32()
+        {
+            Reset();
+        }
+
+        #endregion Constructors
+
+        #region Properties
+
+        /// <summary>
+        /// Returns the Adler32 data checksum computed so far.
+        /// </summary>
+        public long Value
+        {
+            get {
+                return checksum;
+            }
+        }
+
+        #endregion Properties
+
+        #region Methods
+
+        /// <summary>
+        /// Resets the Adler32 checksum to the initial value.
+        /// </summary>
+        public void Reset()
+        {
+            checksum = 1;
+        }
+
+        /// <summary>
+        /// Updates the checksum with a byte value.
+        /// </summary>
+        /// <param name="value">
+        /// The data value to add. The high byte of the int is ignored.
+        /// </param>
+        public void Update(int value)
+        {
+            // We could make a length 1 byte array and call update again, but I
+            // would rather not have that overhead
+            uint s1 = checksum & 0xFFFF;
+            uint s2 = checksum >> 16;
+
+            s1 = (s1 + ((uint)value & 0xFF)) % BASE;
+            s2 = (s1 + s2) % BASE;
+
+            checksum = (s2 << 16) + s1;
+        }
+
+        /// <summary>
+        /// Updates the checksum with an array of bytes.
+        /// </summary>
+        /// <param name="buffer">
+        /// The source of the data to update with.
+        /// </param>
+        public void Update(byte[] buffer)
+        {
+            if ( buffer == null ) {
+                throw new ArgumentNullException("buffer");
+            }
+
+            Update(buffer, 0, buffer.Length);
+        }
+
+        /// <summary>
+        /// Updates the checksum with the bytes taken from the array.
+        /// </summary>
+        /// <param name="buffer">
+        /// an array of bytes
+        /// </param>
+        /// <param name="offset">
+        /// the start of the data used for this update
+        /// </param>
+        /// <param name="count">
+        /// the number of bytes to use for this update
+        /// </param>
+        public void Update(byte[] buffer, int offset, int count)
+        {
+            if (buffer == null) {
+                throw new ArgumentNullException("buffer");
+            }
+
+            if (offset < 0) {
+            #if NETCF_1_0
+                throw new ArgumentOutOfRangeException("offset");
+            #else
+                throw new ArgumentOutOfRangeException("offset", "cannot be negative");
+            #endif
+            }
+
+            if ( count < 0 )
+            {
+            #if NETCF_1_0
+                throw new ArgumentOutOfRangeException("count");
+            #else
+                throw new ArgumentOutOfRangeException("count", "cannot be negative");
+            #endif
+            }
+
+            if (offset >= buffer.Length)
+            {
+            #if NETCF_1_0
+                throw new ArgumentOutOfRangeException("offset");
+            #else
+                throw new ArgumentOutOfRangeException("offset", "not a valid index into buffer");
+            #endif
+            }
+
+            if (offset + count > buffer.Length)
+            {
+            #if NETCF_1_0
+                throw new ArgumentOutOfRangeException("count");
+            #else
+                throw new ArgumentOutOfRangeException("count", "exceeds buffer size");
+            #endif
+            }
+
+            //(By Per Bothner)
+            uint s1 = checksum & 0xFFFF;
+            uint s2 = checksum >> 16;
+
+            while (count > 0) {
+                // We can defer the modulo operation:
+                // s1 maximally grows from 65521 to 65521 + 255 * 3800
+                // s2 maximally grows by 3800 * median(s1) = 2090079800 < 2^31
+                int n = 3800;
+                if (n > count) {
+                    n = count;
+                }
+                count -= n;
+                while (--n >= 0) {
+                    s1 = s1 + (uint)(buffer[offset++] & 0xff);
+                    s2 = s2 + s1;
+                }
+                s1 %= BASE;
+                s2 %= BASE;
+            }
+
+            checksum = (s2 << 16) | s1;
+        }
+
+        #endregion Methods
+    }
 }

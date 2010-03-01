@@ -122,7 +122,6 @@ namespace SLExtensions.Controls
         HtmlDocument _htmlIframeDocument = null;
         HtmlElement _htmlIframeEditorElement = null;
         HtmlWindow _htmlIframeWindow = null;
-
         bool _iframeHasFocus = false;
         bool _iframeInitialized = false;
         private string _initialText = string.Empty;

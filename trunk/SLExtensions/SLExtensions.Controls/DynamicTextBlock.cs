@@ -25,17 +25,16 @@
 //
 //    Read more about the MIT License for software at it's wikipedia
 //    page here: http://en.wikipedia.org/wiki/MIT_License
-// 
+//
 //    If you happen to use this code in a project, please email me
-//    robby@nerdplusart.com and let me know how and where you use 
+//    robby@nerdplusart.com and let me know how and where you use
 //    it. That is, after all, the fun part of sharing code: knowing
 //    that it gets used.
-//   
+//
 //    Find out more about PixelLab at http://pixellab.cc or read my
 //    blog at http://nerdplusart.com.
 // </copyright>
 //-----------------------------------------------------------------------
-
 namespace SLExtensions.Controls
 {
     using System;
@@ -50,119 +49,30 @@ namespace SLExtensions.Controls
     /// </summary>
     public class DynamicTextBlock : ContentControl
     {
-        #region Text (DependencyProperty)
+        #region Fields
 
-        /// <summary>
-        /// Gets or sets the Text DependencyProperty. This is the text that will be displayed.
-        /// </summary>
-        public string Text
-        {
-            get { return (string)GetValue(TextProperty); }
-            set { SetValue(TextProperty, value); }
-        }
-        public static readonly DependencyProperty TextProperty =
-            DependencyProperty.Register("Text", typeof(string), typeof(DynamicTextBlock),
-            new PropertyMetadata(null, new PropertyChangedCallback(OnTextChanged)));
-
-        private static void OnTextChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            ((DynamicTextBlock)d).OnTextChanged(e);
-        }
-
-        protected virtual void OnTextChanged(DependencyPropertyChangedEventArgs e)
-        {
-            this.InvalidateMeasure();
-        }
-
-        #endregion
-
-        #region TextWrapping (DependencyProperty)
-
-        /// <summary>
-        /// Gets or sets the TextWrapping property. This corresponds to TextBlock.TextWrapping.
-        /// </summary>
-        public TextWrapping TextWrapping
-        {
-            get { return (TextWrapping)GetValue(TextWrappingProperty); }
-            set { SetValue(TextWrappingProperty, value); }
-        }
-        public static readonly DependencyProperty TextWrappingProperty =
-            DependencyProperty.Register("TextWrapping", typeof(TextWrapping), typeof(DynamicTextBlock),
-            new PropertyMetadata(TextWrapping.NoWrap, new PropertyChangedCallback(OnTextWrappingChanged)));
-
-        private static void OnTextWrappingChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            ((DynamicTextBlock)d).OnTextWrappingChanged(e);
-        }
-
-        protected virtual void OnTextWrappingChanged(DependencyPropertyChangedEventArgs e)
-        {
-            this.textBlock.TextWrapping = (TextWrapping)e.NewValue;
-            this.InvalidateMeasure();
-        }
-
-        #endregion
-
-        #region LineHeight (DependencyProperty)
-
-        /// <summary>
-        /// Gets or sets the LineHeight property. This property corresponds to TextBlock.LineHeight;
-        /// </summary>
-        public double LineHeight
-        {
-            get { return (double)GetValue(LineHeightProperty); }
-            set { SetValue(LineHeightProperty, value); }
-        }
-
-        public static readonly DependencyProperty LineHeightProperty =
+        public static readonly DependencyProperty LineHeightProperty = 
             DependencyProperty.Register("LineHeight", typeof(double), typeof(DynamicTextBlock),
             new PropertyMetadata(0.0, new PropertyChangedCallback(OnLineHeightChanged)));
-
-        private static void OnLineHeightChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            ((DynamicTextBlock)d).OnLineHeightChanged(e);
-        }
-
-        protected virtual void OnLineHeightChanged(DependencyPropertyChangedEventArgs e)
-        {
-            textBlock.LineHeight = LineHeight;
-            this.InvalidateMeasure();
-        }
-
-        #endregion
-
-        #region LineStackingStrategy (DependencyProperty)
-
-        /// <summary>
-        /// Gets or sets the LineStackingStrategy DependencyProperty. This corresponds to TextBlock.LineStackingStrategy.
-        /// </summary>
-        public LineStackingStrategy LineStackingStrategy
-        {
-            get { return (LineStackingStrategy)GetValue(LineStackingStrategyProperty); }
-            set { SetValue(LineStackingStrategyProperty, value); }
-        }
-        public static readonly DependencyProperty LineStackingStrategyProperty =
+        public static readonly DependencyProperty LineStackingStrategyProperty = 
             DependencyProperty.Register("LineStackingStrategy", typeof(LineStackingStrategy), typeof(DynamicTextBlock),
             new PropertyMetadata(LineStackingStrategy.BlockLineHeight, new PropertyChangedCallback(OnLineStackingStrategyChanged)));
-
-        private static void OnLineStackingStrategyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            ((DynamicTextBlock)d).OnLineStackingStrategyChanged(e);
-        }
-
-        protected virtual void OnLineStackingStrategyChanged(DependencyPropertyChangedEventArgs e)
-        {
-            this.textBlock.LineStackingStrategy = (LineStackingStrategy)e.NewValue;
-            this.InvalidateMeasure();
-        }
-
-        #endregion
+        public static readonly DependencyProperty TextProperty = 
+            DependencyProperty.Register("Text", typeof(string), typeof(DynamicTextBlock),
+            new PropertyMetadata(null, new PropertyChangedCallback(OnTextChanged)));
+        public static readonly DependencyProperty TextWrappingProperty = 
+            DependencyProperty.Register("TextWrapping", typeof(TextWrapping), typeof(DynamicTextBlock),
+            new PropertyMetadata(TextWrapping.NoWrap, new PropertyChangedCallback(OnTextWrappingChanged)));
 
         /// <summary>
         /// A TextBlock that gets set as the control's content and is ultiately the control 
         /// that displays our text
         /// </summary>
         private TextBlock textBlock;
+
+        #endregion Fields
+
+        #region Constructors
 
         /// <summary>
         /// Initializes a new instance of the DynamicTextBlock class
@@ -173,6 +83,50 @@ namespace SLExtensions.Controls
             this.textBlock = new TextBlock();
             this.Content = this.textBlock;
         }
+
+        #endregion Constructors
+
+        #region Properties
+
+        /// <summary>
+        /// Gets or sets the LineHeight property. This property corresponds to TextBlock.LineHeight;
+        /// </summary>
+        public double LineHeight
+        {
+            get { return (double)GetValue(LineHeightProperty); }
+            set { SetValue(LineHeightProperty, value); }
+        }
+
+        /// <summary>
+        /// Gets or sets the LineStackingStrategy DependencyProperty. This corresponds to TextBlock.LineStackingStrategy.
+        /// </summary>
+        public LineStackingStrategy LineStackingStrategy
+        {
+            get { return (LineStackingStrategy)GetValue(LineStackingStrategyProperty); }
+            set { SetValue(LineStackingStrategyProperty, value); }
+        }
+
+        /// <summary>
+        /// Gets or sets the Text DependencyProperty. This is the text that will be displayed.
+        /// </summary>
+        public string Text
+        {
+            get { return (string)GetValue(TextProperty); }
+            set { SetValue(TextProperty, value); }
+        }
+
+        /// <summary>
+        /// Gets or sets the TextWrapping property. This corresponds to TextBlock.TextWrapping.
+        /// </summary>
+        public TextWrapping TextWrapping
+        {
+            get { return (TextWrapping)GetValue(TextWrappingProperty); }
+            set { SetValue(TextWrappingProperty, value); }
+        }
+
+        #endregion Properties
+
+        #region Methods
 
         /// <summary>
         /// Handles the measure part of the measure and arrange layout process. During this process
@@ -210,6 +164,29 @@ namespace SLExtensions.Controls
             return base.MeasureOverride(availableSize);
         }
 
+        protected virtual void OnLineHeightChanged(DependencyPropertyChangedEventArgs e)
+        {
+            textBlock.LineHeight = LineHeight;
+            this.InvalidateMeasure();
+        }
+
+        protected virtual void OnLineStackingStrategyChanged(DependencyPropertyChangedEventArgs e)
+        {
+            this.textBlock.LineStackingStrategy = (LineStackingStrategy)e.NewValue;
+            this.InvalidateMeasure();
+        }
+
+        protected virtual void OnTextChanged(DependencyPropertyChangedEventArgs e)
+        {
+            this.InvalidateMeasure();
+        }
+
+        protected virtual void OnTextWrappingChanged(DependencyPropertyChangedEventArgs e)
+        {
+            this.textBlock.TextWrapping = (TextWrapping)e.NewValue;
+            this.InvalidateMeasure();
+        }
+
         /// <summary>
         /// Reduces the length of the text. Derived classes can override this to use different techniques 
         /// for reducing the text length.
@@ -220,5 +197,27 @@ namespace SLExtensions.Controls
         {
             return text.Substring(0, text.Length - 1);
         }
+
+        private static void OnLineHeightChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            ((DynamicTextBlock)d).OnLineHeightChanged(e);
+        }
+
+        private static void OnLineStackingStrategyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            ((DynamicTextBlock)d).OnLineStackingStrategyChanged(e);
+        }
+
+        private static void OnTextChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            ((DynamicTextBlock)d).OnTextChanged(e);
+        }
+
+        private static void OnTextWrappingChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            ((DynamicTextBlock)d).OnTextWrappingChanged(e);
+        }
+
+        #endregion Methods
     }
 }

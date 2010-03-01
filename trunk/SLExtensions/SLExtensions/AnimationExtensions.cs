@@ -1,44 +1,22 @@
-﻿using System;
-using System.Net;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Ink;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Animation;
-using System.Windows.Shapes;
-
-namespace SLExtensions
+﻿namespace SLExtensions
 {
+    using System;
+    using System.Net;
+    using System.Windows;
+    using System.Windows.Controls;
+    using System.Windows.Documents;
+    using System.Windows.Ink;
+    using System.Windows.Input;
+    using System.Windows.Media;
+    using System.Windows.Media.Animation;
+    using System.Windows.Shapes;
+
     /// <summary>
     /// Contains various animation extension methods for use in Silverlight applications.
     /// </summary>
     public static class AnimationExtensions
     {
-        /// <summary>
-        /// This extension method is used to find a Storyboard declared inside of the VisualStateManager.
-        /// Returns null if the storyboard cannot be found.
-        /// </summary>
-        /// <param name="parent">The parent object containing the VisualStateManager declaration.</param>
-        /// <param name="groupName">The group name containing the storyboard.</param>
-        /// <param name="stateName">The name of the state or storyboard.</param>
-        /// <returns></returns>
-        public static Storyboard FindStoryboard(this FrameworkElement parent, string groupName, string stateName)
-        {
-            var vsgs = VisualStateManager.GetVisualStateGroups(parent);
-            foreach (VisualStateGroup vsg in vsgs)
-            {
-                if (vsg.Name != groupName)
-                    continue;
-                foreach (VisualState vs in vsg.States)
-                {
-                    if (vs.Name == stateName)
-                        return vs.Storyboard;
-                }
-            }
-            return null;
-        }
+        #region Methods
 
         /// <summary>
         /// Extension method to quickly animate a DependencyObject.  Simply provide the propertyPath and a timeline.
@@ -70,7 +48,6 @@ namespace SLExtensions
             Animate(element, propertyPath, timeline, null);
         }
 
-
         /// <summary>
         /// Extension method to quickly animate a DependencyObject with a DoubleAnimation.  Simply provide the propertyPath, toValue, and handler to fire once the animation completes.
         /// </summary>
@@ -98,5 +75,31 @@ namespace SLExtensions
         {
             AnimateDouble(element, propertyPath, duration, toValue, null);
         }
+
+        /// <summary>
+        /// This extension method is used to find a Storyboard declared inside of the VisualStateManager.
+        /// Returns null if the storyboard cannot be found.
+        /// </summary>
+        /// <param name="parent">The parent object containing the VisualStateManager declaration.</param>
+        /// <param name="groupName">The group name containing the storyboard.</param>
+        /// <param name="stateName">The name of the state or storyboard.</param>
+        /// <returns></returns>
+        public static Storyboard FindStoryboard(this FrameworkElement parent, string groupName, string stateName)
+        {
+            var vsgs = VisualStateManager.GetVisualStateGroups(parent);
+            foreach (VisualStateGroup vsg in vsgs)
+            {
+                if (vsg.Name != groupName)
+                    continue;
+                foreach (VisualState vs in vsg.States)
+                {
+                    if (vs.Name == stateName)
+                        return vs.Storyboard;
+                }
+            }
+            return null;
+        }
+
+        #endregion Methods
     }
 }

@@ -1,4 +1,5 @@
-﻿<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup Condition="'$(MSBuildToolsVersion)' == '3.5'">
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
   </PropertyGroup>
@@ -15,10 +16,14 @@
     <AssemblyName>SLExtensions.Controls</AssemblyName>
     <TargetFrameworkVersion>v3.0</TargetFrameworkVersion>
     <SilverlightApplication>false</SilverlightApplication>
-    <SccProjectName>%24/SLExtensions/trunk/SLExtensions/SLExtensions.Controls</SccProjectName>
-    <SccLocalPath>.</SccLocalPath>
-    <SccAuxPath>https://tfs07.codeplex.com</SccAuxPath>
-    <SccProvider>{4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}</SccProvider>
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+    <SccAuxPath>
+    </SccAuxPath>
+    <SccProvider>
+    </SccProvider>
     <ValidateXaml>true</ValidateXaml>
     <ThrowErrorsInValidation>false</ThrowErrorsInValidation>
     <FileUpgradeFlags>
@@ -77,6 +82,10 @@
     <Reference Include="System.Windows.Browser" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ColorPicker\ColorPicker.cs" />
+    <Compile Include="ColorPicker\ColorSpace.cs" />
+    <Compile Include="ColorPicker\SelectedColorEventArgs.cs" />
+    <Compile Include="ControlExtensions\ContentPresenterExtensions.cs" />
     <Compile Include="Layout\AnimatingFillPanel.cs" />
     <Compile Include="Layout\AnimatingTilePanel.cs" />
     <Compile Include="Animation\AnimationWrapper.cs" />
@@ -89,8 +98,6 @@
     <Compile Include="Animation\VisualState.cs" />
     <Compile Include="Animation\ZIndexWrapper.cs" />
     <Compile Include="ChangeTracker.cs" />
-    <Compile Include="ColorPicker.cs" />
-    <Compile Include="ColorSpace.cs" />
     <Compile Include="CoolMenu\CoolMenu.cs" />
     <Compile Include="CoolMenu\CoolMenuItem.cs" />
     <Compile Include="CoolMenu\CoolMenuItemContainerGenerator.cs" />
@@ -98,8 +105,6 @@
     <Compile Include="CoolMenu\ICoolMenuBehavior.cs" />
     <Compile Include="CoolMenu\SelectedMenuItemArgs.cs" />
     <Compile Include="CursorService.cs" />
-    <Compile Include="Media\StoryboardCommandParameter.cs" />
-    <Compile Include="Media\StoryboardCommands.cs" />
     <Compile Include="TreeView\DataTemplateSelector.cs" />
     <Compile Include="Decorator.cs" />
     <Compile Include="Sliders\DiscreteSlider.cs" />
@@ -128,7 +133,6 @@
     <Compile Include="Recaptcha\ReCaptchaReloadReason.cs" />
     <Compile Include="Recaptcha\ReCaptchaResponse.cs" />
     <Compile Include="Recaptcha\ReCaptchaType.cs" />
-    <Compile Include="SelectedColorEventArgs.cs" />
     <Compile Include="Separator.cs" />
     <Compile Include="Sliders\Slider.cs">
       <SubType>Code</SubType>
@@ -185,8 +189,12 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Resource>
     <EmbeddedResource Include="Layers\GoogleMaps\GTileMapDataTemplate.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -198,6 +206,8 @@
       <LastGenOutput>Resource.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Layers\VirtualEarth\VETileMapDataTemplate.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -217,7 +227,7 @@
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
       <Visible>False</Visible>
-      <ProductName>.NET Framework Client Profile</ProductName>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
     <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">
@@ -238,6 +248,11 @@
     <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
       <Visible>False</Visible>
       <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.VisualBasic.PowerPacks.10.0">
+      <Visible>False</Visible>
+      <ProductName>Microsoft Visual Basic PowerPacks 10.0</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
     <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">

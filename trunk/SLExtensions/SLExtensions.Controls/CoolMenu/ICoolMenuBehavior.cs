@@ -5,12 +5,14 @@ namespace SLExtensions.Controls
     /// </summary>
     public interface ICoolMenuBehavior
     {
+        #region Methods
+
         /// <summary>
-        /// Intializes each element in the menu.
+        /// Fired when the left mouse button is clicked on a particular element.
         /// </summary>
-        /// <param name="parent">The menu containing the element.</param>
-        /// <param name="element">The element to initialize.</param>
-        void Initialize(CoolMenu parent, CoolMenuItem element);
+        /// <param name="selectedIndex">The index of the selected element.</param>
+        /// <param name="element">The element of concern.</param>
+        void ApplyMouseDownBehavior(int selectedIndex, CoolMenuItem element);
 
         /// <summary>
         /// Fired on each element when the mouse is hovers over an element.
@@ -26,17 +28,19 @@ namespace SLExtensions.Controls
         void ApplyMouseLeaveBehavior(CoolMenuItem element);
 
         /// <summary>
-        /// Fired when the left mouse button is clicked on a particular element.
-        /// </summary>
-        /// <param name="selectedIndex">The index of the selected element.</param>
-        /// <param name="element">The element of concern.</param>
-        void ApplyMouseDownBehavior(int selectedIndex, CoolMenuItem element);
-
-        /// <summary>
         /// Fired when the left mouse button is lifed on a particular element.
         /// </summary>
         /// <param name="selectedIndex">The index of the selected element.</param>
         /// <param name="element">The element of concern.</param>
         void ApplyMouseUpBehavior(int selectedIndex, CoolMenuItem element);
+
+        /// <summary>
+        /// Intializes each element in the menu.
+        /// </summary>
+        /// <param name="parent">The menu containing the element.</param>
+        /// <param name="element">The element to initialize.</param>
+        void Initialize(CoolMenu parent, CoolMenuItem element);
+
+        #endregion Methods
     }
 }

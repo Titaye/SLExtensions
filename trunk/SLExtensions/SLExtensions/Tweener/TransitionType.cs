@@ -1,7 +1,9 @@
-﻿using System;
-
-namespace SLExtensions.Tweener
+﻿namespace SLExtensions.Tweener
 {
+    using System;
+
+    #region Enumerations
+
     /// <summary>
     /// Defines the set of equation types.
     /// </summary>
@@ -172,4 +174,6 @@ namespace SLExtensions.Tweener
         /// </summary>
         EaseOutInBounce
     }
+
+    #endregion Enumerations
 }

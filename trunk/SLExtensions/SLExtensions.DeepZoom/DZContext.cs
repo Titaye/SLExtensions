@@ -94,9 +94,9 @@
 
                 e.Handled = true;
                 if (e.Delta > 0)
-                    msi.Zoom(1.2, context.LastMousePosition);
+                    msi.Zoom(1.2, context.LastMousePosition, context.IsZoomForceEnabled);
                 else
-                    msi.Zoom(0.8, context.LastMousePosition);
+                    msi.Zoom(0.8, context.LastMousePosition, context.IsZoomForceEnabled);
 
                 context.ClickedImageIndex = -1;
             };
@@ -240,6 +240,12 @@
         }
 
         public bool IsZoomOnClickEnabled
+        {
+            get;
+            set;
+        }
+
+        public bool IsZoomForceEnabled
         {
             get;
             set;

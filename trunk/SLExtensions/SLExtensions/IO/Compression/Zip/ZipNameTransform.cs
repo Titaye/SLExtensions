@@ -1,3 +1,5 @@
+#region Header
+
 // ZipNameTransform.cs
 //
 // Copyright 2005 John Reilly
@@ -20,7 +22,7 @@
 // making a combined work based on this library.  Thus, the terms and
 // conditions of the GNU General Public License cover the whole
 // combination.
-// 
+//
 // As a special exception, the copyright holders of this library give you
 // permission to link this library with independent modules to produce an
 // executable, regardless of the license terms of these independent
@@ -33,223 +35,233 @@
 // obligated to do so.  If you do not wish to do so, delete this
 // exception statement from your version.
 
-
-using System;
-using System.IO;
-using System.Text;
-
-using SLExtensions.IO.Compression.Zip.Core;
+#endregion Header
 
 namespace SLExtensions.IO.Compression.Zip
 {
-	/// <summary>
-	/// ZipNameTransform transforms names as per the Zip file naming convention.
-	/// </summary>
-	/// <remarks>The use of absolute names is supported although its use is not valid 
-	/// according to Zip naming conventions, and should not be used if maximum compatability is desired.</remarks>
-	public class ZipNameTransform : INameTransform
-	{
-		#region Constructors
-		/// <summary>
-		/// Initialize a new instance of <see cref="ZipNameTransform"></see>
-		/// </summary>
-		public ZipNameTransform()
-		{
-		}
+    using System;
+    using System.IO;
+    using System.Text;
 
-		/// <summary>
-		/// Initialize a new instance of <see cref="ZipNameTransform"></see>
-		/// </summary>
-		/// <param name="trimPrefix">The string to trim from front of paths if found.</param>
-		public ZipNameTransform(string trimPrefix)
-		{
-			TrimPrefix = trimPrefix;
-		}
-		#endregion
-		
-		/// <summary>
-		/// Static constructor.
-		/// </summary>
-		static ZipNameTransform()
-		{
-			char[] invalidPathChars;
-#if NET_1_0 || NET_1_1 || NETCF_1_0
-			invalidPathChars = Path.InvalidPathChars;
-#else
-			invalidPathChars = Path.GetInvalidPathChars();
-#endif
-			int howMany = invalidPathChars.Length + 2;
+    using SLExtensions.IO.Compression.Zip.Core;
 
-			InvalidEntryCharsRelaxed = new char[howMany];
-			Array.Copy(invalidPathChars, 0, InvalidEntryCharsRelaxed, 0, invalidPathChars.Length);
-			InvalidEntryCharsRelaxed[howMany - 1] = '*';
-			InvalidEntryCharsRelaxed[howMany - 2] = '?';
+    /// <summary>
+    /// ZipNameTransform transforms names as per the Zip file naming convention.
+    /// </summary>
+    /// <remarks>The use of absolute names is supported although its use is not valid 
+    /// according to Zip naming conventions, and should not be used if maximum compatability is desired.</remarks>
+    public class ZipNameTransform : INameTransform
+    {
+        #region Fields
 
-			howMany = invalidPathChars.Length + 4; 
-			InvalidEntryChars = new char[howMany];
-			Array.Copy(invalidPathChars, 0, InvalidEntryChars, 0, invalidPathChars.Length);
-			InvalidEntryChars[howMany - 1] = ':';
-			InvalidEntryChars[howMany - 2] = '\\';
-			InvalidEntryChars[howMany - 3] = '*';
-			InvalidEntryChars[howMany - 4] = '?';
+        static readonly char[] InvalidEntryChars;
+        static readonly char[] InvalidEntryCharsRelaxed;
 
-		}
+        string trimPrefix_;
 
-		/// <summary>
-		/// Transform a directory name according to the Zip file naming conventions.
-		/// </summary>
-		/// <param name="name">The directory name to transform.</param>
-		/// <returns>The transformed name.</returns>
-		public string TransformDirectory(string name)
-		{
-			name = TransformFile(name);
-			if (name.Length > 0) {
-				if ( !name.EndsWith("/") ) {
-					name += "/";
-				}
-			}
-			else {
-				throw new ZipException("Cannot have an empty directory name");
-			}
-			return name;
-		}
-		
-		/// <summary>
-		/// Transform a windows file name according to the Zip file naming conventions.
-		/// </summary>
-		/// <param name="name">The file name to transform.</param>
-		/// <returns>The transformed name.</returns>
-		public string TransformFile(string name)
-		{
-			if (name != null) {
-				string lowerName = name.ToLower();
-				if ( (trimPrefix_ != null) && (lowerName.IndexOf(trimPrefix_) == 0) ) {
-					name = name.Substring(trimPrefix_.Length);
-				}
+        #endregion Fields
 
-				// The following can throw exceptions when the name contains invalid characters
-				if (Path.IsPathRooted(name) == true) {
-					// NOTE:
-					// for UNC names...  \\machine\share\zoom\beet.txt gives \zoom\beet.txt
-					name = name.Substring(Path.GetPathRoot(name).Length);
-				}
-				
-				name = name.Replace(@"\", "/");
+        #region Constructors
 
-				while ( (name.Length > 0) && (name[0] == '/')) {
-					name = name.Remove(0, 1);
-				}
+        /// <summary>
+        /// Static constructor.
+        /// </summary>
+        static ZipNameTransform()
+        {
+            char[] invalidPathChars;
+            #if NET_1_0 || NET_1_1 || NETCF_1_0
+            invalidPathChars = Path.InvalidPathChars;
+            #else
+            invalidPathChars = Path.GetInvalidPathChars();
+            #endif
+            int howMany = invalidPathChars.Length + 2;
 
-				name = MakeValidName(name, '_');
-			}
-			else {
-				name = string.Empty;
-			}
-			return name;
-		}
-		
-		/// <summary>
-		/// Get/set the path prefix to be trimmed from paths if present.
-		/// </summary>
-		/// <remarks>The prefix is trimmed before any conversion from
-		/// a windows path is done.</remarks>
-		public string TrimPrefix
-		{
-			get { return trimPrefix_; }
-			set {
-				trimPrefix_ = value;
-				if (trimPrefix_ != null) {
-					trimPrefix_ = trimPrefix_.ToLower();
-				}
-			}
-		}
+            InvalidEntryCharsRelaxed = new char[howMany];
+            Array.Copy(invalidPathChars, 0, InvalidEntryCharsRelaxed, 0, invalidPathChars.Length);
+            InvalidEntryCharsRelaxed[howMany - 1] = '*';
+            InvalidEntryCharsRelaxed[howMany - 2] = '?';
 
-		/// <summary>
-		/// Force a name to be valid by replacing invalid characters with a fixed value
-		/// </summary>
-		/// <param name="name">The name to force valid</param>
-		/// <param name="replacement">The replacement character to use.</param>
-		/// <returns>Returns a valid name</returns>
-		static string MakeValidName(string name, char replacement)
-		{
-			int index = name.IndexOfAny(InvalidEntryChars);
-			if (index > 0) {
-				StringBuilder builder = new StringBuilder(name);
+            howMany = invalidPathChars.Length + 4;
+            InvalidEntryChars = new char[howMany];
+            Array.Copy(invalidPathChars, 0, InvalidEntryChars, 0, invalidPathChars.Length);
+            InvalidEntryChars[howMany - 1] = ':';
+            InvalidEntryChars[howMany - 2] = '\\';
+            InvalidEntryChars[howMany - 3] = '*';
+            InvalidEntryChars[howMany - 4] = '?';
+        }
 
-				while (index >= 0 ) {
-					builder[index] = replacement;
+        /// <summary>
+        /// Initialize a new instance of <see cref="ZipNameTransform"></see>
+        /// </summary>
+        public ZipNameTransform()
+        {
+        }
 
-					if (index >= name.Length) {
-						index = -1;
-					}
-					else {
-						index = name.IndexOfAny(InvalidEntryChars, index + 1);
-					}
-				}
-				name = builder.ToString();
-			}
-			return name;
-		}
+        /// <summary>
+        /// Initialize a new instance of <see cref="ZipNameTransform"></see>
+        /// </summary>
+        /// <param name="trimPrefix">The string to trim from front of paths if found.</param>
+        public ZipNameTransform(string trimPrefix)
+        {
+            TrimPrefix = trimPrefix;
+        }
 
-		/// <summary>
-		/// Test a name to see if it is a valid name for a zip entry.
-		/// </summary>
-		/// <param name="name">The name to test.</param>
-		/// <param name="relaxed">If true checking is relaxed about windows file names and absolute paths.</param>
-		/// <returns>Returns true if the name is a valid zip name; false otherwise.</returns>
-		/// <remarks>Zip path names are actually in Unix format, and should only contain relative paths.
-		/// This means that any path stored should not contain a drive or
-		/// device letter, or a leading slash.  All slashes should forward slashes '/'.
-		/// An empty name is valid for a file where the input comes from standard input.
-		/// A null name is not considered valid.
-		/// </remarks>
-		public static bool IsValidName(string name, bool relaxed)
-		{
-			bool result = (name != null);
+        #endregion Constructors
 
-			if ( result ) {
-				if ( relaxed ) {
-					result = name.IndexOfAny(InvalidEntryCharsRelaxed) < 0;
-				}
-				else {
-					result = 
-						(name.IndexOfAny(InvalidEntryChars) < 0) &&
-						(name.IndexOf('/') != 0);
-				}
-			}
+        #region Properties
 
-			return result;
-		}
+        /// <summary>
+        /// Get/set the path prefix to be trimmed from paths if present.
+        /// </summary>
+        /// <remarks>The prefix is trimmed before any conversion from
+        /// a windows path is done.</remarks>
+        public string TrimPrefix
+        {
+            get { return trimPrefix_; }
+            set {
+                trimPrefix_ = value;
+                if (trimPrefix_ != null) {
+                    trimPrefix_ = trimPrefix_.ToLower();
+                }
+            }
+        }
 
-		/// <summary>
-		/// Test a name to see if it is a valid name for a zip entry.
-		/// </summary>
-		/// <param name="name">The name to test.</param>
-		/// <returns>Returns true if the name is a valid zip name; false otherwise.</returns>
-		/// <remarks>Zip path names are actually in unix format,
-		/// and should only contain relative paths if a path is present.
-		/// This means that the path stored should not contain a drive or
-		/// device letter, or a leading slash.  All slashes should forward slashes '/'.
-		/// An empty name is valid where the input comes from standard input.
-		/// A null name is not considered valid.
-		/// </remarks>
-		public static bool IsValidName(string name)
-		{
-			bool result = 
-				(name != null) &&
-				(name.IndexOfAny(InvalidEntryChars) < 0) &&
-				(name.IndexOf('/') != 0)
-				;
-			return result;
-		}
+        #endregion Properties
 
-		#region Instance Fields
-		string trimPrefix_;
-		#endregion
-		
-		#region Class Fields
-		static readonly char[] InvalidEntryChars;
-		static readonly char[] InvalidEntryCharsRelaxed;
-		#endregion
-	}
+        #region Methods
+
+        /// <summary>
+        /// Test a name to see if it is a valid name for a zip entry.
+        /// </summary>
+        /// <param name="name">The name to test.</param>
+        /// <param name="relaxed">If true checking is relaxed about windows file names and absolute paths.</param>
+        /// <returns>Returns true if the name is a valid zip name; false otherwise.</returns>
+        /// <remarks>Zip path names are actually in Unix format, and should only contain relative paths.
+        /// This means that any path stored should not contain a drive or
+        /// device letter, or a leading slash.  All slashes should forward slashes '/'.
+        /// An empty name is valid for a file where the input comes from standard input.
+        /// A null name is not considered valid.
+        /// </remarks>
+        public static bool IsValidName(string name, bool relaxed)
+        {
+            bool result = (name != null);
+
+            if ( result ) {
+                if ( relaxed ) {
+                    result = name.IndexOfAny(InvalidEntryCharsRelaxed) < 0;
+                }
+                else {
+                    result =
+                        (name.IndexOfAny(InvalidEntryChars) < 0) &&
+                        (name.IndexOf('/') != 0);
+                }
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Test a name to see if it is a valid name for a zip entry.
+        /// </summary>
+        /// <param name="name">The name to test.</param>
+        /// <returns>Returns true if the name is a valid zip name; false otherwise.</returns>
+        /// <remarks>Zip path names are actually in unix format,
+        /// and should only contain relative paths if a path is present.
+        /// This means that the path stored should not contain a drive or
+        /// device letter, or a leading slash.  All slashes should forward slashes '/'.
+        /// An empty name is valid where the input comes from standard input.
+        /// A null name is not considered valid.
+        /// </remarks>
+        public static bool IsValidName(string name)
+        {
+            bool result =
+                (name != null) &&
+                (name.IndexOfAny(InvalidEntryChars) < 0) &&
+                (name.IndexOf('/') != 0)
+                ;
+            return result;
+        }
+
+        /// <summary>
+        /// Transform a directory name according to the Zip file naming conventions.
+        /// </summary>
+        /// <param name="name">The directory name to transform.</param>
+        /// <returns>The transformed name.</returns>
+        public string TransformDirectory(string name)
+        {
+            name = TransformFile(name);
+            if (name.Length > 0) {
+                if ( !name.EndsWith("/") ) {
+                    name += "/";
+                }
+            }
+            else {
+                throw new ZipException("Cannot have an empty directory name");
+            }
+            return name;
+        }
+
+        /// <summary>
+        /// Transform a windows file name according to the Zip file naming conventions.
+        /// </summary>
+        /// <param name="name">The file name to transform.</param>
+        /// <returns>The transformed name.</returns>
+        public string TransformFile(string name)
+        {
+            if (name != null) {
+                string lowerName = name.ToLower();
+                if ( (trimPrefix_ != null) && (lowerName.IndexOf(trimPrefix_) == 0) ) {
+                    name = name.Substring(trimPrefix_.Length);
+                }
+
+                // The following can throw exceptions when the name contains invalid characters
+                if (Path.IsPathRooted(name) == true) {
+                    // NOTE:
+                    // for UNC names...  \\machine\share\zoom\beet.txt gives \zoom\beet.txt
+                    name = name.Substring(Path.GetPathRoot(name).Length);
+                }
+
+                name = name.Replace(@"\", "/");
+
+                while ( (name.Length > 0) && (name[0] == '/')) {
+                    name = name.Remove(0, 1);
+                }
+
+                name = MakeValidName(name, '_');
+            }
+            else {
+                name = string.Empty;
+            }
+            return name;
+        }
+
+        /// <summary>
+        /// Force a name to be valid by replacing invalid characters with a fixed value
+        /// </summary>
+        /// <param name="name">The name to force valid</param>
+        /// <param name="replacement">The replacement character to use.</param>
+        /// <returns>Returns a valid name</returns>
+        static string MakeValidName(string name, char replacement)
+        {
+            int index = name.IndexOfAny(InvalidEntryChars);
+            if (index > 0) {
+                StringBuilder builder = new StringBuilder(name);
+
+                while (index >= 0 ) {
+                    builder[index] = replacement;
+
+                    if (index >= name.Length) {
+                        index = -1;
+                    }
+                    else {
+                        index = name.IndexOfAny(InvalidEntryChars, index + 1);
+                    }
+                }
+                name = builder.ToString();
+            }
+            return name;
+        }
+
+        #endregion Methods
+    }
 }

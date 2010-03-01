@@ -1,15 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-
-namespace SLExtensions.Text.Parsers
+﻿namespace SLExtensions.Text.Parsers
 {
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+
     /// <summary>
     /// Provides basic lexer functionality.
     /// </summary>
-    public abstract class Lexer<T>
-        : ILexer
+    public abstract class Lexer<T> : ILexer
     {
+        #region Fields
+
         /// <summary>
         /// Defines the end of file character.
         /// </summary>
@@ -17,6 +18,10 @@ namespace SLExtensions.Text.Parsers
 
         private TextReader reader;
         private Stack<T> states;
+
+        #endregion Fields
+
+        #region Constructors
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:Lexer"/> class.
@@ -28,18 +33,18 @@ namespace SLExtensions.Text.Parsers
             this.states = new Stack<T>();
         }
 
-        private void ValidateOccurence(int count, int minOccurs, int maxOccurs)
-        {
-            if (count < minOccurs || count > maxOccurs) {
-                throw new ParseException("Invalid number of characters");
-            }
-        }
+        #endregion Constructors
+
+        #region Properties
 
         /// <summary>
         /// Gets the default state of the lexer.
         /// </summary>
         /// <value>The state of the default.</value>
-        protected abstract T DefaultState { get;}
+        protected abstract T DefaultState
+        {
+            get;
+        }
 
         /// <summary>
         /// Gets the current state of the lexer.
@@ -56,41 +61,15 @@ namespace SLExtensions.Text.Parsers
             }
         }
 
-        /// <summary>
-        /// Pushes a new state on the stac.
-        /// </summary>
-        /// <param name="state">The state.</param>
-        protected void PushState(T state)
-        {
-            this.states.Push(state);
-        }
+        #endregion Properties
+
+        #region Methods
 
         /// <summary>
-        /// Pops the state.
+        /// Gets the next token.
         /// </summary>
         /// <returns></returns>
-        protected T PopState()
-        {
-            return this.states.Pop();
-        }
-
-        /// <summary>
-        /// Reads the next character without consuming it.
-        /// </summary>
-        /// <returns></returns>
-        protected int Peek()
-        {
-            return this.reader.Peek();
-        }
-
-        /// <summary>
-        /// Consumes the next character.
-        /// </summary>
-        /// <returns></returns>
-        protected int Read()
-        {
-            return this.reader.Read();
-        }
+        public abstract IToken NextToken();
 
         /// <summary>
         /// Determines whether the current character is in given range.
@@ -234,9 +213,48 @@ namespace SLExtensions.Text.Parsers
         }
 
         /// <summary>
-        /// Gets the next token.
+        /// Reads the next character without consuming it.
         /// </summary>
         /// <returns></returns>
-        public abstract IToken NextToken();
+        protected int Peek()
+        {
+            return this.reader.Peek();
+        }
+
+        /// <summary>
+        /// Pops the state.
+        /// </summary>
+        /// <returns></returns>
+        protected T PopState()
+        {
+            return this.states.Pop();
+        }
+
+        /// <summary>
+        /// Pushes a new state on the stac.
+        /// </summary>
+        /// <param name="state">The state.</param>
+        protected void PushState(T state)
+        {
+            this.states.Push(state);
+        }
+
+        /// <summary>
+        /// Consumes the next character.
+        /// </summary>
+        /// <returns></returns>
+        protected int Read()
+        {
+            return this.reader.Read();
+        }
+
+        private void ValidateOccurence(int count, int minOccurs, int maxOccurs)
+        {
+            if (count < minOccurs || count > maxOccurs) {
+                throw new ParseException("Invalid number of characters");
+            }
+        }
+
+        #endregion Methods
     }
 }

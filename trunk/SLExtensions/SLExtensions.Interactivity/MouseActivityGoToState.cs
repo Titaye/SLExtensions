@@ -1,5 +1,4 @@
-﻿
-namespace SLExtensions.Interactivity
+﻿namespace SLExtensions.Interactivity
 {
     using System;
     using System.Net;
@@ -8,23 +7,22 @@ namespace SLExtensions.Interactivity
     using System.Windows.Documents;
     using System.Windows.Ink;
     using System.Windows.Input;
+    using System.Windows.Interactivity;
     using System.Windows.Media;
     using System.Windows.Media.Animation;
     using System.Windows.Shapes;
     using System.Windows.Threading;
-    using System.Windows.Interactivity;
 
-    using SLExtensions.Collections.ObjectModel;
 
     [DefaultTrigger(typeof(UIElement), typeof(System.Windows.Interactivity.EventTrigger), new object[] { "MouseMove" })]
-    public class MouseActivityGoToState : GoToState
+    public class MouseActivityGoToState : TargetedTriggerAction<Control>
     {
         #region Fields
 
         /// <summary>
         /// ForceShow depedency property.
         /// </summary>
-        public static readonly DependencyProperty ForceShowProperty = 
+        public static readonly DependencyProperty ForceShowProperty =
             DependencyProperty.Register(
                 "ForceShow",
                 typeof(bool),
@@ -32,19 +30,29 @@ namespace SLExtensions.Interactivity
                 new PropertyMetadata((d, e) => ((MouseActivityGoToState)d).OnForceShowChanged((bool)e.OldValue, (bool)e.NewValue)));
 
         /// <summary>
+        /// State depedency property.
+        /// </summary>
+        public static readonly DependencyProperty StateProperty =
+            DependencyProperty.Register(
+                "State",
+                typeof(string),
+                typeof(MouseActivityGoToState),
+                null);
+
+        /// <summary>
         /// InactivityState depedency property.
         /// </summary>
-        public static readonly DependencyProperty InactivityStateProperty = 
+        public static readonly DependencyProperty InactivityStateProperty =
             DependencyProperty.Register(
                 "InactivityState",
                 typeof(string),
                 typeof(MouseActivityGoToState),
-                new PropertyMetadata((d, e) => ((MouseActivityGoToState)d).OnInactivityStateChanged((string)e.OldValue, (string)e.NewValue)));
+                null);
 
         /// <summary>
         /// IsActive depedency property.
         /// </summary>
-        public static readonly DependencyProperty IsActiveProperty = 
+        public static readonly DependencyProperty IsActiveProperty =
             DependencyProperty.Register(
                 "IsActive",
                 typeof(bool),
@@ -54,7 +62,7 @@ namespace SLExtensions.Interactivity
         /// <summary>
         /// Timeout depedency property.
         /// </summary>
-        public static readonly DependencyProperty TimeoutProperty = 
+        public static readonly DependencyProperty TimeoutProperty =
             DependencyProperty.Register(
                 "Timeout",
                 typeof(TimeSpan),
@@ -96,6 +104,19 @@ namespace SLExtensions.Interactivity
             }
         }
 
+        public string State
+        {
+            get
+            {
+                return (string)GetValue(StateProperty);
+            }
+
+            set
+            {
+                SetValue(StateProperty, value);
+            }
+        }
+
         public string InactivityState
         {
             get
@@ -122,6 +143,7 @@ namespace SLExtensions.Interactivity
             }
         }
 
+
         public TimeSpan Timeout
         {
             get
@@ -141,9 +163,28 @@ namespace SLExtensions.Interactivity
 
         protected override void Invoke(object parameter)
         {
-            base.Invoke(parameter);
             IsActive = true;
             timer.Start();
+            RefreshState();
+        }
+
+
+
+        protected override void OnTargetChanged(Control oldTarget, Control newTarget)
+        {
+            base.OnTargetChanged(oldTarget, newTarget);
+            if (Target != null)
+                Target.Loaded += Target_Loaded;
+            if (oldTarget != null)
+                oldTarget.Loaded -= Target_Loaded;
+
+            RefreshState();
+        }
+
+
+        void Target_Loaded(object sender, RoutedEventArgs e)
+        {
+            RefreshState();
         }
 
         protected virtual void OnIsActiveChanged()
@@ -186,12 +227,24 @@ namespace SLExtensions.Interactivity
         /// <param name="newValue">The new value.</param>
         private void OnIsActiveChanged(bool oldValue, bool newValue)
         {
-            if(newValue)
-                SLExtensions.Controls.Animation.VisualState.GoToState(Target, true, State);
-            else
-                SLExtensions.Controls.Animation.VisualState.GoToState(Target, true, InactivityState);
+            RefreshState();
 
             OnIsActiveChanged();
+        }
+
+        private void RefreshState()
+        {
+            if (Target != null)
+            {
+                if (IsActive)
+                {
+                    VisualStateManager.GoToState(Target, State, true);
+                }
+                else
+                {
+                    VisualStateManager.GoToState(Target, InactivityState, true);
+                }
+            }
         }
 
         /// <summary>

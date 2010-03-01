@@ -15,7 +15,7 @@
     using System.Windows.Shapes;
 
     [TemplatePart(Name = VirtualizedStackPanelName, Type = typeof(VirtualizedStackPanel))]
-    [TemplatePart(Name = ScrollBarName, Type = typeof(ScrollBar))]    
+    [TemplatePart(Name = ScrollBarName, Type = typeof(ScrollBar))]
     public class VirtualizedListBox : Control
     {
         #region Fields

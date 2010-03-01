@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet type='text/xsl' href='_UpgradeReport_Files/UpgradeReport.xslt'?><UpgradeLog>
+<Properties><Property Name="Solution" Value="SLExtensions">
+</Property><Property Name="Solution File" Value="D:\Titaye\dev\git\SLExtensions\trunk\SLExtensions\SLExtensions.sln">
+</Property><Property Name="Date" Value="Monday, March 01, 2010">
+</Property><Property Name="Time" Value="9:54 AM">
+</Property><Property Name="Solution" Value="SLExtensions">
+</Property><Property Name="Solution File" Value="D:\Titaye\dev\git\SLExtensions\trunk\SLExtensions\SLExtensions.sln">
+</Property><Property Name="Date" Value="Monday, March 01, 2010">
+</Property><Property Name="Time" Value="9:54 AM">
+</Property></Properties><Event ErrorLevel="0" Project="SLExtensions" Source="SLExtensions\SLExtensions.csproj" Description="The project file does not require conversion.">
+</Event><Event ErrorLevel="3" Project="SLExtensions" Source="SLExtensions\SLExtensions.csproj" Description="No Conversion Required">
+</Event><Event ErrorLevel="0" Project="SLExtensions.Test" Source="SLExtensions.Test\SLExtensions.Test.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="SLExtensions.Test" Source="SLExtensions.Test\SLExtensions.Test.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="SLExtensions.Controls" Source="SLExtensions.Controls\SLExtensions.Controls.csproj" Description="The project file does not require conversion.">
+</Event><Event ErrorLevel="3" Project="SLExtensions.Controls" Source="SLExtensions.Controls\SLExtensions.Controls.csproj" Description="No Conversion Required">
+</Event><Event ErrorLevel="0" Project="SLExtensions.Showcase" Source="SLExtensions.Showcase\SLExtensions.Showcase.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="SLExtensions.Showcase" Source="SLExtensions.Showcase\SLExtensions.Showcase.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="SLExtensions.Showcase.Web" Source="SLExtensions.Showcase.Web\SLExtensions.Showcase.Web.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="SLExtensions.Showcase.Web" Source="SLExtensions.Showcase.Web\SLExtensions.Showcase.Web.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="SLExtensions.DeepZoom" Source="SLExtensions.DeepZoom\SLExtensions.DeepZoom.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="SLExtensions.DeepZoom" Source="SLExtensions.DeepZoom\SLExtensions.DeepZoom.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="SLExtensions.Bootstrapping" Source="SLExtensions.Bootstrapping\SLExtensions.Bootstrapping.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="SLExtensions.Bootstrapping" Source="SLExtensions.Bootstrapping\SLExtensions.Bootstrapping.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="SLExtensions.BootstrappingSample" Source="SLExtensions.BootstrappingSample\SLExtensions.BootstrappingSample.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="SLExtensions.BootstrappingSample" Source="SLExtensions.BootstrappingSample\SLExtensions.BootstrappingSample.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="SLExtensions.BootstrappingSample.Web" Source="SLExtensions.BootstrappingSample.Web\SLExtensions.BootstrappingSample.Web.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="SLExtensions.BootstrappingSample.Web" Source="SLExtensions.BootstrappingSample.Web\SLExtensions.BootstrappingSample.Web.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="ApplicationWithCommonAndLocalizedResources" Source="ApplicationWithCommonAndLocalizedResources\ApplicationWithCommonAndLocalizedResources.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="ApplicationWithCommonAndLocalizedResources" Source="ApplicationWithCommonAndLocalizedResources\ApplicationWithCommonAndLocalizedResources.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="LocalizationSample" Source="LocalizationSample\LocalizationSample.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="LocalizationSample" Source="LocalizationSample\LocalizationSample.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="SLMedia.Core" Source="SLMedia.Core\SLMedia.Core.csproj" Description="The project file does not require conversion.">
+</Event><Event ErrorLevel="3" Project="SLMedia.Core" Source="SLMedia.Core\SLMedia.Core.csproj" Description="No Conversion Required">
+</Event><Event ErrorLevel="0" Project="SLMedia.PlaylistProvider.MediaRSS" Source="SLMedia.PlaylistProvider.MediaRSS\SLMedia.PlaylistProvider.MediaRSS.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="SLMedia.PlaylistProvider.MediaRSS" Source="SLMedia.PlaylistProvider.MediaRSS\SLMedia.PlaylistProvider.MediaRSS.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="SLMedia.PlaylistProvider.MSNVideo" Source="SLMedia.PlaylistProvider.MSNVideo\SLMedia.PlaylistProvider.MSNVideo.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="SLMedia.PlaylistProvider.MSNVideo" Source="SLMedia.PlaylistProvider.MSNVideo\SLMedia.PlaylistProvider.MSNVideo.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="SLExtensions.Player" Source="SLExtensions.Player\SLExtensions.Player.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="SLExtensions.Player" Source="SLExtensions.Player\SLExtensions.Player.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="SLExtensions.SocketServer" Source="SLExtensions.SocketServer\SLExtensions.SocketServer.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="SLExtensions.SocketServer" Source="SLExtensions.SocketServer\SLExtensions.SocketServer.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="SLExtensions.SocketClient" Source="SLExtensions.SocketClient\SLExtensions.SocketClient.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="SLExtensions.SocketClient" Source="SLExtensions.SocketClient\SLExtensions.SocketClient.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="SLExtensions.Controls.Extended" Source="SLExtensions.Controls.Extended\SLExtensions.Controls.Extended.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="SLExtensions.Controls.Extended" Source="SLExtensions.Controls.Extended\SLExtensions.Controls.Extended.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="SLExtensions.Data" Source="SLExtensions.Data\SLExtensions.Data.csproj" Description="The project file does not require conversion.">
+</Event><Event ErrorLevel="3" Project="SLExtensions.Data" Source="SLExtensions.Data\SLExtensions.Data.csproj" Description="No Conversion Required">
+</Event><Event ErrorLevel="0" Project="SLMedia.Video" Source="SLMedia.Video\SLMedia.Video.csproj" Description="The project file does not require conversion.">
+</Event><Event ErrorLevel="3" Project="SLMedia.Video" Source="SLMedia.Video\SLMedia.Video.csproj" Description="No Conversion Required">
+</Event><Event ErrorLevel="0" Project="SLMedia.Deepzoom" Source="SLMedia.Deepzoom\SLMedia.Deepzoom.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="SLMedia.Deepzoom" Source="SLMedia.Deepzoom\SLMedia.Deepzoom.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="SLExtensions.Interactivity" Source="SLExtensions.Interactivity\SLExtensions.Interactivity.csproj" Description="The project file does not require conversion.">
+</Event><Event ErrorLevel="3" Project="SLExtensions.Interactivity" Source="SLExtensions.Interactivity\SLExtensions.Interactivity.csproj" Description="No Conversion Required">
+</Event><Event ErrorLevel="0" Project="SLMedia.Picture" Source="SLMedia.Picture\SLMedia.Picture.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="SLMedia.Picture" Source="SLMedia.Picture\SLMedia.Picture.csproj" Description="Converted">
+</Event><Event ErrorLevel="2" Project="SLMedia.SmoothStreaming" Source="SLMedia.AdaptiveStreaming\SLMedia.SmoothStreaming.csproj" Description="Unable to open project file to perform upgrade.  ">
+</Event><Event ErrorLevel="0" Project="SLExtensions.Data.Services" Source="SLExtensions.Data.Services\SLExtensions.Data.Services.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="SLExtensions.Data.Services" Source="SLExtensions.Data.Services\SLExtensions.Data.Services.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="SLExtensions.Sharepoint" Source="SLExtensions.Sharepoint\SLExtensions.Sharepoint.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="SLExtensions.Sharepoint" Source="SLExtensions.Sharepoint\SLExtensions.Sharepoint.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="SLExtensions" Source="SLExtensions\SLExtensions.csproj" Description="The project file does not require conversion.">
+</Event><Event ErrorLevel="3" Project="SLExtensions" Source="SLExtensions\SLExtensions.csproj" Description="No Conversion Required">
+</Event><Event ErrorLevel="0" Project="SLExtensions.Test" Source="SLExtensions.Test\SLExtensions.Test.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="SLExtensions.Test" Source="SLExtensions.Test\SLExtensions.Test.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="SLExtensions.Controls" Source="SLExtensions.Controls\SLExtensions.Controls.csproj" Description="The project file does not require conversion.">
+</Event><Event ErrorLevel="3" Project="SLExtensions.Controls" Source="SLExtensions.Controls\SLExtensions.Controls.csproj" Description="No Conversion Required">
+</Event><Event ErrorLevel="0" Project="SLExtensions.Showcase" Source="SLExtensions.Showcase\SLExtensions.Showcase.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="SLExtensions.Showcase" Source="SLExtensions.Showcase\SLExtensions.Showcase.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="SLExtensions.Showcase.Web" Source="SLExtensions.Showcase.Web\SLExtensions.Showcase.Web.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="SLExtensions.Showcase.Web" Source="SLExtensions.Showcase.Web\SLExtensions.Showcase.Web.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="SLExtensions.DeepZoom" Source="SLExtensions.DeepZoom\SLExtensions.DeepZoom.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="SLExtensions.DeepZoom" Source="SLExtensions.DeepZoom\SLExtensions.DeepZoom.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="SLExtensions.Bootstrapping" Source="SLExtensions.Bootstrapping\SLExtensions.Bootstrapping.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="SLExtensions.Bootstrapping" Source="SLExtensions.Bootstrapping\SLExtensions.Bootstrapping.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="SLExtensions.BootstrappingSample" Source="SLExtensions.BootstrappingSample\SLExtensions.BootstrappingSample.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="SLExtensions.BootstrappingSample" Source="SLExtensions.BootstrappingSample\SLExtensions.BootstrappingSample.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="SLExtensions.BootstrappingSample.Web" Source="SLExtensions.BootstrappingSample.Web\SLExtensions.BootstrappingSample.Web.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="SLExtensions.BootstrappingSample.Web" Source="SLExtensions.BootstrappingSample.Web\SLExtensions.BootstrappingSample.Web.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="ApplicationWithCommonAndLocalizedResources" Source="ApplicationWithCommonAndLocalizedResources\ApplicationWithCommonAndLocalizedResources.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="ApplicationWithCommonAndLocalizedResources" Source="ApplicationWithCommonAndLocalizedResources\ApplicationWithCommonAndLocalizedResources.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="LocalizationSample" Source="LocalizationSample\LocalizationSample.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="LocalizationSample" Source="LocalizationSample\LocalizationSample.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="SLMedia.Core" Source="SLMedia.Core\SLMedia.Core.csproj" Description="The project file does not require conversion.">
+</Event><Event ErrorLevel="3" Project="SLMedia.Core" Source="SLMedia.Core\SLMedia.Core.csproj" Description="No Conversion Required">
+</Event><Event ErrorLevel="0" Project="SLMedia.PlaylistProvider.MediaRSS" Source="SLMedia.PlaylistProvider.MediaRSS\SLMedia.PlaylistProvider.MediaRSS.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="SLMedia.PlaylistProvider.MediaRSS" Source="SLMedia.PlaylistProvider.MediaRSS\SLMedia.PlaylistProvider.MediaRSS.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="SLMedia.PlaylistProvider.MSNVideo" Source="SLMedia.PlaylistProvider.MSNVideo\SLMedia.PlaylistProvider.MSNVideo.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="SLMedia.PlaylistProvider.MSNVideo" Source="SLMedia.PlaylistProvider.MSNVideo\SLMedia.PlaylistProvider.MSNVideo.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="SLExtensions.Player" Source="SLExtensions.Player\SLExtensions.Player.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="SLExtensions.Player" Source="SLExtensions.Player\SLExtensions.Player.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="SLExtensions.SocketServer" Source="SLExtensions.SocketServer\SLExtensions.SocketServer.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="SLExtensions.SocketServer" Source="SLExtensions.SocketServer\SLExtensions.SocketServer.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="SLExtensions.SocketClient" Source="SLExtensions.SocketClient\SLExtensions.SocketClient.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="SLExtensions.SocketClient" Source="SLExtensions.SocketClient\SLExtensions.SocketClient.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="SLExtensions.Controls.Extended" Source="SLExtensions.Controls.Extended\SLExtensions.Controls.Extended.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="SLExtensions.Controls.Extended" Source="SLExtensions.Controls.Extended\SLExtensions.Controls.Extended.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="SLExtensions.Data" Source="SLExtensions.Data\SLExtensions.Data.csproj" Description="The project file does not require conversion.">
+</Event><Event ErrorLevel="3" Project="SLExtensions.Data" Source="SLExtensions.Data\SLExtensions.Data.csproj" Description="No Conversion Required">
+</Event><Event ErrorLevel="0" Project="SLMedia.Video" Source="SLMedia.Video\SLMedia.Video.csproj" Description="The project file does not require conversion.">
+</Event><Event ErrorLevel="3" Project="SLMedia.Video" Source="SLMedia.Video\SLMedia.Video.csproj" Description="No Conversion Required">
+</Event><Event ErrorLevel="0" Project="SLMedia.Deepzoom" Source="SLMedia.Deepzoom\SLMedia.Deepzoom.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="SLMedia.Deepzoom" Source="SLMedia.Deepzoom\SLMedia.Deepzoom.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="SLExtensions.Interactivity" Source="SLExtensions.Interactivity\SLExtensions.Interactivity.csproj" Description="The project file does not require conversion.">
+</Event><Event ErrorLevel="3" Project="SLExtensions.Interactivity" Source="SLExtensions.Interactivity\SLExtensions.Interactivity.csproj" Description="No Conversion Required">
+</Event><Event ErrorLevel="0" Project="SLMedia.Picture" Source="SLMedia.Picture\SLMedia.Picture.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="SLMedia.Picture" Source="SLMedia.Picture\SLMedia.Picture.csproj" Description="Converted">
+</Event><Event ErrorLevel="2" Project="SLMedia.SmoothStreaming" Source="SLMedia.AdaptiveStreaming\SLMedia.SmoothStreaming.csproj" Description="Unable to open project file to perform upgrade.  ">
+</Event><Event ErrorLevel="0" Project="SLExtensions.Data.Services" Source="SLExtensions.Data.Services\SLExtensions.Data.Services.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="SLExtensions.Data.Services" Source="SLExtensions.Data.Services\SLExtensions.Data.Services.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="SLExtensions.Sharepoint" Source="SLExtensions.Sharepoint\SLExtensions.Sharepoint.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="SLExtensions.Sharepoint" Source="SLExtensions.Sharepoint\SLExtensions.Sharepoint.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="SLExtensions" Source="SLExtensions\SLExtensions.csproj" Description="The project file does not require conversion.">
+</Event><Event ErrorLevel="3" Project="SLExtensions" Source="SLExtensions\SLExtensions.csproj" Description="No Conversion Required">
+</Event><Event ErrorLevel="0" Project="SLExtensions.Test" Source="SLExtensions.Test\SLExtensions.Test.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="SLExtensions.Test" Source="SLExtensions.Test\SLExtensions.Test.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="SLExtensions.Controls" Source="SLExtensions.Controls\SLExtensions.Controls.csproj" Description="The project file does not require conversion.">
+</Event><Event ErrorLevel="3" Project="SLExtensions.Controls" Source="SLExtensions.Controls\SLExtensions.Controls.csproj" Description="No Conversion Required">
+</Event><Event ErrorLevel="0" Project="SLExtensions.Showcase" Source="SLExtensions.Showcase\SLExtensions.Showcase.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="SLExtensions.Showcase" Source="SLExtensions.Showcase\SLExtensions.Showcase.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="SLExtensions.Showcase.Web" Source="SLExtensions.Showcase.Web\SLExtensions.Showcase.Web.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="SLExtensions.Showcase.Web" Source="SLExtensions.Showcase.Web\SLExtensions.Showcase.Web.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="SLExtensions.DeepZoom" Source="SLExtensions.DeepZoom\SLExtensions.DeepZoom.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="SLExtensions.DeepZoom" Source="SLExtensions.DeepZoom\SLExtensions.DeepZoom.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="SLExtensions.Bootstrapping" Source="SLExtensions.Bootstrapping\SLExtensions.Bootstrapping.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="SLExtensions.Bootstrapping" Source="SLExtensions.Bootstrapping\SLExtensions.Bootstrapping.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="SLExtensions.BootstrappingSample" Source="SLExtensions.BootstrappingSample\SLExtensions.BootstrappingSample.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="SLExtensions.BootstrappingSample" Source="SLExtensions.BootstrappingSample\SLExtensions.BootstrappingSample.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="SLExtensions.BootstrappingSample.Web" Source="SLExtensions.BootstrappingSample.Web\SLExtensions.BootstrappingSample.Web.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="SLExtensions.BootstrappingSample.Web" Source="SLExtensions.BootstrappingSample.Web\SLExtensions.BootstrappingSample.Web.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="ApplicationWithCommonAndLocalizedResources" Source="ApplicationWithCommonAndLocalizedResources\ApplicationWithCommonAndLocalizedResources.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="ApplicationWithCommonAndLocalizedResources" Source="ApplicationWithCommonAndLocalizedResources\ApplicationWithCommonAndLocalizedResources.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="LocalizationSample" Source="LocalizationSample\LocalizationSample.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="LocalizationSample" Source="LocalizationSample\LocalizationSample.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="SLMedia.Core" Source="SLMedia.Core\SLMedia.Core.csproj" Description="The project file does not require conversion.">
+</Event><Event ErrorLevel="3" Project="SLMedia.Core" Source="SLMedia.Core\SLMedia.Core.csproj" Description="No Conversion Required">
+</Event><Event ErrorLevel="0" Project="SLMedia.PlaylistProvider.MediaRSS" Source="SLMedia.PlaylistProvider.MediaRSS\SLMedia.PlaylistProvider.MediaRSS.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="SLMedia.PlaylistProvider.MediaRSS" Source="SLMedia.PlaylistProvider.MediaRSS\SLMedia.PlaylistProvider.MediaRSS.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="SLMedia.PlaylistProvider.MSNVideo" Source="SLMedia.PlaylistProvider.MSNVideo\SLMedia.PlaylistProvider.MSNVideo.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="SLMedia.PlaylistProvider.MSNVideo" Source="SLMedia.PlaylistProvider.MSNVideo\SLMedia.PlaylistProvider.MSNVideo.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="SLExtensions.Player" Source="SLExtensions.Player\SLExtensions.Player.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="SLExtensions.Player" Source="SLExtensions.Player\SLExtensions.Player.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="SLExtensions.SocketServer" Source="SLExtensions.SocketServer\SLExtensions.SocketServer.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="SLExtensions.SocketServer" Source="SLExtensions.SocketServer\SLExtensions.SocketServer.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="SLExtensions.SocketClient" Source="SLExtensions.SocketClient\SLExtensions.SocketClient.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="SLExtensions.SocketClient" Source="SLExtensions.SocketClient\SLExtensions.SocketClient.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="SLExtensions.Controls.Extended" Source="SLExtensions.Controls.Extended\SLExtensions.Controls.Extended.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="SLExtensions.Controls.Extended" Source="SLExtensions.Controls.Extended\SLExtensions.Controls.Extended.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="SLExtensions.Data" Source="SLExtensions.Data\SLExtensions.Data.csproj" Description="The project file does not require conversion.">
+</Event><Event ErrorLevel="3" Project="SLExtensions.Data" Source="SLExtensions.Data\SLExtensions.Data.csproj" Description="No Conversion Required">
+</Event><Event ErrorLevel="0" Project="SLMedia.Video" Source="SLMedia.Video\SLMedia.Video.csproj" Description="The project file does not require conversion.">
+</Event><Event ErrorLevel="3" Project="SLMedia.Video" Source="SLMedia.Video\SLMedia.Video.csproj" Description="No Conversion Required">
+</Event><Event ErrorLevel="0" Project="SLMedia.Deepzoom" Source="SLMedia.Deepzoom\SLMedia.Deepzoom.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="SLMedia.Deepzoom" Source="SLMedia.Deepzoom\SLMedia.Deepzoom.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="SLExtensions.Interactivity" Source="SLExtensions.Interactivity\SLExtensions.Interactivity.csproj" Description="The project file does not require conversion.">
+</Event><Event ErrorLevel="3" Project="SLExtensions.Interactivity" Source="SLExtensions.Interactivity\SLExtensions.Interactivity.csproj" Description="No Conversion Required">
+</Event><Event ErrorLevel="0" Project="SLMedia.Picture" Source="SLMedia.Picture\SLMedia.Picture.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="SLMedia.Picture" Source="SLMedia.Picture\SLMedia.Picture.csproj" Description="Converted">
+</Event><Event ErrorLevel="2" Project="SLMedia.SmoothStreaming" Source="SLMedia.AdaptiveStreaming\SLMedia.SmoothStreaming.csproj" Description="Unable to open project file to perform upgrade.  ">
+</Event><Event ErrorLevel="0" Project="SLExtensions.Data.Services" Source="SLExtensions.Data.Services\SLExtensions.Data.Services.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="SLExtensions.Data.Services" Source="SLExtensions.Data.Services\SLExtensions.Data.Services.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="SLExtensions.Sharepoint" Source="SLExtensions.Sharepoint\SLExtensions.Sharepoint.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="SLExtensions.Sharepoint" Source="SLExtensions.Sharepoint\SLExtensions.Sharepoint.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="" Source="SLExtensions.sln" Description="Solution converted successfully">
+</Event><Event ErrorLevel="3" Project="" Source="SLExtensions.sln" Description="Converted">
+</Event><Event ErrorLevel="0" Project="SLExtensions.Bootstrapping" Source="SLExtensions.Bootstrapping\SLExtensions.Bootstrapping.csproj" Description="Scan complete: Upgrade not required for project files.">
+</Event><Event ErrorLevel="0" Project="SLExtensions.BootstrappingSample" Source="SLExtensions.BootstrappingSample\SLExtensions.BootstrappingSample.csproj" Description="Scan complete: Upgrade not required for project files.">
+</Event><Event ErrorLevel="0" Project="SLExtensions.BootstrappingSample.Web" Source="SLExtensions.BootstrappingSample.Web\SLExtensions.BootstrappingSample.Web.csproj" Description="Scan complete: Upgrade not required for project files.">
+</Event><Event ErrorLevel="0" Project="ApplicationWithCommonAndLocalizedResources" Source="ApplicationWithCommonAndLocalizedResources\ApplicationWithCommonAndLocalizedResources.csproj" Description="Scan complete: Upgrade not required for project files.">
+</Event><Event ErrorLevel="0" Project="LocalizationSample" Source="LocalizationSample\LocalizationSample.csproj" Description="Scan complete: Upgrade not required for project files.">
+</Event><Event ErrorLevel="0" Project="SLMedia.PlaylistProvider.MediaRSS" Source="SLMedia.PlaylistProvider.MediaRSS\SLMedia.PlaylistProvider.MediaRSS.csproj" Description="Scan complete: Upgrade not required for project files.">
+</Event><Event ErrorLevel="0" Project="SLMedia.PlaylistProvider.MSNVideo" Source="SLMedia.PlaylistProvider.MSNVideo\SLMedia.PlaylistProvider.MSNVideo.csproj" Description="Scan complete: Upgrade not required for project files.">
+</Event><Event ErrorLevel="0" Project="SLMedia.Deepzoom" Source="SLMedia.Deepzoom\SLMedia.Deepzoom.csproj" Description="Scan complete: Upgrade not required for project files.">
+</Event><Event ErrorLevel="0" Project="SLMedia.Picture" Source="SLMedia.Picture\SLMedia.Picture.csproj" Description="Scan complete: Upgrade not required for project files.">
+</Event><Event ErrorLevel="0" Project="SLExtensions.Showcase" Source="SLExtensions.Showcase\SLExtensions.Showcase.csproj" Description="Scan complete: Upgrade not required for project files.">
+</Event><Event ErrorLevel="0" Project="SLExtensions.Showcase.Web" Source="SLExtensions.Showcase.Web\SLExtensions.Showcase.Web.csproj" Description="Scan complete: Upgrade not required for project files.">
+</Event><Event ErrorLevel="0" Project="SLExtensions.Player" Source="SLExtensions.Player\SLExtensions.Player.csproj" Description="Scan complete: Upgrade not required for project files.">
+</Event><Event ErrorLevel="0" Project="SLExtensions.SocketServer" Source="SLExtensions.SocketServer\SLExtensions.SocketServer.csproj" Description="Scan complete: Upgrade not required for project files.">
+</Event><Event ErrorLevel="0" Project="SLExtensions.SocketClient" Source="SLExtensions.SocketClient\SLExtensions.SocketClient.csproj" Description="Scan complete: Upgrade not required for project files.">
+</Event><Event ErrorLevel="0" Project="SLExtensions.Test" Source="SLExtensions.Test\SLExtensions.Test.csproj" Description="Scan complete: Upgrade not required for project files.">
+</Event><Event ErrorLevel="0" Project="SLExtensions.DeepZoom" Source="SLExtensions.DeepZoom\SLExtensions.DeepZoom.csproj" Description="Scan complete: Upgrade not required for project files.">
+</Event><Event ErrorLevel="0" Project="SLExtensions.Controls.Extended" Source="SLExtensions.Controls.Extended\SLExtensions.Controls.Extended.csproj" Description="Scan complete: Upgrade not required for project files.">
+</Event><Event ErrorLevel="0" Project="SLExtensions.Data.Services" Source="SLExtensions.Data.Services\SLExtensions.Data.Services.csproj" Description="Scan complete: Upgrade not required for project files.">
+</Event><Event ErrorLevel="0" Project="SLExtensions.Sharepoint" Source="SLExtensions.Sharepoint\SLExtensions.Sharepoint.csproj" Description="Scan complete: Upgrade not required for project files.">
+</Event></UpgradeLog>

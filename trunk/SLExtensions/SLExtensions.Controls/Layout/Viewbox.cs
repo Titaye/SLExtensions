@@ -231,11 +231,13 @@
 
             if (isLoaded && oldValue != null)
             {
+                newValue.SizeChanged -= new SizeChangedEventHandler(newValue_SizeChanged);
                 cvParent.Children.Remove(oldValue);
             }
 
             if (isLoaded && newValue != null)
             {
+                newValue.SizeChanged += new SizeChangedEventHandler(newValue_SizeChanged);
                 cvParent.Children.Add(newValue);
             }
         }
@@ -246,6 +248,11 @@
         /// <param name="oldValue">The old value.</param>
         /// <param name="newValue">The new value.</param>
         private void OnStretchChanged(Stretch oldValue, Stretch newValue)
+        {
+            InvalidateMeasure();
+        }
+
+        void newValue_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             InvalidateMeasure();
         }

@@ -1,46 +1,38 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
-using System.Text;
-using System.Windows;
-using System.Windows.Media;
-using System.Xml;
-
-using SLExtensions.Text;
-
-namespace SLExtensions.Xaml
+﻿namespace SLExtensions.Xaml
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Globalization;
+    using System.IO;
+    using System.Text;
+    using System.Windows;
+    using System.Windows.Media;
+    using System.Xml;
+
+    using SLExtensions.Text;
+
     /// <summary>
     /// Provides the basic implementation of a converter.
     /// </summary>
     public abstract class ConverterBase
     {
+        #region Fields
+
+        private bool treatWarningAsError = false;
+        private bool writeDefaultValues = false;
+
+        #endregion Fields
+
+        #region Events
+
         /// <summary>
         /// Occurs when a converter warning is encountered.
         /// </summary>
         public event EventHandler<ConverterWarningEventArgs> Warning;
 
-        private bool treatWarningAsError = false;
-        private bool writeDefaultValues = false;
+        #endregion Events
 
-        /// <summary>
-        /// Raises the Warning event or ConverterException.
-        /// </summary>
-        /// <param name="message">The message.</param>
-        /// <param name="o">The o.</param>
-        protected void OnWarning(string message, params object[] o)
-        {
-            message = StringUtility.Format(message, o);
-
-            if (treatWarningAsError) {
-                throw new ConverterException(message);
-            }
-
-            if (this.Warning != null) {
-                this.Warning(this, new ConverterWarningEventArgs(message));
-            }
-        }
+        #region Properties
 
         /// <summary>
         /// Gets or sets a value indicating whether to treat warnings as errors.
@@ -63,6 +55,10 @@ namespace SLExtensions.Xaml
             get { return this.writeDefaultValues; }
             set { this.writeDefaultValues = value; }
         }
+
+        #endregion Properties
+
+        #region Methods
 
         /// <summary>
         /// Converts the data from the input stream to XAML using specified format options.
@@ -88,25 +84,6 @@ namespace SLExtensions.Xaml
         public abstract void ToXaml(Stream input, XmlWriter output);
 
         /// <summary>
-        /// Writes the start element tag.
-        /// </summary>
-        /// <param name="output">The output.</param>
-        /// <param name="name">The name.</param>
-        protected void WriteStartElement(XmlWriter output, string name)
-        {
-            output.WriteStartElement(name, XamlWriter.NamespaceClient);
-        }
-
-        /// <summary>
-        /// Writes the end element tag.
-        /// </summary>
-        /// <param name="output">The output.</param>
-        protected void WriteEndElement(XmlWriter output)
-        {
-            output.WriteEndElement();
-        }
-
-        /// <summary>
         /// Writes a string name/value attribute.
         /// </summary>
         /// <param name="output">The output.</param>
@@ -118,7 +95,7 @@ namespace SLExtensions.Xaml
                 // accolade is control character for binding
                 value = "{}" + value;
             }
-            output.WriteAttributeString(name, value);        
+            output.WriteAttributeString(name, value);
         }
 
         /// <summary>
@@ -244,5 +221,44 @@ namespace SLExtensions.Xaml
 
             return settings;
         }
+
+        /// <summary>
+        /// Raises the Warning event or ConverterException.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        /// <param name="o">The o.</param>
+        protected void OnWarning(string message, params object[] o)
+        {
+            message = StringUtility.Format(message, o);
+
+            if (treatWarningAsError) {
+                throw new ConverterException(message);
+            }
+
+            if (this.Warning != null) {
+                this.Warning(this, new ConverterWarningEventArgs(message));
+            }
+        }
+
+        /// <summary>
+        /// Writes the end element tag.
+        /// </summary>
+        /// <param name="output">The output.</param>
+        protected void WriteEndElement(XmlWriter output)
+        {
+            output.WriteEndElement();
+        }
+
+        /// <summary>
+        /// Writes the start element tag.
+        /// </summary>
+        /// <param name="output">The output.</param>
+        /// <param name="name">The name.</param>
+        protected void WriteStartElement(XmlWriter output, string name)
+        {
+            output.WriteStartElement(name, XamlWriter.NamespaceClient);
+        }
+
+        #endregion Methods
     }
 }
