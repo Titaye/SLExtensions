@@ -29,7 +29,7 @@ namespace SLExtensions
                 if (splitChar.Contains(input[i]))
                     charIdx.Add(i);
 
-                if (charIdx.Count == max)
+                if (charIdx.Count == max - 1)
                     break;
             }
 

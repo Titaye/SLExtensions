@@ -152,9 +152,6 @@
 
                 if (!TryGetState(visualStateGroups, stateName, out group, out state))
                 {
-                    //if (!System.ComponentModel.DesignerProperties.GetIsInDesignMode(element))
-                    //    throw new Exception("Unable to find state " + stateName + " for element " + element.Name);
-                    //else
                     return false;
                 }
 

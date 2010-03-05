@@ -230,19 +230,9 @@ namespace SLExtensions.Input
         /// <param name="parameter">The parameter.</param>
         public virtual void Execute(T parameter)
         {
-            Execute(parameter, null);
-        }
-
-        /// <summary>
-        /// Executes the command
-        /// </summary>
-        /// <param name="parameter">The parameter.</param>
-        /// <param name="source">The event source.</param>
-        public virtual void Execute(T parameter, object source)
-        {
             if (this.Executed != null)
             {
-                this.Executed(this, new ExecutedEventArgs<T>(this, parameter, source));
+                this.Executed(this, new ExecutedEventArgs<T>(this, parameter));
             }
         }
 

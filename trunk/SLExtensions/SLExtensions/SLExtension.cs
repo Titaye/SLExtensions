@@ -114,7 +114,7 @@ namespace SLExtensions
         /// <returns>The cookie content</returns>
         public static string GetCookie(this HtmlDocument document, string cookieName)
         {
-            if (System.ComponentModel.DesignerProperties.GetIsInDesignMode(Application.Current.RootVisual))
+            if (System.ComponentModel.DesignerProperties.IsInDesignTool)
             {
                 return string.Empty;
             }
@@ -245,7 +245,7 @@ namespace SLExtensions
                     byte[] buffer = new byte[4096];
                     int read = 0;
 
-                    while ((read = fileStream.Read(buffer, 0, buffer.Length)) == buffer.Length)
+                    while ((read = fileStream.Read(buffer, 0, buffer.Length)) > 0)
                     {
                         e.Result.Write(buffer, 0, read);
                         e.Result.Flush();
@@ -337,7 +337,7 @@ namespace SLExtensions
         /// <param name="expireDays">Expiration in days.</param>
         public static void SetCookie(this HtmlDocument document, string cookieName, string value, int? expireDays)
         {
-            if (System.ComponentModel.DesignerProperties.GetIsInDesignMode(Application.Current.RootVisual))
+            if (System.ComponentModel.DesignerProperties.IsInDesignTool)
             {
                 return;
             }

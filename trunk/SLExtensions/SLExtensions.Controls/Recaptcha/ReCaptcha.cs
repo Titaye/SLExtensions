@@ -550,7 +550,7 @@
 
         private void AddScript(Uri scriptUrl)
         {
-            if (System.ComponentModel.DesignerProperties.GetIsInDesignMode(this))
+            if (System.ComponentModel.DesignerProperties.IsInDesignTool)
                 return;
 
             HtmlElement scriptElement = HtmlPage.Document.CreateElement("script");
@@ -573,7 +573,7 @@
 
         private void AddScriptContent(string script)
         {
-            if (System.ComponentModel.DesignerProperties.GetIsInDesignMode(this))
+            if (System.ComponentModel.DesignerProperties.IsInDesignTool)
                 return;
 
             HtmlElement scriptElement = HtmlPage.Document.CreateElement("script");
@@ -706,7 +706,7 @@
         {
             VisualStateManager.GoToState(this, imageStateName, false);
 
-            if (System.ComponentModel.DesignerProperties.GetIsInDesignMode(this))
+            if (System.ComponentModel.DesignerProperties.IsInDesignTool)
                 return;
 
             AddScriptContent(recaptchaJavascript);

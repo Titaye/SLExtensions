@@ -66,21 +66,9 @@ namespace SLExtensions.Input
         /// <param name="command">The command.</param>
         /// <param name="parameter">The parameter.</param>
         internal ExecutedEventArgs(Command<T> command, T parameter)
-            : this(command, parameter, null)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ExecutedEventArgs"/> class.
-        /// </summary>
-        /// <param name="command">The command.</param>
-        /// <param name="parameter">The parameter.</param>
-        /// <param name="source">The event source.</param>
-        internal ExecutedEventArgs(Command<T> command, T parameter, object source)
         {
             this.Command = command;
             this.Parameter = parameter;
-            this.Source = source;
         }
 
         #endregion Constructors

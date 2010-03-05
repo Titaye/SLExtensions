@@ -50,7 +50,7 @@ namespace SLExtensions.Controls.Animation
                 this.timer.Tick += this.Timer_Tick;
             }
 
-            if (Application.Current.RootVisual != null && !System.ComponentModel.DesignerProperties.GetIsInDesignMode(Application.Current.RootVisual))
+            if (Application.Current.RootVisual != null && !System.ComponentModel.DesignerProperties.IsInDesignTool)
             {
                 this.Start();
             }
