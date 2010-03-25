@@ -11,6 +11,8 @@
     using System.Windows.Media.Animation;
     using System.Windows.Shapes;
     using System.Windows.Data;
+    using System.ComponentModel;
+    using SLExtensions.ComponentModel;
 
     public class BindingListener : FrameworkElement
     {
@@ -38,7 +40,7 @@
 
         #region Events
 
-        public event EventHandler ValueChanged;
+        public event EventHandler<PropertyValueChangedEventArgs> ValueChanged;
 
         #endregion Events
 
@@ -70,7 +72,7 @@
         {
             if (ValueChanged != null)
             {
-                ValueChanged(this, EventArgs.Empty);
+                ValueChanged(this, new PropertyValueChangedEventArgs(oldValue, newValue));
             }
         }
 
@@ -98,7 +100,7 @@
                 bd.ElementName = oldBinding.ElementName;
                 var bindingExpression = source.SetBinding(BindingHelperProperty, bd);
                 newBindingSource = source.GetValue(BindingHelperProperty) as FrameworkElement;
-                source.ClearValue(BindingHelperProperty);                
+                source.ClearValue(BindingHelperProperty);
             }
             else if (oldBinding.RelativeSource != null)
             {
@@ -106,7 +108,7 @@
                 bd.RelativeSource = oldBinding.RelativeSource;
                 var bindingExpression = source.SetBinding(BindingHelperProperty, bd);
                 newBindingSource = source.GetValue(BindingHelperProperty) as FrameworkElement;
-                source.ClearValue(BindingHelperProperty);                
+                source.ClearValue(BindingHelperProperty);
             }
 
             if (newBindingSource != null)
@@ -132,7 +134,7 @@
             DependencyProperty.RegisterAttached("BindingHelper", typeof(FrameworkElement), typeof(BindingListener), null);
 
 
-        
+
         #endregion Methods
     }
 }

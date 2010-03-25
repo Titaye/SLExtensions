@@ -43,8 +43,8 @@
 
             WebClient wc = new WebClient();
             wc.UploadStringCompleted += new UploadStringCompletedEventHandler(wc_UploadStringCompleted);
-            wc.SendHtmlForm(url,
-                new KeyValuePair<string, string>[]
+            wc.UploadValues(url,
+                new []
                 {
                     new KeyValuePair<string, string>("challenge", challenge),
                     new KeyValuePair<string, string>("response", response)

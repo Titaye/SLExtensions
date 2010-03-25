@@ -20,6 +20,7 @@
     using SLExtensions;
 
     using SLMedia.Core;
+    using SLExtensions.Markup;
 
     public class SmiParser : IMarkerParser
     {

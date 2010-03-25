@@ -53,7 +53,8 @@
                 <local:ShowcaseItem Title="36 - Star Selector" Page="SLExtensions.Showcase.PageStarSelector" />
                 <local:ShowcaseItem Title="37 - Dynamic Imaging" Page="SLExtensions.Showcase.PageDynamicImaging" />
                 <local:ShowcaseItem Title="38 - Cool Menu" Page="SLExtensions.Showcase.PageCoolMenu" />
-        <local:ShowcaseItem Title="39 - Dynamic TextBlock" Page="SLExtensions.Showcase.PageDynamicTextBlock" />
+                <local:ShowcaseItem Title="39 - Dynamic TextBlock" Page="SLExtensions.Showcase.PageDynamicTextBlock" />
+                <local:ShowcaseItem Title="40 - Localizer" Page="SLExtensions.Showcase.PageLocalizer" />
       </scControllers:ShowcaseController.Items> 
 
 
