@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Net;
+    using System.Linq;
     using System.Resources;
     using System.Windows;
     using System.Windows.Controls;
@@ -12,29 +13,35 @@
     using System.Windows.Media;
     using System.Windows.Media.Animation;
     using System.Windows.Shapes;
+    using System.Collections;
+    using System.Globalization;
 
     public class Localizer
     {
+        static Localizer()
+        {
+            CachedResourceNames = new Dictionary<ResourceManager, Dictionary<string, string[]>>();
+        }
         #region Fields
 
         // Using a DependencyProperty as the backing store for Text.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty ContentKeyProperty = 
+        public static readonly DependencyProperty ContentKeyProperty =
             DependencyProperty.RegisterAttached("ContentKey", typeof(string), typeof(Localizer), new PropertyMetadata(OnPropertyChanged));
 
         // Using a DependencyProperty as the backing store for Localizer.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty LocalizerProperty = 
+        public static readonly DependencyProperty LocalizerProperty =
             DependencyProperty.RegisterAttached("Localizer", typeof(Localizer), typeof(Localizer), new PropertyMetadata(LocalizerChangedCallback));
 
         // Using a DependencyProperty as the backing store for ResourceManager.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty ResourceManagerProperty = 
+        public static readonly DependencyProperty ResourceManagerProperty =
             DependencyProperty.RegisterAttached("ResourceManager", typeof(ResourceManager), typeof(Localizer), new PropertyMetadata(OnPropertyChanged));
 
         // Using a DependencyProperty as the backing store for Text.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty TextKeyProperty = 
+        public static readonly DependencyProperty TextKeyProperty =
             DependencyProperty.RegisterAttached("TextKey", typeof(string), typeof(Localizer), new PropertyMetadata(OnPropertyChanged));
 
         // Using a DependencyProperty as the backing store for Tooltip.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty TooltipKeyProperty = 
+        public static readonly DependencyProperty TooltipKeyProperty =
             DependencyProperty.RegisterAttached("TooltipKey", typeof(string), typeof(Localizer), new PropertyMetadata(OnPropertyChanged));
 
         private static ResourceManager defaultResourceManager;
@@ -99,7 +106,7 @@
                 else
                 {
                     var localizer = GetLocalizer(controlToBeRefreshed);
-                    if(localizer != null)
+                    if (localizer != null)
                         localizer.Localize(controlToBeRefreshed);
                     else
                         localizedControls.RemoveAt(i);
@@ -132,13 +139,15 @@
             obj.SetValue(TooltipKeyProperty, value);
         }
 
+        public static Dictionary<ResourceManager, Dictionary<string, string[]>> CachedResourceNames { get; set; }
+
         public virtual void Localize(DependencyObject d)
         {
             ResourceManager rm = GetResourceManager(d);
 
             if (rm == null)
             {
-                if(Application.Current.RootVisual != null)
+                if (Application.Current.RootVisual != null)
                     rm = GetResourceManager(Application.Current.RootVisual);
             }
 
@@ -147,9 +156,55 @@
                 rm = DefaultResourceManager;
             }
 
-            if(rm == null)
+            if (rm == null)
             {
-                return;
+                var rootVisualAssembly = Application.Current.RootVisual.GetType().Assembly;
+                rm = new ResourceManager(rootVisualAssembly.ToString().Split(',').First() + ".Resources", rootVisualAssembly);                
+            }
+
+            string key = GetKey(d);
+            if (!string.IsNullOrEmpty(key))
+            {
+                var resourceNames = GetResourceNames(rm);
+                if (resourceNames != null)
+                {
+                    string[] propertyNames;
+                    if (resourceNames.TryGetValue(key, out propertyNames))
+                    {
+                        Type objectType = d.GetType();
+                        var propToAssign = from p in objectType.GetProperties()
+                                           where propertyNames.Contains(p.Name)
+                                           && p.CanWrite
+                                           select p;
+
+                        foreach (var prop in propToAssign)
+                        {
+                            var val = rm.GetObject(key + "_" + prop.Name);
+                            if (prop.PropertyType.IsAssignableFrom(val.GetType()))
+                            {
+                                prop.SetValue(d, val, null);
+                            }
+                            else if (prop.PropertyType.IsEnum)
+                            {
+                                var eval = Enum.Parse(prop.PropertyType, Convert.ToString(val), false);
+                                if (eval != null)
+                                {
+                                    prop.SetValue(d, eval, null);
+                                }
+                            }
+                            else
+                            {
+                                try
+                                {
+                                    System.Convert.ChangeType(val, prop.PropertyType, CultureInfo.CurrentCulture);
+                                }
+                                catch
+                                {
+                                }
+                            }
+                        }
+                    }
+                }
             }
 
             string textKey = GetTextKey(d);
@@ -185,6 +240,25 @@
             }
         }
 
+        private Dictionary<string, string[]> GetResourceNames(ResourceManager rm)
+        {
+            Dictionary<string, string[]> result;
+            if (!CachedResourceNames.TryGetValue(rm, out result))
+            {
+                result = (from dicEntry in rm.GetResourceSet(System.Globalization.CultureInfo.CurrentCulture, true, true)
+                                        .OfType<DictionaryEntry>()
+                          let keyParts = ((string)((DictionaryEntry)dicEntry).Key).Split(new[] { '_' }, 2)
+                          where keyParts.Length == 2
+                          let kv = new { k = keyParts[0], v = keyParts[1] }
+                          group kv by kv.k into g
+                          select g)
+                        .ToDictionary(i => i.Key, i => i.Select(_ => _.v).ToArray());
+                CachedResourceNames.Add(rm, result);
+            }
+
+            return result;
+        }
+
         private static void LocalizerChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             Localizer newLocalizer = e.NewValue as Localizer;
@@ -206,5 +280,21 @@
         }
 
         #endregion Methods
+
+
+
+        public static string GetKey(DependencyObject obj)
+        {
+            return (string)obj.GetValue(KeyProperty);
+        }
+
+        public static void SetKey(DependencyObject obj, string value)
+        {
+            obj.SetValue(KeyProperty, value);
+        }
+
+        // Using a DependencyProperty as the backing store for Key.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty KeyProperty =
+            DependencyProperty.RegisterAttached("Key", typeof(string), typeof(Localizer), new PropertyMetadata(OnPropertyChanged));
     }
 }

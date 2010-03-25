@@ -16,6 +16,7 @@
     <AssemblyName>SLExtensions.Showcase</AssemblyName>
     <TargetFrameworkVersion>v3.0</TargetFrameworkVersion>
     <SilverlightApplication>true</SilverlightApplication>
+	<SupportedCultures>fr-fr;en-us</SupportedCultures>
     <XapOutputs>true</XapOutputs>
     <GenerateSilverlightManifest>true</GenerateSilverlightManifest>
     <XapFilename>SLExtensions.Showcase.xap</XapFilename>
@@ -96,6 +97,7 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Windows.Controls, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Windows.Controls.Data, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Windows.Controls.Navigation, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Windows.Interactivity, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Libs\System.Windows.Interactivity.dll</HintPath>
@@ -116,6 +118,11 @@
     <Compile Include="Controllers\PageViewboxController.cs" />
     <Compile Include="Controllers\PasswordBindingContext.cs" />
     <Compile Include="Controllers\ShowcaseController.cs" />
+    <Compile Include="Resources.fr-fr.Designer.cs">
+      <DependentUpon>Resources.fr-fr.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
     <Compile Include="PageCoolMenu.xaml.cs">
       <DependentUpon>PageCoolMenu.xaml</DependentUpon>
     </Compile>
@@ -145,6 +152,9 @@
     </Compile>
     <Compile Include="PageHtmlConverter.xaml.cs">
       <DependentUpon>PageHtmlConverter.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="PageLocalizer.xaml.cs">
+      <DependentUpon>PageLocalizer.xaml</DependentUpon>
     </Compile>
     <Compile Include="PagePasswordBoxBinding.xaml.cs">
       <DependentUpon>PagePasswordBoxBinding.xaml</DependentUpon>
@@ -224,6 +234,11 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PageResourceSelector.xaml.cs">
       <DependentUpon>PageResourceSelector.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="ShowcaseHost.xaml.cs">
       <DependentUpon>ShowcaseHost.xaml</DependentUpon>
@@ -383,6 +398,10 @@
       <Generator>MSBuild:Compile</Generator>
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="PageLocalizer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="PagePasswordBoxBinding.xaml">
       <SubType>Designer</SubType>
@@ -605,6 +624,16 @@
     <Content Include="Assets\CoolMenuImages\Icons\lock.png" />
     <Content Include="Assets\CoolMenuImages\Icons\pacman.png" />
     <Content Include="Assets\CoolMenuImages\Icons\star.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources.fr-fr.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.fr-fr.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Silverlight\$(SilverlightVersion)\Microsoft.Silverlight.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

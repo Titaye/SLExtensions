@@ -46,7 +46,7 @@
         {
             WebClient webclient = new WebClient();
             webclient.UploadStringCompleted += new UploadStringCompletedEventHandler(webclient_UploadStringCompleted);
-            webclient.SendHtmlForm(
+            webclient.UploadValues(
                 new Uri(Application.Current.Host.Source, "../PostResult.aspx"),
                 (from data in postData select new KeyValuePair<string, string>(data.Name, data.Value)));
         }
@@ -61,7 +61,7 @@
                 WebClient webclient = new WebClient();
                 webclient.UploadStringCompleted += new UploadStringCompletedEventHandler(webclient_FileUploadStringCompleted);
                 webclient.UploadProgressChanged += new UploadProgressChangedEventHandler(webclient_UploadProgressChanged);
-                webclient.SendFile(
+                webclient.UploadFile(
                     new Uri(Application.Current.Host.Source, "../PostFileResult.aspx"),
                     ofd.File.OpenRead(),
                     ofd.File.Name,
