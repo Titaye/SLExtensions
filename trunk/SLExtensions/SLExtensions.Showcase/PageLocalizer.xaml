@@ -1,0 +1,22 @@
+﻿<navigation:Page x:Class="SLExtensions.Showcase.PageLocalizer" 
+           xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+           xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+           xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+           xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+           mc:Ignorable="d"
+           xmlns:navigation="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Navigation"
+           d:DesignWidth="640" d:DesignHeight="480"
+                 xmlns:slg="clr-namespace:SLExtensions.Globalization;assembly=SLExtensions"
+           Title="PageLocalizer Page">
+    <Grid x:Name="LayoutRoot">
+        <StackPanel VerticalAlignment="Top" HorizontalAlignment="Center">
+            <ComboBox x:Name="comboLang" SelectedIndex="0" SelectionChanged="ComboBox_SelectionChanged">
+                <ComboBoxItem Content="English" slg:Localizer.Key="localizeEnglish"/>
+                <ComboBoxItem Content="French" slg:Localizer.Key="localizeFrench"/>
+            </ComboBox>
+            <TextBlock  Text="unlocalized"
+                    slg:Localizer.Key="tb1" />
+        </StackPanel>
+        
+    </Grid>
+</navigation:Page>
