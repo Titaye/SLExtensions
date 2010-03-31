@@ -27,7 +27,8 @@ namespace SLExtensions
 
             var r = from parts in uri.Query.TrimStart('?').Split(new[] { '&' }, StringSplitOptions.RemoveEmptyEntries)
                     let keyvalue = parts.Split(new[] { '=' }, 2)
-                    group keyvalue by keyvalue.First() into g
+                    let values = keyvalue.Skip(1).ToArray()
+                    group values by keyvalue.First() into g
                     select g;
             foreach (var item in r.ToDictionary(g => g.Key, g => g.ToArray(), StringComparer.OrdinalIgnoreCase))
             {
