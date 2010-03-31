@@ -98,7 +98,7 @@
             {
                 Binding bd = new Binding();
                 bd.ElementName = oldBinding.ElementName;
-                var bindingExpression = source.SetBinding(BindingHelperProperty, bd);
+                source.SetBinding(BindingHelperProperty, bd);
                 newBindingSource = source.GetValue(BindingHelperProperty) as FrameworkElement;
                 source.ClearValue(BindingHelperProperty);
             }
@@ -106,7 +106,7 @@
             {
                 Binding bd = new Binding();
                 bd.RelativeSource = oldBinding.RelativeSource;
-                var bindingExpression = source.SetBinding(BindingHelperProperty, bd);
+                source.SetBinding(BindingHelperProperty, bd);
                 newBindingSource = source.GetValue(BindingHelperProperty) as FrameworkElement;
                 source.ClearValue(BindingHelperProperty);
             }

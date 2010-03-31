@@ -32,6 +32,16 @@
             Metadata = new Dictionary<string, object>();
         }
 
+        public MarkerSelector(params KeyValuePair<string, object>[] metadataValues)
+            : this()
+        {
+            if (metadataValues != null)
+                foreach (var item in metadataValues)
+                {
+                    Metadata.Add(item);
+                }
+        }
+
         #endregion Constructors
 
         #region Events
@@ -82,10 +92,18 @@
             }
         }
 
+        private IList<IMarker> markers;
         public IList<IMarker> Markers
         {
-            get;
-            private set;
+            get { return this.markers; }
+            set
+            {
+                if (this.markers != value)
+                {
+                    this.markers = value;
+                    this.OnPropertyChanged(this.GetPropertyName(n => n.Markers));
+                }
+            }
         }
 
         public IDictionary<string, object> Metadata

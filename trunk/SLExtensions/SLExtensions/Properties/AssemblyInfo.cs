@@ -12,6 +12,7 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Windows.Markup;
+using System.Resources;
 
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
@@ -52,3 +53,4 @@ using System.Windows.Markup;
 [assembly: XmlnsDefinition("http://www.slextensions.net/2009/input", "SLExtensions.Input")]
 [assembly: XmlnsPrefix("http://www.slextensions.net/2009/globalization", "slg")]
 [assembly: XmlnsDefinition("http://www.slextensions.net/2009/globalization", "SLExtensions.Globalization")]
+[assembly: NeutralResourcesLanguageAttribute("en-US")]

@@ -15,6 +15,7 @@
     using System.Windows.Shapes;
     using System.Collections;
     using System.Globalization;
+    using System.ComponentModel;
 
     public class Localizer
     {
@@ -156,10 +157,15 @@
                 rm = DefaultResourceManager;
             }
 
-            if (rm == null)
+            var app = Application.Current;
+            if (rm == null && app != null && app.RootVisual != null)
             {
-                var rootVisualAssembly = Application.Current.RootVisual.GetType().Assembly;
-                rm = new ResourceManager(rootVisualAssembly.ToString().Split(',').First() + ".Resources", rootVisualAssembly);                
+                var rootVisualAssembly = app.RootVisual.GetType().Assembly;
+                var resourceName = rootVisualAssembly.ToString().Split(',').First() + ".Resources";
+                if (rootVisualAssembly.GetManifestResourceNames().Contains(resourceName + ".resources"))
+                    rm = new ResourceManager(resourceName, rootVisualAssembly);
+                else
+                    return;
             }
 
             string key = GetKey(d);
