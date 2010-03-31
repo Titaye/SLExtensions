@@ -30,7 +30,7 @@
             DependencyProperty.RegisterAttached("ContentKey", typeof(string), typeof(Localizer), new PropertyMetadata(OnPropertyChanged));
 
         // Using a DependencyProperty as the backing store for Localizer.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty LocalizerProperty =
+        public static readonly DependencyProperty LocalizerProperty = 
             DependencyProperty.RegisterAttached("Localizer", typeof(Localizer), typeof(Localizer), new PropertyMetadata(LocalizerChangedCallback));
 
         // Using a DependencyProperty as the backing store for ResourceManager.  This enables animation, styling, binding, etc...
@@ -38,7 +38,7 @@
             DependencyProperty.RegisterAttached("ResourceManager", typeof(ResourceManager), typeof(Localizer), new PropertyMetadata(OnPropertyChanged));
 
         // Using a DependencyProperty as the backing store for Text.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty TextKeyProperty =
+        public static readonly DependencyProperty TextKeyProperty = 
             DependencyProperty.RegisterAttached("TextKey", typeof(string), typeof(Localizer), new PropertyMetadata(OnPropertyChanged));
 
         // Using a DependencyProperty as the backing store for Tooltip.  This enables animation, styling, binding, etc...
