@@ -32,7 +32,8 @@ namespace SLExtensions.Design
             if (System.ComponentModel.DesignerProperties.IsInDesignTool)
             {
                 var t = Type.GetType((string) e.NewValue);
-                Activator.CreateInstance(t, d);                
+                if(t != null)
+                    Activator.CreateInstance(t, d);                
             }
         }
     }
