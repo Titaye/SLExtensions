@@ -10,12 +10,13 @@
     using System.Windows.Input;
     using System.Windows.Media;
     using System.Windows.Media.Animation;
+    using System.Windows.Media.Imaging;
     using System.Windows.Shapes;
 
     /// <summary>
     /// Utility class for encoding PNG image data.
     /// </summary>
-    public class PngEncoder
+    public static class PngEncoder
     {
         #region Fields
 
@@ -45,7 +46,7 @@
         /// <param name="width">The width of the image.</param>
         /// <param name="height">The height of the image.</param>
         /// <returns>Returns a PNG encoded stream.</returns>
-        public static Stream Encode(byte[] data, int width, int height)
+        public static MemoryStream Encode(byte[] data, int width, int height)
         {
             MemoryStream ms = new MemoryStream();
             byte[] size;
@@ -170,6 +171,12 @@
             // See http://www.libpng.org/pub/png/book/chapter08.html#png.ch08.div.4
             // See http://www.gzip.org/zlib/rfc-zlib.html (ZLIB format)
             // See ftp://ftp.uu.net/pub/archiving/zip/doc/rfc1951.txt (ZLIB compression format)
+        }
+
+        public static MemoryStream SaveAsPng(this WriteableBitmap source)
+        {
+            EditableImage img = new EditableImage(source);
+            return img.GetStream();
         }
 
         private static uint ComputeAdler32(byte[] buf)

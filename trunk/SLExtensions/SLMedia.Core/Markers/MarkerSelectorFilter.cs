@@ -26,58 +26,17 @@
         /// <summary>
         /// FilterActiveOnly depedency property.
         /// </summary>
-        public static readonly DependencyProperty FilterActiveOnlyProperty =
+        public static readonly DependencyProperty FilterActiveOnlyProperty = 
             DependencyProperty.Register(
                 "FilterActiveOnly",
                 typeof(bool),
                 typeof(MarkerSelectorFilter),
                 new PropertyMetadata((d, e) => ((MarkerSelectorFilter)d).OnFilterActiveOnlyChanged((bool)e.OldValue, (bool)e.NewValue)));
 
-
-
-        #region MarkerSelectors
-
-        public IEnumerable<IMarkerSelector> MarkerSelectors
-        {
-            get
-            {
-                return (IEnumerable<IMarkerSelector>)GetValue(MarkerSelectorsProperty);
-            }
-
-            set
-            {
-                SetValue(MarkerSelectorsProperty, value);
-            }
-        }
-
-        /// <summary>
-        /// MarkerSelectors depedency property.
-        /// </summary>
-        public static readonly DependencyProperty MarkerSelectorsProperty =
-            DependencyProperty.Register(
-                "MarkerSelectors",
-                typeof(IEnumerable<IMarkerSelector>),
-                typeof(MarkerSelectorFilter),
-                new PropertyMetadata((d, e) => ((MarkerSelectorFilter)d).OnMarkerSelectorsChanged((IEnumerable<IMarkerSelector>)e.OldValue, (IEnumerable<IMarkerSelector>)e.NewValue)));
-
-        /// <summary>
-        /// handles the MarkerSelectorsProperty changes.
-        /// </summary>
-        /// <param name="oldValue">The old value.</param>
-        /// <param name="newValue">The new value.</param>
-        private void OnMarkerSelectorsChanged(IEnumerable<IMarkerSelector> oldValue, IEnumerable<IMarkerSelector> newValue)
-        {
-            Refresh();
-        }
-
-        #endregion MarkerSelectors
-
-
-
         /// <summary>
         /// Key depedency property.
         /// </summary>
-        public static readonly DependencyProperty KeyProperty =
+        public static readonly DependencyProperty KeyProperty = 
             DependencyProperty.Register(
                 "Key",
                 typeof(string),
@@ -85,9 +44,19 @@
                 new PropertyMetadata((d, e) => ((MarkerSelectorFilter)d).OnKeyChanged((string)e.OldValue, (string)e.NewValue)));
 
         /// <summary>
+        /// MarkerSelectors depedency property.
+        /// </summary>
+        public static readonly DependencyProperty MarkerSelectorsProperty = 
+            DependencyProperty.Register(
+                "MarkerSelectors",
+                typeof(IEnumerable<IMarkerSelector>),
+                typeof(MarkerSelectorFilter),
+                new PropertyMetadata((d, e) => ((MarkerSelectorFilter)d).OnMarkerSelectorsChanged((IEnumerable<IMarkerSelector>)e.OldValue, (IEnumerable<IMarkerSelector>)e.NewValue)));
+
+        /// <summary>
         /// Value depedency property.
         /// </summary>
-        public static readonly DependencyProperty ValueProperty =
+        public static readonly DependencyProperty ValueProperty = 
             DependencyProperty.Register(
                 "Value",
                 typeof(object),
@@ -142,6 +111,19 @@
             }
         }
 
+        public IEnumerable<IMarkerSelector> MarkerSelectors
+        {
+            get
+            {
+                return (IEnumerable<IMarkerSelector>)GetValue(MarkerSelectorsProperty);
+            }
+
+            set
+            {
+                SetValue(MarkerSelectorsProperty, value);
+            }
+        }
+
         public object Value
         {
             get
@@ -174,22 +156,18 @@
             FilterList();
         }
 
-        private void UnbindSelectors(IEnumerable<IMarkerSelector> lastCollection)
+        protected virtual void OnPropertyChanged(string name)
         {
-            foreach (var mrkSelector in lastCollection)
+            if (PropertyChanged != null)
             {
-                UnSubscribeSelector(mrkSelector);
+                PropertyChanged(this, new PropertyChangedEventArgs(name));
             }
-
-            var notifyCollection = lastCollection as INotifyCollectionChanged;
-            if(notifyCollection != null)
-                notifyCollection.CollectionChanged -= MarkerSources_CollectionChanged;
         }
 
         private void BindSelectors(IEnumerable<IMarkerSelector> newCollection)
         {
             lastCollection = newCollection;
-            
+
             foreach (var mrkSelector in lastCollection)
             {
                 SubscribeSelector(mrkSelector);
@@ -198,26 +176,6 @@
             var notifyCollection = lastCollection as INotifyCollectionChanged;
             if (notifyCollection != null)
                 notifyCollection.CollectionChanged += MarkerSources_CollectionChanged;
-        }
-
-        private void SubscribeSelector(IMarkerSelector selector)
-        {
-            subscribedSelectors.Add(selector);
-            selector.IsActiveChanged += mrkSelector_IsActiveChanged;
-        }
-
-        private void UnSubscribeSelector(IMarkerSelector selector)
-        {
-            subscribedSelectors.Remove(selector);
-            selector.IsActiveChanged -= mrkSelector_IsActiveChanged;
-        }
-
-        protected virtual void OnPropertyChanged(string name)
-        {
-            if (PropertyChanged != null)
-            {
-                PropertyChanged(this, new PropertyChangedEventArgs(name));
-            }
         }
 
         private void FilterList()
@@ -291,6 +249,16 @@
         }
 
         /// <summary>
+        /// handles the MarkerSelectorsProperty changes.
+        /// </summary>
+        /// <param name="oldValue">The old value.</param>
+        /// <param name="newValue">The new value.</param>
+        private void OnMarkerSelectorsChanged(IEnumerable<IMarkerSelector> oldValue, IEnumerable<IMarkerSelector> newValue)
+        {
+            Refresh();
+        }
+
+        /// <summary>
         /// handles the ValueProperty changes.
         /// </summary>
         /// <param name="oldValue">The old value.</param>
@@ -298,6 +266,30 @@
         private void OnValueChanged(object oldValue, object newValue)
         {
             OnPropertyChanged("Value");
+        }
+
+        private void SubscribeSelector(IMarkerSelector selector)
+        {
+            subscribedSelectors.Add(selector);
+            selector.IsActiveChanged += mrkSelector_IsActiveChanged;
+        }
+
+        private void UnSubscribeSelector(IMarkerSelector selector)
+        {
+            subscribedSelectors.Remove(selector);
+            selector.IsActiveChanged -= mrkSelector_IsActiveChanged;
+        }
+
+        private void UnbindSelectors(IEnumerable<IMarkerSelector> lastCollection)
+        {
+            foreach (var mrkSelector in lastCollection)
+            {
+                UnSubscribeSelector(mrkSelector);
+            }
+
+            var notifyCollection = lastCollection as INotifyCollectionChanged;
+            if(notifyCollection != null)
+                notifyCollection.CollectionChanged -= MarkerSources_CollectionChanged;
         }
 
         void mrkSelector_IsActiveChanged(object sender, EventArgs e)

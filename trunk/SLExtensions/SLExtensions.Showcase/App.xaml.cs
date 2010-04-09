@@ -71,7 +71,7 @@
             var host = new ShowcaseHost();
             this.RootVisual = host;
 
-            InitScripts();            
+            InitScripts();
         }
 
         private void Application_UnhandledException(object sender, ApplicationUnhandledExceptionEventArgs e)

@@ -70,7 +70,7 @@
         /// <param name="s">The Saturation value.</param>
         /// <param name="v">The Value value.</param>
         /// <returns></returns>
-        public Color ConvertHsvToRgb(double h, double s, double v)
+        public Color ConvertHsvToRgb(byte alpha, double h, double s, double v)
         {
             h = h / 360;
             if (s > 0)
@@ -86,19 +86,19 @@
 
                 switch (hueFloor)
                 {
-                    case 0: return Color.FromArgb(MAX, d, c, a);
-                    case 1: return Color.FromArgb(MAX, b, d, a);
-                    case 2: return Color.FromArgb(MAX, a, d, c);
-                    case 3: return Color.FromArgb(MAX, a, b, d);
-                    case 4: return Color.FromArgb(MAX, c, a, d);
-                    case 5: return Color.FromArgb(MAX, d, a, b);
-                    default: return Color.FromArgb(0, 0, 0, 0);
+                    case 0: return Color.FromArgb(alpha, d, c, a);
+                    case 1: return Color.FromArgb(alpha, b, d, a);
+                    case 2: return Color.FromArgb(alpha, a, d, c);
+                    case 3: return Color.FromArgb(alpha, a, b, d);
+                    case 4: return Color.FromArgb(alpha, c, a, d);
+                    case 5: return Color.FromArgb(alpha, d, a, b);
+                    default: return Color.FromArgb(alpha, 0, 0, 0);
                 }
             }
             else
             {
                 byte d = (byte)(v * MAX);
-                return Color.FromArgb(255, d, d, d);
+                return Color.FromArgb(alpha, d, d, d);
             }
         }
 
@@ -122,21 +122,24 @@
             double min = Math.Min(r, Math.Min(g, b));
 
             double h = 0.0;
-            if (max == r && g >= b)
+            if (max - min != 0)
             {
-               h = 60 * (g - b) / (max - min);
-            }
-            else if (max == r && g < b)
-            {
-                h = 60 * (g - b) / (max - min) + 360;
-            }
-            else if (max == g)
-            {
-                h = 60 * (b - r) / (max - min) + 120;
-            }
-            else if (max == b)
-            {
-                h = 60 * (r - g) / (max - min) + 240;
+                if (max == r && g >= b)
+                {
+                    h = 60 * (g - b) / (max - min);
+                }
+                else if (max == r && g < b)
+                {
+                    h = 60 * (g - b) / (max - min) + 360;
+                }
+                else if (max == g)
+                {
+                    h = 60 * (b - r) / (max - min) + 120;
+                }
+                else if (max == b)
+                {
+                    h = 60 * (r - g) / (max - min) + 240;
+                }
             }
 
             double s = (max == 0) ? 0.0 : (1.0 - (min / max));
@@ -144,7 +147,7 @@
             return new HSV(h, s, max);
         }
 
-        public Color GetColorFromPosition(double position)
+        public Color GetColorFromPosition(byte alpha, double position)
         {
             int gradientStops = 6;
             position *= gradientStops;
@@ -153,13 +156,13 @@
 
             switch ((int)(position / MAX))
             {
-                case 0: return Color.FromArgb(MAX, MAX, mod, MIN);
-                case 1: return Color.FromArgb(MAX, diff, MAX, MIN);
-                case 2: return Color.FromArgb(MAX, MIN, MAX, mod);
-                case 3: return Color.FromArgb(MAX, MIN, diff, MAX);
-                case 4: return Color.FromArgb(MAX, mod, MIN, MAX);
-                case 5: return Color.FromArgb(MAX, MAX, MIN, diff);
-                case 6: return Color.FromArgb(MAX, MAX, mod, MIN);
+                case 0: return Color.FromArgb(alpha, MAX, mod, MIN);
+                case 1: return Color.FromArgb(alpha, diff, MAX, MIN);
+                case 2: return Color.FromArgb(alpha, MIN, MAX, mod);
+                case 3: return Color.FromArgb(alpha, MIN, diff, MAX);
+                case 4: return Color.FromArgb(alpha, mod, MIN, MAX);
+                case 5: return Color.FromArgb(alpha, MAX, MIN, diff);
+                case 6: return Color.FromArgb(alpha, MAX, mod, MIN);
                 default: return Colors.Black;
             }
         }

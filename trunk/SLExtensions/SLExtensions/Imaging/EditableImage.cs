@@ -10,6 +10,7 @@
     using System.Windows.Input;
     using System.Windows.Media;
     using System.Windows.Media.Animation;
+    using System.Windows.Media.Imaging;
     using System.Windows.Shapes;
 
     /// <summary>
@@ -41,6 +42,31 @@
         {
             this.Width = width;
             this.Height = height;
+        }
+
+        /// <summary>
+        /// Creates a new EditableImage with the specified witdth and height.
+        /// </summary>
+        /// <param name="width">Specifies the width of the image.  The width must not exceed 3000 pixels.</param>
+        /// <param name="height">Specifies the height of the image.  The height must not exceed 3000 pixels.</param>
+        public EditableImage(WriteableBitmap wb)
+        {
+            this.Width = wb.PixelWidth;
+            this.Height = wb.PixelHeight;
+            Initialize();
+            for (int y = 0; y < wb.PixelHeight; y++)
+            {
+                for (int x = 0; x < wb.PixelWidth; x++)
+                {
+                    int pix = wb.Pixels[x + (y * wb.PixelWidth)];
+                    byte a = (byte)((pix >> 24) & 0xff);
+                    byte r = (byte)((pix >> 16) & 0xff);
+                    byte g = (byte)((pix >> 8) & 0xff);
+                    byte b = (byte)(pix & 0xff);
+
+                    SetPixel(x, y, r, g, b, a);
+                }
+            }
         }
 
         #endregion Constructors
@@ -152,9 +178,9 @@
         /// Gets a PNG encoded stream from the image data.
         /// </summary>
         /// <returns>Returns a PNG encoded stream.</returns>
-        public Stream GetStream()
+        public MemoryStream GetStream()
         {
-            Stream stream;
+            MemoryStream stream;
 
             if (!_init)
             {
@@ -193,16 +219,7 @@
         {
             if (!_init)
             {
-                _rowLength = _width * 4 + 1;
-                _buffer = new byte[_rowLength * _height];
-
-                // Initialize
-                for (int idx = 0; idx < _height; idx++)
-                {
-                    _buffer[idx * _rowLength] = 0;      // Filter bit
-                }
-
-                _init = true;
+                Initialize();
             }
 
             if ((col > _width) || (col < 0))
@@ -220,6 +237,20 @@
             _buffer[start + 1] = green;
             _buffer[start + 2] = blue;
             _buffer[start + 3] = alpha;
+        }
+
+        private void Initialize()
+        {
+            _rowLength = _width * 4 + 1;
+            _buffer = new byte[_rowLength * _height];
+
+            // Initialize
+            for (int idx = 0; idx < _height; idx++)
+            {
+                _buffer[idx * _rowLength] = 0;      // Filter bit
+            }
+
+            _init = true;
         }
 
         private void OnImageError(string msg)

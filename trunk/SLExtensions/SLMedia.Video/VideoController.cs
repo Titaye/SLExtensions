@@ -220,7 +220,7 @@
             {
                 VideoAdapter.Adapt(this);
             }
-            
+
             base.OnCurrentItemChanged();
         }
 

@@ -1,17 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Windows;
-using System.Windows.Controls;
-
-namespace SLExtensions.Showcase
+﻿namespace SLExtensions.Showcase
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Windows;
+    using System.Windows.Controls;
+
     public partial class PageSliderGauge : UserControl
     {
+        #region Constructors
+
         public PageSliderGauge()
         {
             InitializeComponent();
             this.Loaded += PageSliderGauge_Loaded;
         }
+
+        #endregion Constructors
+
+        #region Methods
 
         void PageSliderGauge_Loaded(object sender, RoutedEventArgs e)
         {
@@ -34,5 +40,7 @@ namespace SLExtensions.Showcase
         {
             txtPercent3.Text = e.Percentage.ToString("p");
         }
+
+        #endregion Methods
     }
 }

@@ -28,13 +28,10 @@
 
         #region Properties
 
-      
-
         public IEnumerable<Content> Content
         {
             get; set;
         }
-
 
         [ScriptableMember]
         public IEnumerable<string> Keywords

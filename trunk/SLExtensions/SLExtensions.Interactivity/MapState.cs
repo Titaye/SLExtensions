@@ -28,13 +28,13 @@
         #region Fields
 
         // Using a DependencyProperty as the backing store for AttachedValue.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty AttachedValueProperty =
+        public static readonly DependencyProperty AttachedValueProperty = 
             DependencyProperty.RegisterAttached("AttachedValue", typeof(object), typeof(MapState), new PropertyMetadata(AttachedValueChangedCallback));
 
         /// <summary>
         /// Property depedency property.
         /// </summary>
-        public static readonly DependencyProperty PropertyProperty =
+        public static readonly DependencyProperty PropertyProperty = 
             DependencyProperty.Register(
                 "Property",
                 typeof(string),
@@ -44,7 +44,7 @@
         /// <summary>
         /// Source depedency property.
         /// </summary>
-        public static readonly DependencyProperty SourceProperty =
+        public static readonly DependencyProperty SourceProperty = 
             DependencyProperty.Register(
                 "Source",
                 typeof(object),
@@ -59,7 +59,7 @@
         /// <summary>
         /// Value depedency property.
         /// </summary>
-        public static readonly DependencyProperty ValueProperty =
+        public static readonly DependencyProperty ValueProperty = 
             DependencyProperty.Register(
                 "Value",
                 typeof(object),
@@ -83,8 +83,6 @@
         }
 
         #endregion Constructors
-
-
 
         #region Properties
 

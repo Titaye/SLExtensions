@@ -1,8 +1,11 @@
 ﻿namespace SLMedia.Core
 {
     using System;
-    using System.Net;
+    using System.Collections.Generic;
+    using System.ComponentModel;
     using System.Linq;
+    using System.Net;
+    using System.Text;
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Documents;
@@ -11,16 +14,21 @@
     using System.Windows.Media;
     using System.Windows.Media.Animation;
     using System.Windows.Shapes;
-    using System.Collections.Generic;
-using System.ComponentModel;
-    using System.Text;
 
     public class SmiMarkerSelector : MarkerSelector
     {
+        #region Fields
+
+        BackgroundWorker parserWorker;
+        private bool webContentLoaded;
+
+        #endregion Fields
+
+        #region Constructors
+
         public SmiMarkerSelector()
             : base()
         {
-
         }
 
         public SmiMarkerSelector(Uri source, string language)
@@ -30,11 +38,14 @@ using System.ComponentModel;
             this.Source = source;
         }
 
+        #endregion Constructors
+
         #region Properties
 
-        public Uri Source { get; set; }
-
-        public Encoding Encoding { get; set; }
+        public Encoding Encoding
+        {
+            get; set;
+        }
 
         public string Language
         {
@@ -42,10 +53,14 @@ using System.ComponentModel;
             set;
         }
 
-        private bool webContentLoaded;
-
+        public Uri Source
+        {
+            get; set;
+        }
 
         #endregion Properties
+
+        #region Methods
 
         protected override void OnIsActiveChanged()
         {
@@ -53,8 +68,6 @@ using System.ComponentModel;
 
             LoadWebContent();
         }
-
-        BackgroundWorker parserWorker;
 
         private void LoadWebContent()
         {
@@ -72,12 +85,12 @@ using System.ComponentModel;
                     e.Result.Read(data, 0, data.Length);
                     string content;
                     var encoding = Encoding ?? Encoding.UTF8;
-                    
+
                     content = encoding.GetString(data, 0, data.Length);
-                    
+
                     webContentLoaded = true;
                     parserWorker = new BackgroundWorker();
-                    parserWorker.DoWork += delegate 
+                    parserWorker.DoWork += delegate
                     {
                         var markers = SmiParser.ParseSmiFile(content);
                         if (markers != null
@@ -94,5 +107,7 @@ using System.ComponentModel;
                 client.OpenReadAsync(Source);
             }
         }
+
+        #endregion Methods
     }
 }

@@ -1,27 +1,35 @@
-﻿using System;
-using System.Net;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Ink;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Animation;
-using System.Windows.Shapes;
-using System.Text;
-
-namespace SLExtensions.Text
+﻿namespace SLExtensions.Text
 {
+    using System;
+    using System.Net;
+    using System.Text;
+    using System.Windows;
+    using System.Windows.Controls;
+    using System.Windows.Documents;
+    using System.Windows.Ink;
+    using System.Windows.Input;
+    using System.Windows.Media;
+    using System.Windows.Media.Animation;
+    using System.Windows.Shapes;
+
     public class Iso8859Encoding : Encoding
     {
-        private Iso8859Encoding() 
-        { 
-        }
+        #region Fields
+
+        /// <summary>
+        /// The one and only instance of this class
+        /// </summary>
+        public static readonly Iso8859Encoding Instance = new Iso8859Encoding();
 
         private static char[] chars;
+
+        #endregion Fields
+
+        #region Constructors
+
         static Iso8859Encoding()
         {
-            chars = new char[256];            
+            chars = new char[256];
             chars[10] = '\n';
             chars[13] = '\r';
             chars[32] = ' ';
@@ -223,10 +231,13 @@ namespace SLExtensions.Text
             chars[255] = 'ÿ';
         }
 
-        /// <summary>
-        /// The one and only instance of this class
-        /// </summary>
-        public static readonly Iso8859Encoding Instance = new Iso8859Encoding();
+        private Iso8859Encoding()
+        {
+        }
+
+        #endregion Constructors
+
+        #region Methods
 
         /// <summary>
         /// <see cref="Encoding.GetByteCount(char[],int,int)"/>
@@ -246,22 +257,6 @@ namespace SLExtensions.Text
                 bytes[byteIndex + n] = Convert(chars[charIndex + n]);
             }
             return charCount;
-        }
-
-        private byte Convert(char p)
-        {
-            var idx = Array.IndexOf(chars, p);
-            if (idx != -1)
-                return (byte)idx;
-            return (byte)p;
-        }
-
-        private char Convert(byte p)
-        {
-            var c = chars[p];
-            if (c != '\0')
-                return c;
-            return (char)p;
         }
 
         /// <summary>
@@ -285,14 +280,6 @@ namespace SLExtensions.Text
         }
 
         /// <summary>
-        /// <see cref="Encoding.GetMaxCharCount"/>
-        /// </summary>
-        public override int GetMaxCharCount(int byteCount)
-        {
-            return byteCount;
-        }
-
-        /// <summary>
         /// <see cref="Encoding.GetMaxByteCount"/>
         /// </summary>
         public override int GetMaxByteCount(int charCount)
@@ -300,5 +287,30 @@ namespace SLExtensions.Text
             return charCount;
         }
 
+        /// <summary>
+        /// <see cref="Encoding.GetMaxCharCount"/>
+        /// </summary>
+        public override int GetMaxCharCount(int byteCount)
+        {
+            return byteCount;
+        }
+
+        private byte Convert(char p)
+        {
+            var idx = Array.IndexOf(chars, p);
+            if (idx != -1)
+                return (byte)idx;
+            return (byte)p;
+        }
+
+        private char Convert(byte p)
+        {
+            var c = chars[p];
+            if (c != '\0')
+                return c;
+            return (char)p;
+        }
+
+        #endregion Methods
     }
 }

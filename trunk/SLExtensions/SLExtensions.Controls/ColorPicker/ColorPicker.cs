@@ -3,9 +3,14 @@
     using System;
     using System.Windows;
     using System.Windows.Controls;
+    using System.Windows.Controls.Primitives;
     using System.Windows.Input;
+    using System.Windows.Markup;
     using System.Windows.Media;
+    using System.Windows.Media.Imaging;
     using System.Windows.Shapes;
+
+    using SLExtensions.Controls.Primitives;
 
     /// <summary>
     /// Represents a Color Picker control which allows a user to select a color.
@@ -13,6 +18,86 @@
     public class ColorPicker : Control
     {
         #region Fields
+
+        /// <summary>
+        /// Alpha depedency property.
+        /// </summary>
+        public static readonly DependencyProperty AlphaProperty = 
+            DependencyProperty.Register(
+                "Alpha",
+                typeof(double),
+                typeof(ColorPicker),
+                new PropertyMetadata(1d, (d, e) => ((ColorPicker)d).OnAlphaChanged((double)e.OldValue, (double)e.NewValue)));
+
+        /// <summary>
+        /// ColorXPosition depedency property.
+        /// </summary>
+        public static readonly DependencyProperty ColorXPositionProperty = 
+            DependencyProperty.Register(
+                "ColorXPosition",
+                typeof(double),
+                typeof(ColorPicker),
+                new PropertyMetadata((d, e) => ((ColorPicker)d).OnColorXPositionChanged((double)e.OldValue, (double)e.NewValue)));
+
+        /// <summary>
+        /// ColorYPosition depedency property.
+        /// </summary>
+        public static readonly DependencyProperty ColorYPositionProperty = 
+            DependencyProperty.Register(
+                "ColorYPosition",
+                typeof(double),
+                typeof(ColorPicker),
+                new PropertyMetadata((d, e) => ((ColorPicker)d).OnColorYPositionChanged((double)e.OldValue, (double)e.NewValue)));
+
+        /// <summary>
+        /// HueMonitorBrush depedency property.
+        /// </summary>
+        public static readonly DependencyProperty HueMonitorBrushProperty = 
+            DependencyProperty.Register(
+                "HueMonitorBrush",
+                typeof(Brush),
+                typeof(ColorPicker),
+                new PropertyMetadata(DefaultHueMonitorBrush));
+
+        /// <summary>
+        /// HuePosition depedency property.
+        /// </summary>
+        public static readonly DependencyProperty HuePositionProperty = 
+            DependencyProperty.Register(
+                "HuePosition",
+                typeof(double),
+                typeof(ColorPicker),
+                new PropertyMetadata((d, e) => ((ColorPicker)d).OnHuePositionChanged((double)e.OldValue, (double)e.NewValue)));
+
+        /// <summary>
+        /// RGBColorBrush depedency property.
+        /// </summary>
+        public static readonly DependencyProperty RGBColorBrushProperty = 
+            DependencyProperty.Register(
+                "RGBColorBrush",
+                typeof(Brush),
+                typeof(ColorPicker),
+                null);
+
+        /// <summary>
+        /// ColorBrush depedency property.
+        /// </summary>
+        public static readonly DependencyProperty SatValBrushProperty = 
+            DependencyProperty.Register(
+                "SatValBrush",
+                typeof(Brush),
+                typeof(ColorPicker),
+                null);
+
+        /// <summary>
+        /// SelectedColorBrush depedency property.
+        /// </summary>
+        public static readonly DependencyProperty SelectedColorBrushProperty = 
+            DependencyProperty.Register(
+                "SelectedColorBrush",
+                typeof(SolidColorBrush),
+                typeof(ColorPicker),
+                null);
 
         /// <summary>
         /// SelectedColor Dependency Property.
@@ -24,21 +109,32 @@
                 typeof(ColorPicker),
                 new PropertyMetadata(new PropertyChangedCallback(SelectedColorPropertyChanged)));
 
+        private static readonly Brush DefaultHueMonitorBrush = InitializeHueBrush();
+
         private readonly ColorSpace m_colorSpace;
 
-        private Rectangle m_colorSample;
-        private TextBlock m_hexValue;
-        private Rectangle m_hueMonitor;
-        private bool m_hueMonitorMouseCaptured;
-        private double m_huePos;
-        private Canvas m_hueSelector;
-        private Panel m_rootElement;
-        private bool m_sampleMouseCaptured;
-        private Canvas m_sampleSelector;
-        private double m_sampleX;
-        private double m_sampleY;
-        private ScaleTransform m_scale;
-        private Rectangle m_selectedColorView;
+        private FrameworkElement colorSampleVisual = XamlReader.Load(@"<Canvas xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation'
+              xmlns:x='http://schemas.microsoft.com/winfx/2006/xaml'
+              Width='180' Height='180'>
+            <Rectangle x:Name='ColorSample' Width='180' Height='180' Fill='Red'></Rectangle>
+                <Rectangle x:Name='WhiteGradient' IsHitTestVisible='False' Width='180' Height='180'>
+                    <Rectangle.Fill>
+                        <LinearGradientBrush StartPoint='0,0' EndPoint='1,0'>
+                            <GradientStop Offset='0' Color='#ffffffff'/>
+                            <GradientStop Offset='1' Color='#00ffffff'/>
+                        </LinearGradientBrush>
+                    </Rectangle.Fill>
+                </Rectangle>
+                <Rectangle x:Name='BlackGradient' IsHitTestVisible='False' Width='180' Height='180'>
+                    <Rectangle.Fill>
+                        <LinearGradientBrush StartPoint='0,1' EndPoint='0, 0'>
+                            <GradientStop Offset='0' Color='#ff000000'/>
+                            <GradientStop Offset='1' Color='#00000000'/>
+                        </LinearGradientBrush>
+                    </Rectangle.Fill>
+                </Rectangle>
+                </Canvas>") as FrameworkElement;
+        private bool inUpdatingSatValSelection = false;
 
         #endregion Fields
 
@@ -73,16 +169,115 @@
 
         #region Properties
 
+        public double Alpha
+        {
+            get
+            {
+                return (double)GetValue(AlphaProperty);
+            }
+
+            set
+            {
+                SetValue(AlphaProperty, value);
+            }
+        }
+
+        public double ColorXPosition
+        {
+            get
+            {
+                return (double)GetValue(ColorXPositionProperty);
+            }
+
+            set
+            {
+                SetValue(ColorXPositionProperty, value);
+            }
+        }
+
+        public double ColorYPosition
+        {
+            get
+            {
+                return (double)GetValue(ColorYPositionProperty);
+            }
+
+            set
+            {
+                SetValue(ColorYPositionProperty, value);
+            }
+        }
+
+        public Brush HueMonitorBrush
+        {
+            get
+            {
+                return (Brush)GetValue(HueMonitorBrushProperty);
+            }
+        }
+
+        public double HuePosition
+        {
+            get
+            {
+                return (double)GetValue(HuePositionProperty);
+            }
+
+            set
+            {
+                SetValue(HuePositionProperty, value);
+            }
+        }
+
+        public Brush RGBColorBrush
+        {
+            get
+            {
+                return (Brush)GetValue(RGBColorBrushProperty);
+            }
+
+            set
+            {
+                SetValue(RGBColorBrushProperty, value);
+            }
+        }
+
+        public Brush SatValBrush
+        {
+            get
+            {
+                return (Brush)GetValue(SatValBrushProperty);
+            }
+
+            set
+            {
+                SetValue(SatValBrushProperty, value);
+            }
+        }
+
         /// <summary>
         /// Gets or sets the currently selected color in the Color Picker.
         /// </summary>
         public Color SelectedColor
         {
-            get { return (Color) GetValue(SelectedColorProperty);}
+            get { return (Color)GetValue(SelectedColorProperty); }
             set
             {
                 SetValue(SelectedColorProperty, value);
-                this.UpdateVisuals();
+                //this.UpdateVisuals();
+            }
+        }
+
+        public SolidColorBrush SelectedColorBrush
+        {
+            get
+            {
+                return (SolidColorBrush)GetValue(SelectedColorBrushProperty);
+            }
+
+            set
+            {
+                SetValue(SelectedColorBrushProperty, value);
             }
         }
 
@@ -97,260 +292,159 @@
         {
             base.OnApplyTemplate();
 
-            m_rootElement = GetTemplateChild("RootElement") as Panel;
-            m_hueMonitor = GetTemplateChild("HueMonitor") as Rectangle;
-            m_sampleSelector = GetTemplateChild("SampleSelector") as Canvas;
-            m_hueSelector = GetTemplateChild("HueSelector") as Canvas;
-            m_selectedColorView = GetTemplateChild("SelectedColorView") as Rectangle;
-            m_colorSample = GetTemplateChild("ColorSample") as Rectangle;
-            m_hexValue = GetTemplateChild("HexValue") as TextBlock;
-
-            m_rootElement.RenderTransform = m_scale = new ScaleTransform();
-
-            m_hueMonitor.MouseLeftButtonDown += rectHueMonitor_MouseLeftButtonDown;
-            m_hueMonitor.MouseLeftButtonUp += rectHueMonitor_MouseLeftButtonUp;
-            m_hueMonitor.MouseMove += rectHueMonitor_MouseMove;
-
-            m_colorSample.MouseLeftButtonDown += rectSampleMonitor_MouseLeftButtonDown;
-            m_colorSample.MouseLeftButtonUp += rectSampleMonitor_MouseLeftButtonUp;
-            m_colorSample.MouseMove += rectSampleMonitor_MouseMove;
-
-            m_sampleX = m_colorSample.Width;
-            m_sampleY = 0;
-            m_huePos = 0;
-
             UpdateVisuals();
+            SetSelectedColorBrush(SelectedColor);
         }
 
-        /// <summary>
-        /// Called by the layout system during a layout pass.
-        /// </summary>
-        /// <param name="finalSize">The size determined to be availble to the child elements.</param>
-        /// <returns>The final size used by the child elements.</returns>
-        protected override Size ArrangeOverride(Size finalSize)
+        private static Brush InitializeHueBrush()
         {
-            if (m_rootElement != null)
-            {
-                // Determine the scale factor given the final size
-                Size desiredSize = m_rootElement.DesiredSize;
-                Size scale = ComputeScaleFactor(finalSize, desiredSize);
-
-                m_scale.ScaleX = scale.Width;
-                m_scale.ScaleY = scale.Height;
-
-                // Position the ChildElement to fill the ChildElement
-                Rect originalPosition = new Rect(0, 0, desiredSize.Width, desiredSize.Height);
-                m_rootElement.Arrange(originalPosition);
-
-                // Determine the final size used by the Viewbox
-                finalSize.Width = scale.Width * desiredSize.Width;
-                finalSize.Height = scale.Height * desiredSize.Height;
-            }
-            return finalSize;
-        }
-
-        /// <summary>
-        /// Called by the layout system during a layout pass.
-        /// </summary>
-        /// <param name="availableSize">The size available to the child elements.</param>
-        /// <returns>The size set by the child elements.</returns>
-        protected override Size MeasureOverride(Size availableSize)
-        {
-            Size size = new Size();
-            if(m_rootElement != null)
-            {
-                m_rootElement.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
-                Size desiredSize = m_rootElement.DesiredSize;
-
-                Size scale = ComputeScaleFactor(availableSize, desiredSize);
-
-                size.Width = scale.Width*desiredSize.Width;
-                size.Height = scale.Height*desiredSize.Height;
-            }
-
-            return size;
+            var stops = new GradientStopCollection();
+            stops.Add(new GradientStop { Color = Color.FromArgb(0xff, 0xff, 0x00, 0x00), Offset = 0 });
+            stops.Add(new GradientStop { Color = Color.FromArgb(0xff, 0xff, 0xff, 0x00), Offset = 0.17 });
+            stops.Add(new GradientStop { Color = Color.FromArgb(0xff, 0x00, 0xff, 0x00), Offset = 0.33 });
+            stops.Add(new GradientStop { Color = Color.FromArgb(0xff, 0x00, 0xff, 0xff), Offset = 0.5 });
+            stops.Add(new GradientStop { Color = Color.FromArgb(0xff, 0x00, 0x00, 0xff), Offset = 0.66 });
+            stops.Add(new GradientStop { Color = Color.FromArgb(0xff, 0xff, 0x00, 0xff), Offset = 0.83 });
+            stops.Add(new GradientStop { Color = Color.FromArgb(0xff, 0xff, 0x00, 0x00), Offset = 1 });
+            return new LinearGradientBrush(stops, 90);
         }
 
         private static void SelectedColorPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             ColorPicker p = d as ColorPicker;
-            if (p != null && p.SelectedColorChanged != null)
+            if (p != null)
             {
-                SelectedColorEventArgs args = new SelectedColorEventArgs((Color) e.NewValue);
-                p.SelectedColorChanged(p, args);
-            }
-        }
-
-        private Size ComputeScaleFactor(Size availableSize, Size contentSize)
-        {
-            double scaleX = 1.0;
-            double scaleY = 1.0;
-
-            bool isConstrainedWidth = !double.IsPositiveInfinity(availableSize.Width);
-            bool isConstrainedHeight = !double.IsPositiveInfinity(availableSize.Height);
-
-            // Don't scale if we shouldn't stretch or the scaleX and scaleY are both infinity.
-            if (isConstrainedWidth || isConstrainedHeight)
-            {
-                // Compute the individual scaleX and scaleY scale factors
-                scaleX = contentSize.Width == 0 ? 0.0 : (availableSize.Width / contentSize.Width);
-                scaleY = contentSize.Height == 0 ? 0.0 : (availableSize.Height / contentSize.Height);
-
-                // Make the scale factors uniform by setting them both equal to
-                // the larger or smaller (depending on infinite lengths and the
-                // Stretch value)
-                if (!isConstrainedWidth)
+                var newColor = (Color)e.NewValue;
+                p.SetSelectedColorBrush(newColor);
+                p.UpdateVisuals();
+                if (p.SelectedColorChanged != null)
                 {
-                    scaleX = scaleY;
+                    SelectedColorEventArgs args = new SelectedColorEventArgs(newColor);
+                    p.SelectedColorChanged(p, args);
                 }
-                else if (!isConstrainedHeight)
-                {
-                    scaleY = scaleX;
-                }
-            }
-
-            return new Size(scaleX, scaleY);
-        }
-
-        private void DragSliders(double x, double y)
-        {
-            if(m_hueMonitorMouseCaptured)
-            {
-                if (y < 0)
-                    m_huePos = 0;
-                else if (y > m_hueMonitor.Height)
-                    m_huePos = m_hueMonitor.Height;
-                else
-                    m_huePos = y;
-                UpdateHueSelection();
-            }
-            else if(m_sampleMouseCaptured)
-            {
-                if (x < 0)
-                    m_sampleX = 0;
-                else if (x > m_colorSample.Width)
-                    m_sampleX = m_colorSample.Width;
-                else
-                    m_sampleX = x;
-
-                if (y < 0)
-                    m_sampleY = 0;
-                else if (y > m_colorSample.Height)
-                    m_sampleY = m_colorSample.Height;
-                else
-                    m_sampleY = y;
-
-                UpdateSatValSelection();
             }
         }
 
         private void FireSelectedColorChangingEvent(Color selectedColor)
         {
-            if(SelectedColorChanging != null)
+            if (SelectedColorChanging != null)
             {
                 SelectedColorEventArgs args = new SelectedColorEventArgs(selectedColor);
                 SelectedColorChanging(this, args);
             }
         }
 
+        private byte GetAlphaByte()
+        {
+            return (byte)(Math.Max(Math.Min(1d, Alpha), 0) * 255);
+        }
+
         private Color GetColor()
         {
-            double yComponent = 1 - (m_sampleY / m_colorSample.Height);
-            double xComponent = m_sampleX / m_colorSample.Width;
-            double hueComponent = (m_huePos / m_hueMonitor.Height) * 360;
+            double yComponent = ColorYPosition;
+            double xComponent = ColorXPosition;
+            double hueComponent = HuePosition * 360;
 
-            return m_colorSpace.ConvertHsvToRgb(hueComponent, xComponent, yComponent);
+            return m_colorSpace.ConvertHsvToRgb(GetAlphaByte(), hueComponent, xComponent, yComponent);
+        }
+
+        /// <summary>
+        /// handles the AlphaProperty changes.
+        /// </summary>
+        /// <param name="oldValue">The old value.</param>
+        /// <param name="newValue">The new value.</param>
+        private void OnAlphaChanged(double oldValue, double newValue)
+        {
+            UpdateHueSelection();
+        }
+
+        /// <summary>
+        /// handles the ColorXPositionProperty changes.
+        /// </summary>
+        /// <param name="oldValue">The old value.</param>
+        /// <param name="newValue">The new value.</param>
+        private void OnColorXPositionChanged(double oldValue, double newValue)
+        {
+            UpdateSatValSelection();
+        }
+
+        /// <summary>
+        /// handles the ColorYPositionProperty changes.
+        /// </summary>
+        /// <param name="oldValue">The old value.</param>
+        /// <param name="newValue">The new value.</param>
+        private void OnColorYPositionChanged(double oldValue, double newValue)
+        {
+            UpdateSatValSelection();
+        }
+
+        /// <summary>
+        /// handles the HuePositionProperty changes.
+        /// </summary>
+        /// <param name="oldValue">The old value.</param>
+        /// <param name="newValue">The new value.</param>
+        private void OnHuePositionChanged(double oldValue, double newValue)
+        {
+            UpdateHueSelection();
+        }
+
+        private void SetSelectedColorBrush(Color newColor)
+        {
+            SelectedColorBrush = new SolidColorBrush(newColor);
+            RGBColorBrush = new SolidColorBrush(Color.FromArgb(255, newColor.R, newColor.G, newColor.B));
+        }
+
+        private void UpdateColorBrush()
+        {
+            Shape rectVisual = colorSampleVisual.FindName("ColorSample") as Shape;
+            Color c = m_colorSpace.GetColorFromPosition(byte.MaxValue, HuePosition * byte.MaxValue);
+            rectVisual.Fill = new SolidColorBrush(c);
+            WriteableBitmap bitmap = new WriteableBitmap(colorSampleVisual, null);
+            SatValBrush = new ImageBrush { ImageSource = bitmap };
         }
 
         private void UpdateHueSelection()
         {
-            if (m_hueMonitor == null)
-                return;
-            double huePos = m_huePos / m_hueMonitor.Height * 255;
-            Color c = m_colorSpace.GetColorFromPosition(huePos);
-            m_colorSample.Fill = new SolidColorBrush(c);
-
-            m_hueSelector.SetValue(Canvas.TopProperty, m_huePos - (m_hueSelector.Height / 2));
+            UpdateColorBrush();
 
             Color currColor = GetColor();
-
-            m_selectedColorView.Fill = new SolidColorBrush(currColor);
-            m_hexValue.Text = m_colorSpace.GetHexCode(currColor);
-
             FireSelectedColorChangingEvent(currColor);
+            SelectedColor = currColor;
         }
 
         private void UpdateSatValSelection()
         {
-            if (m_colorSample == null)
-                return;
+            if (!inUpdatingSatValSelection)
+            {
+                inUpdatingSatValSelection = true;
+                try
+                {
+                    Color currColor = GetColor();
 
-            m_sampleSelector.SetValue(Canvas.LeftProperty, m_sampleX - (m_sampleSelector.Height / 2));
-            m_sampleSelector.SetValue(Canvas.TopProperty, m_sampleY - (m_sampleSelector.Height / 2));
-
-            Color currColor = GetColor();
-            m_selectedColorView.Fill = new SolidColorBrush(currColor);
-            m_hexValue.Text = m_colorSpace.GetHexCode(currColor);
-
-            FireSelectedColorChangingEvent(currColor);
+                    FireSelectedColorChangingEvent(currColor);
+                    SelectedColor = currColor;
+                }
+                finally
+                {
+                    inUpdatingSatValSelection = false;
+                }
+            }
         }
 
         private void UpdateVisuals()
         {
-            if (m_hueMonitor == null)
+            if (inUpdatingSatValSelection)
                 return;
 
             Color c = this.SelectedColor;
+            Alpha = (double)c.A / byte.MaxValue;
             ColorSpace cs = new ColorSpace();
             HSV hsv = cs.ConvertRgbToHsv(c);
 
-            m_huePos = (hsv.Hue/360*m_hueMonitor.Height);
-            m_sampleY = -1*(hsv.Value-1)*m_colorSample.Height;
-            m_sampleX = hsv.Saturation*m_colorSample.Width;
-            if(!double.IsNaN(m_huePos))
-                UpdateHueSelection();
-            UpdateSatValSelection();
-        }
-
-        private void rectHueMonitor_MouseLeftButtonDown(object sender, MouseEventArgs e)
-        {
-            m_hueMonitorMouseCaptured = m_hueMonitor.CaptureMouse();
-            DragSliders(0, e.GetPosition((UIElement)sender).Y);
-        }
-
-        private void rectHueMonitor_MouseLeftButtonUp(object sender, MouseEventArgs e)
-        {
-            m_hueMonitor.ReleaseMouseCapture();
-            m_hueMonitorMouseCaptured = false;
-            SetValue(SelectedColorProperty, GetColor());
-        }
-
-        private void rectHueMonitor_MouseMove(object sender, MouseEventArgs e)
-        {
-            DragSliders(0, e.GetPosition((UIElement) sender).Y);
-        }
-
-        private void rectSampleMonitor_MouseLeftButtonDown(object sender, MouseEventArgs e)
-        {
-            m_sampleMouseCaptured = m_colorSample.CaptureMouse();
-            Point pos = e.GetPosition((UIElement)sender);
-            DragSliders(pos.X, pos.Y);
-        }
-
-        private void rectSampleMonitor_MouseLeftButtonUp(object sender, MouseEventArgs e)
-        {
-            m_colorSample.ReleaseMouseCapture();
-            m_sampleMouseCaptured = false;
-            SetValue(SelectedColorProperty, GetColor());
-        }
-
-        private void rectSampleMonitor_MouseMove(object sender, MouseEventArgs e)
-        {
-            if(!m_sampleMouseCaptured)
-                return;
-
-            Point pos = e.GetPosition((UIElement)sender);
-            DragSliders(pos.X, pos.Y);
+            HuePosition = hsv.Hue / 360;
+            ColorYPosition = hsv.Value;
+            ColorXPosition = hsv.Saturation;
+            UpdateColorBrush();
         }
 
         #endregion Methods

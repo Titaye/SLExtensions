@@ -31,13 +31,13 @@
         public static readonly DependencyProperty ItemProperty = 
             DependencyProperty.RegisterAttached("Item", typeof(TemplateDataBase), typeof(ColumnBinder), new PropertyMetadata(ItemChangedCallback));
 
+        sharepointEventListener evtListener;
         private TemplateDataBase item;
         int skipValidationCounter;
         private object value;
 
         #endregion Fields
 
-        sharepointEventListener evtListener;
         #region Constructors
 
         static ColumnBinder()
@@ -86,7 +86,7 @@
                     evtListener.Detach();
 
                     this.item = value;
-                    
+
                     if (this.Item != null)
                     {
                         evtListener.Attach();
@@ -322,12 +322,23 @@
             public sharepointEventListener(ColumnBinder binder)
             {
                 weakReference = new WeakReference(binder);
-                
             }
 
             #endregion Constructors
 
             #region Methods
+
+            public void Attach()
+            {
+                SharepointEvents.ItemValueUpdated += new EventHandler<SharepointItemValueEventArgs>(SharepointEvents_ItemValueUpdated);
+                SharepointEvents.IsValid += new EventHandler<CancelSharepointItemEventArgs>(SharepointEvents_IsValid);
+            }
+
+            public void Detach()
+            {
+                SharepointEvents.ItemValueUpdated -= new EventHandler<SharepointItemValueEventArgs>(SharepointEvents_ItemValueUpdated);
+                SharepointEvents.IsValid -= new EventHandler<CancelSharepointItemEventArgs>(SharepointEvents_IsValid);
+            }
 
             void SharepointEvents_IsValid(object sender, CancelSharepointItemEventArgs e)
             {
@@ -356,18 +367,6 @@
             }
 
             #endregion Methods
-
-            public void Attach()
-            {
-                SharepointEvents.ItemValueUpdated += new EventHandler<SharepointItemValueEventArgs>(SharepointEvents_ItemValueUpdated);
-                SharepointEvents.IsValid += new EventHandler<CancelSharepointItemEventArgs>(SharepointEvents_IsValid);
-            }
-
-            public void Detach()
-            {
-                SharepointEvents.ItemValueUpdated -= new EventHandler<SharepointItemValueEventArgs>(SharepointEvents_ItemValueUpdated);
-                SharepointEvents.IsValid -= new EventHandler<CancelSharepointItemEventArgs>(SharepointEvents_IsValid);
-            }
         }
 
         #endregion Nested Types

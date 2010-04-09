@@ -100,7 +100,7 @@
 
                 context.ClickedImageIndex = -1;
             };
-            
+
             msi.MouseLeave += delegate(object sender, MouseEventArgs e)
             {
                 if (mouseButtonPressed)
@@ -239,13 +239,13 @@
             set;
         }
 
-        public bool IsZoomOnClickEnabled
+        public bool IsZoomForceEnabled
         {
             get;
             set;
         }
 
-        public bool IsZoomForceEnabled
+        public bool IsZoomOnClickEnabled
         {
             get;
             set;

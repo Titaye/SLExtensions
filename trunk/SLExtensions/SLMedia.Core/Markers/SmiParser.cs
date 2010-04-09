@@ -18,9 +18,9 @@
     using System.Windows.Shapes;
 
     using SLExtensions;
+    using SLExtensions.Markup;
 
     using SLMedia.Core;
-    using SLExtensions.Markup;
 
     public class SmiParser : IMarkerParser
     {

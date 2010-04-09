@@ -29,7 +29,7 @@ namespace SLExtensions.Input
         /// <summary>
         ///     The DependencyProperty for the CommandParameter property.
         /// </summary> 
-        public static readonly DependencyProperty CommandParameterProperty =
+        public static readonly DependencyProperty CommandParameterProperty = 
                 DependencyProperty.RegisterAttached(
                 "CommandParameter",         // Name
                 typeof(object),            // Type
@@ -39,7 +39,7 @@ namespace SLExtensions.Input
         /// <summary>
         ///     The DependencyProperty for the Command property.
         /// </summary> 
-        public static readonly DependencyProperty CommandProperty =
+        public static readonly DependencyProperty CommandProperty = 
                 DependencyProperty.RegisterAttached(
                 "Command",         // Name
                 typeof(object),            // Type
@@ -47,6 +47,32 @@ namespace SLExtensions.Input
                 new PropertyMetadata(CommandChanged));
 
         #endregion Fields
+
+        #region Constructors
+
+        /// <summary>
+        /// Static constructor. Initialize static properties
+        /// </summary>
+        static CommandService()
+        {
+            CommandCache = new Dictionary<string, ICommand>();
+        }
+
+        #endregion Constructors
+
+        #region Properties
+
+        /// <summary>
+        /// Gets the command cache.
+        /// </summary>
+        /// <value>The command cache.</value>
+        public static Dictionary<string, ICommand> CommandCache
+        {
+            get;
+            private set;
+        }
+
+        #endregion Properties
 
         #region Methods
 
@@ -190,24 +216,5 @@ namespace SLExtensions.Input
         }
 
         #endregion Methods
-
-        /// <summary>
-        /// Static constructor. Initialize static properties
-        /// </summary>
-        static CommandService()
-        {
-            CommandCache = new Dictionary<string, ICommand>();
-        }
-
-        /// <summary>
-        /// Gets the command cache.
-        /// </summary>
-        /// <value>The command cache.</value>
-        public static Dictionary<string, ICommand> CommandCache
-        {
-            get;
-            private set;
-        }
-
     }
 }

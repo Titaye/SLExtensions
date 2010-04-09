@@ -19,17 +19,17 @@
         #region Fields
 
         // Using a DependencyProperty as the backing store for LoadedState.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty LoadedStateProperty =
+        public static readonly DependencyProperty LoadedStateProperty = 
             DependencyProperty.RegisterAttached("LoadedState", typeof(string), typeof(VisualState), new PropertyMetadata(PropertyChangedCallback));
 
         // Using a DependencyProperty as the backing store for MouseOverState.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty MouseOverStateProperty =
+        public static readonly DependencyProperty MouseOverStateProperty = 
             DependencyProperty.RegisterAttached("MouseOverState", typeof(string), typeof(VisualState), new PropertyMetadata(PropertyChangedCallback));
 
         // Using a DependencyProperty as the backing store for NormalState.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty NormalStateProperty =
+        public static readonly DependencyProperty NormalStateProperty = 
             DependencyProperty.RegisterAttached("NormalState", typeof(string), typeof(VisualState), new PropertyMetadata(PropertyChangedCallback));
-        public static readonly DependencyProperty subscriptionProperty =
+        public static readonly DependencyProperty subscriptionProperty = 
             DependencyProperty.RegisterAttached("subscription", typeof(subscription), typeof(VisualState), null);
 
         #endregion Fields
@@ -195,7 +195,7 @@
 
                     var groupList = GetVisualStateGroups(templateRoot);
                     if (groupList== null || !TryGetState(groupList.OfType<VisualStateGroup>(), stateName, out group, out state))
-                        return false;                    
+                        return false;
                 }
                 return base.GoToStateCore(control, templateRoot, stateName, group, state, useTransitions);
             }

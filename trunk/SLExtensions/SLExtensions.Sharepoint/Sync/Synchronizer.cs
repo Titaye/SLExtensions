@@ -168,7 +168,7 @@
 
                 BackgroundWorker worker = new BackgroundWorker();
                 worker.DoWork += delegate
-                {                    
+                {
                     SharepointSite.DownloadListChanges(spl, (success, list, data) =>
                     {
                         inListSynchroAsync = false;

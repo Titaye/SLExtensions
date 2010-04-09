@@ -1,18 +1,25 @@
-﻿using System;
-using System.Net;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Ink;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Animation;
-using System.Windows.Shapes;
-
-namespace SLExtensions
+﻿namespace SLExtensions
 {
+    using System;
+    using System.Net;
+    using System.Windows;
+    using System.Windows.Controls;
+    using System.Windows.Documents;
+    using System.Windows.Ink;
+    using System.Windows.Input;
+    using System.Windows.Media;
+    using System.Windows.Media.Animation;
+    using System.Windows.Shapes;
+
     public static class NumericExtensions
     {
+        #region Methods
+
+        public static bool IsRational(this double value)
+        {
+            return !double.IsInfinity(value) && !double.IsNaN(value);
+        }
+
         /// <summary>
         /// Check if a number is zero.
         /// </summary>
@@ -26,10 +33,6 @@ namespace SLExtensions
             return Math.Abs(value) < 2.2204460492503131E-15;
         }
 
-        public static bool IsRational(this double value)
-        {
-            return !double.IsInfinity(value) && !double.IsNaN(value);
-        }
-
+        #endregion Methods
     }
 }

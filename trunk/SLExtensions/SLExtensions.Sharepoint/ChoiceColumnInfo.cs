@@ -6,6 +6,7 @@
     using System.Net;
     using System.Runtime.Serialization;
     using System.Windows;
+    using System.Windows.Browser;
     using System.Windows.Controls;
     using System.Windows.Documents;
     using System.Windows.Ink;
@@ -14,7 +15,6 @@
     using System.Windows.Media.Animation;
     using System.Windows.Shapes;
     using System.Xml.Linq;
-    using System.Windows.Browser;
 
     [DataContract]
     public class ChoiceColumnInfo : TextColumnInfo
@@ -63,15 +63,6 @@
             return data.Split(new string[]{ ChoiceSeparator}, StringSplitOptions.RemoveEmptyEntries);
         }
 
-        public override void ParseColumnDefinition(XElement field)
-        {
-            base.ParseColumnDefinition(field);
-            MultiChoice = field.GetAttribute("Type") == "MultiChoice";
-            Choices = ChoiceColumnInfo.Parse(field);
-        }
-
-        #endregion Methods
-
         public override object GetFieldValue(TemplateDataBase templateDataBase, XElement element)
         {
             if (!MultiChoice)
@@ -82,5 +73,14 @@
             }
             return base.GetFieldValue(templateDataBase, element);
         }
+
+        public override void ParseColumnDefinition(XElement field)
+        {
+            base.ParseColumnDefinition(field);
+            MultiChoice = field.GetAttribute("Type") == "MultiChoice";
+            Choices = ChoiceColumnInfo.Parse(field);
+        }
+
+        #endregion Methods
     }
 }

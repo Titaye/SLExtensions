@@ -29,7 +29,10 @@
         #region Properties
 
         [DataMember]
-        public object DefaultValue { get; set; }
+        public object DefaultValue
+        {
+            get; set;
+        }
 
         [DataMember]
         public string DisplayName

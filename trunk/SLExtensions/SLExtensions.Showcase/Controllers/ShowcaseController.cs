@@ -14,8 +14,8 @@
     using System.Windows.Media.Animation;
     using System.Windows.Shapes;
 
-    using SLExtensions.Stats;
     using SLExtensions.Input;
+    using SLExtensions.Stats;
 
     public class ShowcaseController : INotifyPropertyChanged
     {
@@ -126,9 +126,12 @@
             }
         }
 
-        #endregion Properties
+        public Command<ShowcaseItem> Navigate
+        {
+            get; private set;
+        }
 
-        public Command<ShowcaseItem> Navigate { get; private set; }
+        #endregion Properties
 
         #region Methods
 

@@ -10,6 +10,12 @@
     xmlns:sld="clr-namespace:SLExtensions.Data;assembly=SLExtensions.Data"
     >
 
+    <LinearGradientBrush x:Key="AlphaBackgroundBrush" EndPoint="10,10" StartPoint="0,0" SpreadMethod="Repeat" MappingMode="Absolute">
+        <GradientStop Color="Black" Offset="0.5"/>
+        <GradientStop Offset="1" Color="White"/>
+        <GradientStop Offset="0" Color="White"/>
+    </LinearGradientBrush>
+    
     <Style TargetType="layers:LayerHost">
         <Setter Property="Template" >
             <Setter.Value>
@@ -21,6 +27,278 @@
             </Setter.Value>
         </Setter>
     </Style>
+
+    <Style TargetType="local:Slider2D">
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="MaximumX" Value="10" />
+        <Setter Property="MinimumX" Value="0" />
+        <Setter Property="MaximumX" Value="10" />
+        <Setter Property="MinimumX" Value="0" />
+        <Setter Property="ValueX" Value="0" />
+        <Setter Property="ValueY" Value="0" />
+        <Setter Property="BorderBrush">
+            <Setter.Value>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#FFA3AEB9" Offset="0"/>
+                    <GradientStop Color="#FF8399A9" Offset="0.375"/>
+                    <GradientStop Color="#FF718597" Offset="0.375"/>
+                    <GradientStop Color="#FF617584" Offset="1"/>
+                </LinearGradientBrush>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="IsTabStop" Value="False" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="local:Slider2D">
+                    <Grid x:Name="Root">
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="Normal"/>
+                                <VisualState x:Name="MouseOver"/>
+                                <VisualState x:Name="Disabled">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ThumbDisabledOverlay" Storyboard.TargetProperty="Visibility" Duration="0">
+                                            <DiscreteObjectKeyFrame KeyTime="0">
+                                                <DiscreteObjectKeyFrame.Value>
+                                                    <Visibility>Visible</Visibility>
+                                                </DiscreteObjectKeyFrame.Value>
+                                            </DiscreteObjectKeyFrame>
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+
+                        <Grid x:Name="TemplateRoot" Background="{TemplateBinding Background}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <Thumb Height="11" x:Name="Thumb" Width="11" Grid.Column="1" Grid.Row="1" IsTabStop="True"/>
+                            <Rectangle x:Name="ThumbDisabledOverlay" RadiusX="2" RadiusY="2"  
+                                       Width="11" Grid.Row="1" 
+                                       Grid.Column="1" Fill="White" Opacity=".55" Visibility="Collapsed"/>
+
+                        </Grid>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="local:ColorPicker">
+        <Setter Property="SelectedColor" Value="Black"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="local:ColorPicker">
+                    <Grid x:Name="RootElement" >
+                        <Grid.Resources>
+                            <ControlTemplate x:Key="SliderThumbControlTemplate" TargetType="Thumb">
+                                <Grid >
+                                    <VisualStateManager.VisualStateGroups>
+                                        <VisualStateGroup x:Name="CommonStates">
+                                            <VisualState x:Name="Normal"/>
+                                            <VisualState x:Name="MouseOver"/>
+                                            <VisualState x:Name="Pressed"/>
+                                            <VisualState x:Name="Disabled"/>
+                                        </VisualStateGroup>
+                                        <VisualStateGroup x:Name="FocusStates">
+                                            <VisualState x:Name="Unfocused"/>
+                                            <VisualState x:Name="Focused"/>
+                                        </VisualStateGroup>
+                                    </VisualStateManager.VisualStateGroups>
+                                    <Grid Margin="0,-10" Background="Transparent">
+                                        <Path Width="5" Height="8" Stretch="Fill" StrokeLineJoin="Round" Stroke="White" Fill="#FF000000" Data="F1 M 276.761,316L 262.619,307.835L 262.619,324.165L 276.761,316 Z " HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,-4" UseLayoutRounding="False" />
+                                        <Path Width="5" Height="8" Stretch="Fill" StrokeLineJoin="Round" Stroke="White" Fill="#FF000000" Data="F1 M 276.761,316L 262.619,307.835L 262.619,324.165L 276.761,316 Z " HorizontalAlignment="Right" RenderTransformOrigin="0.5,0.5" VerticalAlignment="Center" Margin="0,-4" UseLayoutRounding="False">
+                                            <Path.RenderTransform>
+                                                <RotateTransform Angle="180" />
+                                            </Path.RenderTransform>
+                                        </Path>
+                                    </Grid>
+                                </Grid>
+                            </ControlTemplate>
+                            <ControlTemplate x:Name="hueSliderTemplate" TargetType="Slider">
+                                <Grid x:Name="Root">
+                                    <Grid.Resources>
+                                        <ControlTemplate x:Key="RepeatButtonTemplate">
+                                            <Grid x:Name="Root" Opacity="0" Background="Transparent"/>
+                                        </ControlTemplate>
+                                    </Grid.Resources>
+                                    <VisualStateManager.VisualStateGroups>
+                                        <VisualStateGroup x:Name="CommonStates">
+                                            <VisualState x:Name="Normal"/>
+                                            <VisualState x:Name="MouseOver"/>
+                                            <VisualState x:Name="Disabled"/>
+                                        </VisualStateGroup>
+                                    </VisualStateManager.VisualStateGroups>
+                                    <Grid x:Name="VerticalTemplate" Visibility="Collapsed" Background="{TemplateBinding Background}"
+                                          local:Clipper.ClipToBounds="True">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="*"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+                                        <RepeatButton x:Name="VerticalTrackLargeChangeDecreaseRepeatButton" Width="18" IsTabStop="False" Template="{StaticResource RepeatButtonTemplate}" Grid.Row="2"
+                                                      IsHitTestVisible="False"/>
+                                        <RepeatButton x:Name="VerticalTrackLargeChangeIncreaseRepeatButton" Width="18" IsTabStop="False" Template="{StaticResource RepeatButtonTemplate}" Grid.Row="0"
+                                                      IsHitTestVisible="False"/>
+                                        <Thumb x:Name="VerticalThumb" Height="0" IsTabStop="True" Template="{StaticResource SliderThumbControlTemplate}" Grid.Row="1"/>
+                                    </Grid>
+                                </Grid>
+                            </ControlTemplate>
+                            <ControlTemplate x:Key="ColorSlider2DTemplate" TargetType="local:Slider2D">
+                                <Grid x:Name="Root">
+                                    <Grid.Resources>
+                                        <ControlTemplate x:Key="ThumbControlTemplate" TargetType="Thumb">
+                                            <Grid >
+                                                <Grid Background="Transparent" Margin="-10">
+                                                    <VisualStateManager.VisualStateGroups>
+                                                        <VisualStateGroup x:Name="CommonStates">
+                                                            <VisualState x:Name="Normal"/>
+                                                            <VisualState x:Name="MouseOver"/>
+                                                            <VisualState x:Name="Pressed"/>
+                                                            <VisualState x:Name="Disabled"/>
+                                                        </VisualStateGroup>
+                                                        <VisualStateGroup x:Name="FocusStates">
+                                                            <VisualState x:Name="Unfocused"/>
+                                                            <VisualState x:Name="Focused"/>
+                                                        </VisualStateGroup>
+                                                    </VisualStateManager.VisualStateGroups>
+                                                    <Ellipse StrokeThickness="3" Stroke="#FFFFFFFF" Width="10" Height="10"/>
+                                                    <Ellipse StrokeThickness="1" Stroke="#FF000000" Width="10" Height="10"/>
+                                                </Grid>
+                                            </Grid>
+                                        </ControlTemplate>
+                                    </Grid.Resources>
+                                    <VisualStateManager.VisualStateGroups>
+                                        <VisualStateGroup x:Name="CommonStates">
+                                            <VisualState x:Name="Normal"/>
+                                            <VisualState x:Name="MouseOver"/>
+                                            <VisualState x:Name="Disabled">
+                                                <Storyboard>
+                                                    <ObjectAnimationUsingKeyFrames Duration="0" Storyboard.TargetName="ThumbDisabledOverlay" Storyboard.TargetProperty="Visibility">
+                                                        <DiscreteObjectKeyFrame KeyTime="0">
+                                                            <DiscreteObjectKeyFrame.Value>
+                                                                <Visibility>Visible</Visibility>
+                                                            </DiscreteObjectKeyFrame.Value>
+                                                        </DiscreteObjectKeyFrame>
+                                                    </ObjectAnimationUsingKeyFrames>
+                                                </Storyboard>
+                                            </VisualState>
+                                        </VisualStateGroup>
+                                    </VisualStateManager.VisualStateGroups>
+                                    <Grid x:Name="TemplateRoot" Background="{TemplateBinding Background}">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="*"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+                                        <Thumb x:Name="Thumb" Height="0" Width="0" IsTabStop="True" Grid.Column="1" Grid.Row="1" Template="{StaticResource ThumbControlTemplate}"/>
+                                        <Rectangle x:Name="ThumbDisabledOverlay" Fill="White" RadiusX="2" RadiusY="2" Width="11" Opacity=".55" Visibility="Collapsed" Grid.Column="1" Grid.Row="1"/>
+                                    </Grid>
+                                </Grid>
+                            </ControlTemplate>
+
+                            <ControlTemplate x:Key="AlphaSliderTemplate" TargetType="Slider">
+                                <Grid x:Name="Root">
+                                    <Grid.Resources>
+                                        <ControlTemplate x:Key="RepeatButtonTemplate">
+                                            <Grid x:Name="Root" Opacity="0" Background="Transparent"/>
+                                        </ControlTemplate>
+                                    </Grid.Resources>
+                                    <VisualStateManager.VisualStateGroups>
+                                        <VisualStateGroup x:Name="CommonStates">
+                                            <VisualState x:Name="Normal"/>
+                                            <VisualState x:Name="MouseOver"/>
+                                            <VisualState x:Name="Disabled"/>
+                                        </VisualStateGroup>
+                                    </VisualStateManager.VisualStateGroups>
+                                    <Grid x:Name="VerticalTemplate" Visibility="Collapsed" 
+                                        local:Clipper.ClipToBounds="True" >
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="*"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+                                        <RepeatButton IsHitTestVisible="False" x:Name="VerticalTrackLargeChangeDecreaseRepeatButton" Width="18" IsTabStop="False" Template="{StaticResource RepeatButtonTemplate}" Grid.Row="2"/>
+                                        <Grid Grid.RowSpan="3"  Background="{StaticResource AlphaBackgroundBrush}"/>
+                                        <Grid Background="{TemplateBinding Background}" Grid.RowSpan="3">
+                                            <Grid.OpacityMask>
+                                                <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                                                    <GradientStop Color="Black" Offset="0"/>
+                                                    <GradientStop Color="Transparent" Offset="1"/>
+                                                </LinearGradientBrush>
+                                            </Grid.OpacityMask>
+                                        </Grid>
+                                        <Thumb x:Name="VerticalThumb" Height="0"
+                                               IsTabStop="True" Grid.Row="1" 
+                                               Template="{StaticResource SliderThumbControlTemplate}"/>
+                                        <RepeatButton IsHitTestVisible="False" x:Name="VerticalTrackLargeChangeIncreaseRepeatButton" Width="18" IsTabStop="False" Template="{StaticResource RepeatButtonTemplate}" Grid.Row="0"/>
+                                    </Grid>
+                                </Grid>
+                            </ControlTemplate>
+                        </Grid.Resources>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="20" />
+                            <ColumnDefinition Width="20"/>
+                            <ColumnDefinition />
+
+
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <Slider x:Name="HueSelector" Background="{TemplateBinding HueMonitorBrush}" 
+                                Minimum="0"
+                                Maximum="1"
+                                SmallChange="0.05"
+                                LargeChange="0.1"
+                                Value="{Binding HuePosition, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" 
+                                IsDirectionReversed="True"
+                                Orientation="Vertical" Template="{StaticResource hueSliderTemplate}"
+                                slCommon:SliderExtensions.SetMouseDownPositionValue="True"/>
+                        <local:Slider2D x:Name="ColorSelector" 
+                                        ValueX="{Binding ColorXPosition, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" 
+                                        ValueY="{Binding ColorYPosition, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+                                        MinimumX="0" MaximumX="1" SmallChangeX="0.05"
+                                        MinimumY="0" MaximumY="1" SmallChangeY="0.05"
+                                        Background="{TemplateBinding SatValBrush}" 
+                                        SetMouseDownPositionValue="True"
+                                        Grid.Column="2" Template="{StaticResource ColorSlider2DTemplate}"/>
+
+                        <Slider x:Name="AlphaSelector" 
+                                Value="{Binding Alpha, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" 
+                                Grid.Column="1" Minimum="0" Maximum="1" SmallChange="0.05" Orientation="Vertical" 
+                                Template="{StaticResource AlphaSliderTemplate}" 
+                                Background="{TemplateBinding RGBColorBrush}"
+                                slCommon:SliderExtensions.SetMouseDownPositionValue="True"/>
+                        <Rectangle Grid.Row="1" Fill="{StaticResource AlphaBackgroundBrush}"/>
+                        <Rectangle Grid.Row="1" Fill="{TemplateBinding SelectedColorBrush}"/>
+                        <TextBox x:Name="HexValue" 
+                                           Text="{Binding SelectedColor, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}, NotifyOnValidationError=true, ValidatesOnExceptions=true}"
+                                           Grid.Row="1"
+                                           Grid.Column="1"
+                                            Grid.ColumnSpan="2"/>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
 
     <Style TargetType="ve:HybridView">
         <Setter Property="ItemsPanel">
@@ -1255,82 +1533,6 @@
                     <GradientStop Color="#FFB3D0F5" Offset="0.64"/>
                     <GradientStop Color="#FFC7DCF8" Offset="0.65"/>
                 </LinearGradientBrush>
-            </Setter.Value>
-        </Setter>
-    </Style>
-
-    <Style TargetType="local:ColorPicker">
-        <Setter Property="Width" Value="200" />
-        <Setter Property="Height" Value="200" />
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="local:ColorPicker">
-                    <StackPanel x:Name="RootElement">
-                        <StackPanel Orientation="Horizontal">
-                            <Canvas Width="20" Height="180">
-                                <Rectangle x:Name="HueMonitor" Width="20" Height="180">
-                                    <Rectangle.Fill>
-                                        <LinearGradientBrush StartPoint ="0,0" EndPoint="0,1">
-                                            <GradientStop Offset="0.00" Color="#ffff0000"/>
-                                            <GradientStop Offset="0.17" Color="#ffffff00"/>
-                                            <GradientStop Offset="0.33" Color="#ff00ff00"/>
-                                            <GradientStop Offset="0.50" Color="#ff00ffff"/>
-                                            <GradientStop Offset="0.66" Color="#ff0000ff"/>
-                                            <GradientStop Offset="0.83" Color="#ffff00ff"/>
-                                            <GradientStop Offset="1.00" Color="#ffff0000"/>
-                                        </LinearGradientBrush>
-                                    </Rectangle.Fill>
-                                </Rectangle>
-                                <Canvas x:Name="HueSelector" IsHitTestVisible="False" Height="8" Canvas.Left="0" Canvas.Top="-4">
-                                    <Path Width="5" Height="8" Stretch="Fill" StrokeLineJoin="Round" Stroke="#FF000000" Fill="#FF000000" Data="F1 M 276.761,316L 262.619,307.835L 262.619,324.165L 276.761,316 Z " />
-                                    <Path Width="5" Height="8" Canvas.Top="8" Canvas.Left="20" Stretch="Fill" StrokeLineJoin="Round" Stroke="#FF000000" Fill="#FF000000" Data="F1 M 276.761,316L 262.619,307.835L 262.619,324.165L 276.761,316 Z ">
-                                        <Path.RenderTransform>
-                                            <RotateTransform Angle="180" />
-                                        </Path.RenderTransform>
-                                    </Path>
-                                </Canvas>
-                            </Canvas>
-                            <Canvas Canvas.Top="0" Canvas.Left="20">
-                                <Rectangle x:Name="ColorSample" Width="180" Height="180" Fill="Red"></Rectangle>
-                                <Rectangle x:Name="WhiteGradient" IsHitTestVisible="False" Width="180" Height="180">
-                                    <Rectangle.Fill>
-                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
-                                            <GradientStop Offset="0" Color="#ffffffff"/>
-                                            <GradientStop Offset="1" Color="#00ffffff"/>
-                                        </LinearGradientBrush>
-                                    </Rectangle.Fill>
-                                </Rectangle>
-                                <Rectangle x:Name="BlackGradient" IsHitTestVisible="False" Width="180" Height="180">
-                                    <Rectangle.Fill>
-                                        <LinearGradientBrush StartPoint="0,1" EndPoint="0, 0">
-                                            <GradientStop Offset="0" Color="#ff000000"/>
-                                            <GradientStop Offset="1" Color="#00000000"/>
-                                        </LinearGradientBrush>
-                                    </Rectangle.Fill>
-                                </Rectangle>
-                                <Canvas x:Name="SampleSelector" IsHitTestVisible="False" Width="10" Height="10" Canvas.Left="100" Canvas.Top="96">
-                                    <Ellipse Width="10" Height="10" StrokeThickness="3" Stroke="#FFFFFFFF"/>
-                                    <Ellipse Width="10" Height="10" StrokeThickness="1" Stroke="#FF000000"/>
-                                </Canvas>
-                            </Canvas>
-                        </StackPanel>
-
-                        <StackPanel Orientation="Horizontal">
-                            <Grid>
-                                <Rectangle Width="60" Height="20" Fill="Black" />
-                                <TextBlock x:Name="HexValue" 
-                                           Foreground="White" 
-                                           Text="#FF0000" 
-                                           FontFamily="Arial" 
-                                           FontSize="11" 
-                                           TextAlignment="Center" 
-                                           VerticalAlignment="Center" 
-                                           HorizontalAlignment="Center" />
-                            </Grid>
-                            <Rectangle x:Name="SelectedColorView" Width="140" Height="20" Fill="Black" />
-                        </StackPanel>
-                    </StackPanel>
-                </ControlTemplate>
             </Setter.Value>
         </Setter>
     </Style>

@@ -1,6 +1,7 @@
 ﻿namespace SLExtensions.Data
 {
     using System;
+    using System.Collections;
     using System.Globalization;
     using System.Net;
     using System.Windows;
@@ -12,7 +13,6 @@
     using System.Windows.Media;
     using System.Windows.Media.Animation;
     using System.Windows.Shapes;
-    using System.Collections;
 
     public class BoolConverter : IValueConverter
     {
@@ -107,7 +107,7 @@
                     {
                         return !iter.MoveNext();
                     }
-                    return iter.MoveNext();                    
+                    return iter.MoveNext();
                 }
 
                 bool convertResult;
