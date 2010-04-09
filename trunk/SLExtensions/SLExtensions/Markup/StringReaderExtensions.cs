@@ -53,6 +53,8 @@
 
             if (!reader.PeekIsMarkup())
             {
+                if (content != null)
+                    content.Type = MarkupType.Raw;
                 return MarkupType.Raw;
             }
 
@@ -60,7 +62,11 @@
             reader.Read();
             int intChar = reader.Peek();
             if (intChar == -1)
+            {
+                if (content != null)
+                    content.Type = MarkupType.Raw;
                 return MarkupType.Raw;
+            }
 
             var isClosingMarkup = intChar == slash;
             if (isClosingMarkup)
@@ -72,7 +78,8 @@
                 content = new MarkupContent { Name = name };
                 // Consume >
                 reader.Read();
-                return MarkupType.ClosingNode;
+                content.Type = MarkupType.ClosingNode;
+                return content.Type;
             }
             else
             {
@@ -100,7 +107,8 @@
                 if (isComment)
                 {
                     content = new MarkupContent { Content = data.ToString(3, data.Length - 5).Trim(), Name = "!--" };
-                    return MarkupType.Comment;
+                    content.Type = MarkupType.Comment;
+                    return content.Type;
                 }
                 else
                 {
@@ -120,8 +128,8 @@
                         (e) => e.Groups["key"].Value,
                         (e) => e.Groups["value"].Value,
                         comparer);
-
-                    return isClosed ? MarkupType.Node : MarkupType.StartNode;
+                    content.Type = isClosed ? MarkupType.Node : MarkupType.StartNode;
+                    return content.Type;
                 }
             }
         }

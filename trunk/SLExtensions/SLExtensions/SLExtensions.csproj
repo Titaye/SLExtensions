@@ -184,6 +184,7 @@
     <Compile Include="Extensions\StringBuilderExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Markup\StringReaderExtensions.cs" />
+    <Compile Include="Text\Iso8859Encoding.cs" />
     <Compile Include="Text\Iso8859Helper.cs" />
     <Compile Include="Text\Parsers\ILexer.cs" />
     <Compile Include="Text\Parsers\IToken.cs" />

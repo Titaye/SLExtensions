@@ -31,6 +31,7 @@
             get; set;
         }
 
+        public MarkupType Type { get; set; }
         #endregion Properties
     }
 }

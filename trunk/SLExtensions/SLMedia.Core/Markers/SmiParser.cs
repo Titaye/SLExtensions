@@ -115,15 +115,24 @@
                     break;
 
                 markupType = reader.ReadMarkup(out markupContent, strComp);
-
-                if (markupType == MarkupType.ClosingNode && strComp.Compare(markupContent.Name, BodyMarkup) == 0)
-                    break;
-
-                if (markupType == MarkupType.StartNode
-                    && strComp.Compare(markupContent.Name, SyncMarkup) == 0)
+                MarkupContent invalidSamiNextMarkupContent = null;
+                do
                 {
-                    readSyncNode(reader, markupContent, styles, markersByLanguage);
-                }
+                    if (invalidSamiNextMarkupContent != null)
+                    {
+                        markupType = invalidSamiNextMarkupContent.Type;
+                        markupContent = invalidSamiNextMarkupContent;
+                    }
+
+                    if (markupType == MarkupType.ClosingNode && strComp.Compare(markupContent.Name, BodyMarkup) == 0)
+                        break;
+
+                    if (markupType == MarkupType.StartNode
+                        && strComp.Compare(markupContent.Name, SyncMarkup) == 0)
+                    {
+                        invalidSamiNextMarkupContent = readSyncNode(reader, markupContent, styles, markersByLanguage);
+                    }
+                } while (invalidSamiNextMarkupContent != null);
             }
 
             var result = new Dictionary<string, SmiMarker[]>(strComp);
@@ -275,10 +284,11 @@
             }
         }
 
-        private static void ReadSyncPNode(StringReader reader, Dictionary<string, Dictionary<string, string>> styles,
+        private static MarkupContent ReadSyncPNode(StringReader reader, Dictionary<string, Dictionary<string, string>> styles,
             MarkupContent markupContent,
             TimeSpan position, Dictionary<string, List<SmiMarker>> markersByLanguage)
         {
+            MarkupContent malformedContent = null;
             MarkupType markupType;
             var cssList = new List<string>();
             cssList.Add("p");
@@ -322,9 +332,17 @@
                         markerContent.Append('\n');
                     }
 
-                    if (markupType == MarkupType.ClosingNode
-                        && strComp.Compare(markupContent.Name, PMarkup) == 0)
+                    if ((markupType == MarkupType.ClosingNode
+                            && strComp.Compare(markupContent.Name, PMarkup) == 0))
                     {
+                        break;
+                    }
+
+                    if((markupType == MarkupType.StartNode
+                            && strComp.Compare(markupContent.Name, SyncMarkup) == 0))
+                    {
+                        // Malformed Sami file.
+                        malformedContent = markupContent;
                         break;
                     }
                 }
@@ -336,9 +354,11 @@
             {
                 marker.Content = null;
             }
+
+            return malformedContent;
         }
 
-        private static void readSyncNode(StringReader reader, MarkupContent markupContent, Dictionary<string, Dictionary<string, string>> styles, Dictionary<string, List<SmiMarker>> markersByLanguage)
+        private static MarkupContent readSyncNode(StringReader reader, MarkupContent markupContent, Dictionary<string, Dictionary<string, string>> styles, Dictionary<string, List<SmiMarker>> markersByLanguage)
         {
             MarkupType markupType;
 
@@ -346,7 +366,7 @@
             var start = markupContent.Parameters.TryGetValue("start");
             var startInt = 0;
             if (!int.TryParse(start, out startInt))
-                return;
+                return null;
 
             position = TimeSpan.FromMilliseconds(startInt);
 
@@ -354,7 +374,7 @@
             {
                 reader.ReadToMarkup();
                 if (!reader.PeekIsMarkup())
-                    return;
+                    return null;
 
                 markupType = reader.ReadMarkup(out markupContent, strComp);
 
@@ -365,11 +385,18 @@
                 if (markupType == MarkupType.StartNode
                     && strComp.Compare(markupContent.Name, PMarkup) == 0)
                 {
-                    ReadSyncPNode(reader, styles,
-                        markupContent,
-                        position, markersByLanguage);
+                    var invalidSamiNextMarkupContent = ReadSyncPNode(reader, styles,
+                                                markupContent,
+                                                position, markersByLanguage);
+                    if (invalidSamiNextMarkupContent != null)
+                    {
+                        // malformed sami
+                        return invalidSamiNextMarkupContent;
+                    }
                 }
             }
+
+            return null;
         }
 
         #endregion Methods

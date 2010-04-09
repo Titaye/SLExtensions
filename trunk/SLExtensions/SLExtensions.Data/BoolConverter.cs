@@ -12,6 +12,7 @@
     using System.Windows.Media;
     using System.Windows.Media.Animation;
     using System.Windows.Shapes;
+    using System.Collections;
 
     public class BoolConverter : IValueConverter
     {
@@ -39,6 +40,12 @@
             if (value is int)
             {
                 return ((int)value == 0) ? false : true;
+            }
+
+            if (value is IEnumerable)
+            {
+                var iter = ((IEnumerable)value).GetEnumerator();
+                return iter.MoveNext();
             }
 
             string strValue = value as string;
@@ -91,6 +98,16 @@
                         return !b;
                     }
                     return b;
+                }
+
+                if (value is IEnumerable)
+                {
+                    var iter = ((IEnumerable)value).GetEnumerator();
+                    if ("!".Equals(parameter) || "!?".Equals(parameter))
+                    {
+                        return !iter.MoveNext();
+                    }
+                    return iter.MoveNext();                    
                 }
 
                 bool convertResult;

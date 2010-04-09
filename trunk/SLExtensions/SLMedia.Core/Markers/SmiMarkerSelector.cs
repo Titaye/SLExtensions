@@ -11,11 +11,14 @@
     using System.Windows.Media;
     using System.Windows.Media.Animation;
     using System.Windows.Shapes;
-using System.Collections.Generic;
+    using System.Collections.Generic;
+using System.ComponentModel;
+    using System.Text;
 
     public class SmiMarkerSelector : MarkerSelector
     {
-        public SmiMarkerSelector() : base()
+        public SmiMarkerSelector()
+            : base()
         {
 
         }
@@ -24,20 +27,23 @@ using System.Collections.Generic;
             : base(new KeyValuePair<string, object>(MarkerMetadata.Language, language))
         {
             this.Language = language;
-            this.Source = source;           
+            this.Source = source;
         }
 
         #region Properties
 
         public Uri Source { get; set; }
 
+        public Encoding Encoding { get; set; }
+
         public string Language
         {
-            get; set;
+            get;
+            set;
         }
 
         private bool webContentLoaded;
-        
+
 
         #endregion Properties
 
@@ -48,6 +54,8 @@ using System.Collections.Generic;
             LoadWebContent();
         }
 
+        BackgroundWorker parserWorker;
+
         private void LoadWebContent()
         {
             if (IsActive
@@ -55,20 +63,35 @@ using System.Collections.Generic;
                 && !webContentLoaded)
             {
                 WebClient client = new WebClient();
-                client.DownloadStringCompleted += (snd, e) =>
+                client.OpenReadCompleted += (snd, e) =>
                 {
-                    if (!e.Cancelled && e.Error != null)
+                    if (e.Cancelled
+                        || e.Error != null)
+                        return;
+                    var data = new byte[e.Result.Length];
+                    e.Result.Read(data, 0, data.Length);
+                    string content;
+                    var encoding = Encoding ?? Encoding.UTF8;
+                    
+                    content = encoding.GetString(data, 0, data.Length);
+                    
+                    webContentLoaded = true;
+                    parserWorker = new BackgroundWorker();
+                    parserWorker.DoWork += delegate 
                     {
-                        var markers = SmiParser.ParseSmiFile(e.Result);
+                        var markers = SmiParser.ParseSmiFile(content);
                         if (markers != null
                             && markers.Count > 0)
                         {
-                            this.Markers = markers.First().Value;
+                            Deployment.Current.Dispatcher.BeginInvoke(() =>
+                            {
+                                this.Markers = markers.First().Value;
+                            });
                         }
-                        webContentLoaded = true;
-                    }
+                    };
+                    parserWorker.RunWorkerAsync();
                 };
-                client.DownloadStringAsync(Source);
+                client.OpenReadAsync(Source);
             }
         }
     }
