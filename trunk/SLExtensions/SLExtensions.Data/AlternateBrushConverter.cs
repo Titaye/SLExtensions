@@ -59,6 +59,7 @@
         public AlternateBrushConverter()
         {
             DefaultBrush = transparentBrush;
+            Brushes = new List<SolidColorBrush>();
         }
 
         #endregion Constructors
@@ -70,8 +71,20 @@
         /// </summary>
         public SolidColorBrush DefaultBrush
         {
-            get; set;
+            get;
+            set;
         }
+
+
+        /// <summary>
+        /// brushes
+        /// </summary>
+        public List<SolidColorBrush> Brushes
+        {
+            get;
+            set;
+        }
+
 
         #endregion Properties
 
@@ -84,8 +97,13 @@
         {
             AlternateBrushConverterParameter param;
             string colors = parameter as string;
+            List<SolidColorBrush> brushes = new List<SolidColorBrush>();
 
-            if (!string.IsNullOrEmpty(colors))
+            if (Brushes != null && Brushes.Count > 0)
+            {
+                brushes = Brushes;
+            }
+            else if (!string.IsNullOrEmpty(colors))
             {
                 // parse color string like #FFFFFFFF Red #FFFFFF Blue
                 param = new AlternateBrushConverterParameter();
@@ -116,6 +134,7 @@
                         param.Brushes.Add(GetColorFromCache(item, DefaultBrush));
                     }
                 }
+                brushes = param.Brushes;
             }
             else
             {
@@ -127,14 +146,19 @@
                 }
             }
 
+            
+
             // no brushes
-            if (param.Brushes.Count == 0)
+            //if (param.Brushes.Count == 0)
+            if (brushes.Count == 0)
                 return null;
 
-            int idx = counter % param.Brushes.Count;
+            //int idx = counter % param.Brushes.Count;
+            int idx = counter % brushes.Count;
             counter++;
 
-            return param.Brushes[idx];
+            return brushes[idx];
+            //return param.Brushes[idx];
         }
 
         public object ConvertBack(object value,
@@ -153,8 +177,8 @@
                 if (brush == null)
                 {
                     var colorProp = (from p in typeof(Colors).GetProperties(System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public)
-                               where StringComparer.OrdinalIgnoreCase.Compare(name, p.Name) == 0
-                               select p).First();
+                                     where StringComparer.OrdinalIgnoreCase.Compare(name, p.Name) == 0
+                                     select p).First();
                     brush = new SolidColorBrush((Color)colorProp.GetValue(null, null));
                     defaultBrushes[colorProp.Name] = brush;
                 }

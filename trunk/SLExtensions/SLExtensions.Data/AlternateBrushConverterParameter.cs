@@ -25,14 +25,14 @@
 
         public AlternateBrushConverterParameter()
         {
-            Brushes = new List<Brush>();
+            Brushes = new List<SolidColorBrush>();
         }
 
         #endregion Constructors
 
         #region Properties
 
-        public List<Brush> Brushes
+        public List<SolidColorBrush> Brushes
         {
             get; private set;
         }
