@@ -19,7 +19,7 @@
 
     using SLExtensions;
 
-    public class MarkerSelectorFilter : FrameworkElement, INotifyPropertyChanged
+    public class MarkerSelectorFilter : DependencyObject, INotifyPropertyChanged
     {
         #region Fields
 

@@ -80,7 +80,26 @@
             {
                 if (mediaElement != null)
                 {
-                    return mediaElement.CurrentState;
+                    switch (mediaElement.CurrentState)
+                    {
+                        case SmoothStreamingMediaElementState.AcquiringLicense:
+                            return MediaElementState.AcquiringLicense;
+                        case SmoothStreamingMediaElementState.Buffering:
+                            return MediaElementState.AcquiringLicense;
+                        case SmoothStreamingMediaElementState.ClipPlaying:
+                        case SmoothStreamingMediaElementState.Playing:
+                            return MediaElementState.Playing;
+                        case SmoothStreamingMediaElementState.Closed:
+                            return MediaElementState.Closed;
+                        case SmoothStreamingMediaElementState.Individualizing:
+                            return MediaElementState.Individualizing;
+                        case SmoothStreamingMediaElementState.Opening:
+                            return MediaElementState.Opening;
+                        case SmoothStreamingMediaElementState.Paused:
+                            return MediaElementState.Paused;
+                        case SmoothStreamingMediaElementState.Stopped:
+                            return MediaElementState.Stopped;
+                    }
                 }
                 return MediaElementState.Closed;
             }

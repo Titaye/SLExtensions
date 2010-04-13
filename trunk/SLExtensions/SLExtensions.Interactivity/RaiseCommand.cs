@@ -73,24 +73,6 @@
 
         #region Properties
 
-        public Binding CommandBinding
-        {
-            get { return this.commandBinding; }
-            set
-            {
-                if (this.commandBinding != value)
-                {
-                    this.commandBinding = value;
-                    if (value == null)
-                        bindingListenerCommand.ClearValue(BindingListener.ValueProperty);
-                    else
-                        bindingListenerCommand.SetBinding(BindingListener.ValueProperty, value);
-
-                    bindingListenerCommand.EnsureBindingSource(Target);
-                }
-            }
-        }
-
         public string CommandName
         {
             get
@@ -117,25 +99,18 @@
             }
         }
 
-        public Binding CommandParameterBinding
+
+
+        public ICommand Command
         {
-            get { return this.commandParameterBinding; }
-            set
-            {
-                if (this.commandParameterBinding != value)
-                {
-                    this.commandParameterBinding = value;
-
-                    if (value == null)
-                        bindingListenerCommandParameter.ClearValue(BindingListener.ValueProperty);
-                    else
-                        bindingListenerCommandParameter.SetBinding(BindingListener.ValueProperty, value);
-
-                    bindingListenerCommandParameter.EnsureBindingSource(Target);
-                }
-            }
+            get { return (ICommand)GetValue(CommandProperty); }
+            set { SetValue(CommandProperty, value); }
         }
 
+        // Using a DependencyProperty as the backing store for Command.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty CommandProperty =
+            DependencyProperty.Register("Command", typeof(ICommand), typeof(RaiseCommand), null);
+        
         public Key Key
         {
             get
@@ -170,13 +145,6 @@
             {
                 cmd.Execute(CommandParameter);
             }
-        }
-
-        protected override void OnTargetChanged(FrameworkElement oldTarget, FrameworkElement newTarget)
-        {
-            base.OnTargetChanged(oldTarget, newTarget);
-            bindingListenerCommand.EnsureBindingSource(newTarget);
-            bindingListenerCommandParameter.EnsureBindingSource(newTarget);
         }
 
         #endregion Methods

@@ -15,7 +15,7 @@
 
     using SLExtensions.ComponentModel;
 
-    public class BindingListener : FrameworkElement
+    public class BindingListener : DependencyObject
     {
         #region Fields
 
@@ -66,59 +66,6 @@
         #endregion Properties
 
         #region Methods
-
-        public void EnsureBindingSource(FrameworkElement source)
-        {
-            if (source == null)
-            {
-                ClearValue(DataContextProperty);
-                return;
-            }
-
-            var binding = GetBindingExpression(ValueProperty);
-            if (binding == null)
-                return;
-
-            SetBinding(DataContextProperty, new Binding("DataContext") { Source = source });
-
-            var oldBinding = binding.ParentBinding;
-            object newBindingSource = null;
-
-            if (oldBinding.ElementName != null)
-            {
-                Binding bd = new Binding();
-                bd.ElementName = oldBinding.ElementName;
-                source.SetBinding(BindingHelperProperty, bd);
-                newBindingSource = source.GetValue(BindingHelperProperty) as FrameworkElement;
-                source.ClearValue(BindingHelperProperty);
-            }
-            else if (oldBinding.RelativeSource != null)
-            {
-                Binding bd = new Binding();
-                bd.RelativeSource = oldBinding.RelativeSource;
-                source.SetBinding(BindingHelperProperty, bd);
-                newBindingSource = source.GetValue(BindingHelperProperty) as FrameworkElement;
-                source.ClearValue(BindingHelperProperty);
-            }
-
-            if (newBindingSource != null)
-            {
-                ClearValue(ValueProperty);
-                Binding newBinding = new Binding();
-                newBinding.BindsDirectlyToSource = oldBinding.BindsDirectlyToSource;
-                newBinding.Converter = oldBinding.Converter;
-                newBinding.ConverterCulture = oldBinding.ConverterCulture;
-                newBinding.ConverterParameter = oldBinding.ConverterParameter;
-                newBinding.Mode = oldBinding.Mode;
-                newBinding.NotifyOnValidationError = oldBinding.NotifyOnValidationError;
-                newBinding.Path = oldBinding.Path;
-                newBinding.Source = newBindingSource;
-                newBinding.UpdateSourceTrigger = oldBinding.UpdateSourceTrigger;
-                newBinding.ValidatesOnExceptions = oldBinding.ValidatesOnExceptions;
-                SetBinding(ValueProperty, newBinding);
-            }
-            //}
-        }
 
         /// <summary>
         /// handles the ValueProperty changes.

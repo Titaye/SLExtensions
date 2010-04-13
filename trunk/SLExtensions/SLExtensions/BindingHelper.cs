@@ -11,7 +11,7 @@
     using System.Windows.Media.Animation;
     using System.Windows.Shapes;
 
-    public class BindingHelper : FrameworkElement
+    public class BindingHelper : DependencyObject
     {
         #region Fields
 

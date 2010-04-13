@@ -1,4 +1,4 @@
-﻿namespace SLExtensions.LoginProvider
+﻿namespace SLExtensions.LogOnProvider
 {
     using System;
     using System.Collections.Generic;
