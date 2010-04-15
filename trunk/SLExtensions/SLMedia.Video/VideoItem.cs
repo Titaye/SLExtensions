@@ -27,7 +27,8 @@
 
         public VideoItem()
         {
-            VideoAdapter = MediaElementVideoAdapter.Instance;
+            //VideoAdapter = MediaElementVideoAdapter.Instance;
+            VideoAdapter = new MediaElementVideoAdapter();
         }
 
         #endregion Constructors
