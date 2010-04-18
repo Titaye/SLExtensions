@@ -67,16 +67,6 @@
         #region Properties
 
         /// <summary>
-        /// Default brush
-        /// </summary>
-        public SolidColorBrush DefaultBrush
-        {
-            get;
-            set;
-        }
-
-
-        /// <summary>
         /// brushes
         /// </summary>
         public List<SolidColorBrush> Brushes
@@ -85,6 +75,14 @@
             set;
         }
 
+        /// <summary>
+        /// Default brush
+        /// </summary>
+        public SolidColorBrush DefaultBrush
+        {
+            get;
+            set;
+        }
 
         #endregion Properties
 
@@ -145,8 +143,6 @@
                     return null;
                 }
             }
-
-            
 
             // no brushes
             //if (param.Brushes.Count == 0)

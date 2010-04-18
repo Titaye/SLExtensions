@@ -55,15 +55,6 @@
             return size;
         }
 
-        private void Image_ImageFailed(object sender, ExceptionRoutedEventArgs e)
-        {
-        }
-
-        void VideoPlayer_Loaded(object sender, RoutedEventArgs e)
-        {
-            descriptionDesignMargin = gridDescription.Margin;
-        }
-
         void gridDescription_MouseEnter(object sender, MouseEventArgs e)
         {
             Storyboard sb = new Storyboard();
@@ -88,8 +79,17 @@
             sb.Begin();
         }
 
+        private void Image_ImageFailed(object sender, ExceptionRoutedEventArgs e)
+        {
+        }
+
         private void media_MediaFailed(object sender, ExceptionRoutedEventArgs e)
         {
+        }
+
+        void VideoPlayer_Loaded(object sender, RoutedEventArgs e)
+        {
+            descriptionDesignMargin = gridDescription.Margin;
         }
 
         #endregion Methods

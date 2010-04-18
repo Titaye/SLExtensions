@@ -41,16 +41,6 @@
                 new PropertyMetadata((d, e) => ((VirtualizedListBox)d).OnItemContainerStyleChanged((Style)e.OldValue, (Style)e.NewValue)));
 
         /// <summary>
-        /// ItemTemplate depedency property.
-        /// </summary>
-        public static readonly DependencyProperty ItemTemplateProperty = 
-            DependencyProperty.Register(
-                "ItemTemplate",
-                typeof(DataTemplate),
-                typeof(VirtualizedListBox),
-                new PropertyMetadata((d, e) => ((VirtualizedListBox)d).OnItemTemplateChanged((DataTemplate)e.OldValue, (DataTemplate)e.NewValue)));
-
-        /// <summary>
         /// ItemsSource depedency property.
         /// </summary>
         public static readonly DependencyProperty ItemsSourceProperty = 
@@ -59,6 +49,16 @@
                 typeof(IEnumerable),
                 typeof(VirtualizedListBox),
                 new PropertyMetadata((d, e) => ((VirtualizedListBox)d).OnItemsSourceChanged((IEnumerable)e.OldValue, (IEnumerable)e.NewValue)));
+
+        /// <summary>
+        /// ItemTemplate depedency property.
+        /// </summary>
+        public static readonly DependencyProperty ItemTemplateProperty = 
+            DependencyProperty.Register(
+                "ItemTemplate",
+                typeof(DataTemplate),
+                typeof(VirtualizedListBox),
+                new PropertyMetadata((d, e) => ((VirtualizedListBox)d).OnItemTemplateChanged((DataTemplate)e.OldValue, (DataTemplate)e.NewValue)));
 
         /// <summary>
         /// ItemContainerGenerator depedency property.
@@ -130,19 +130,6 @@
             }
         }
 
-        public DataTemplate ItemTemplate
-        {
-            get
-            {
-                return (DataTemplate)GetValue(ItemTemplateProperty);
-            }
-
-            set
-            {
-                SetValue(ItemTemplateProperty, value);
-            }
-        }
-
         public IEnumerable ItemsSource
         {
             get
@@ -153,6 +140,19 @@
             set
             {
                 SetValue(ItemsSourceProperty, value);
+            }
+        }
+
+        public DataTemplate ItemTemplate
+        {
+            get
+            {
+                return (DataTemplate)GetValue(ItemTemplateProperty);
+            }
+
+            set
+            {
+                SetValue(ItemTemplateProperty, value);
             }
         }
 
@@ -213,15 +213,6 @@
         }
 
         /// <summary>
-        /// handles the ItemTemplateProperty changes.
-        /// </summary>
-        /// <param name="oldValue">The old value.</param>
-        /// <param name="newValue">The new value.</param>
-        private void OnItemTemplateChanged(DataTemplate oldValue, DataTemplate newValue)
-        {
-        }
-
-        /// <summary>
         /// handles the ItemsSourceProperty changes.
         /// </summary>
         /// <param name="oldValue">The old value.</param>
@@ -230,9 +221,13 @@
         {
         }
 
-        void VirtualizedListBox_Click(object sender, RoutedEventArgs e)
+        /// <summary>
+        /// handles the ItemTemplateProperty changes.
+        /// </summary>
+        /// <param name="oldValue">The old value.</param>
+        /// <param name="newValue">The new value.</param>
+        private void OnItemTemplateChanged(DataTemplate oldValue, DataTemplate newValue)
         {
-            stackPanel.CurrentScrollIndex += 4;
         }
 
         void scrollbar_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
@@ -244,6 +239,11 @@
         void stackPanel_ItemsCountChanged(object sender, EventArgs e)
         {
             scrollbar.Maximum = stackPanel.ItemsCount;
+        }
+
+        void VirtualizedListBox_Click(object sender, RoutedEventArgs e)
+        {
+            stackPanel.CurrentScrollIndex += 4;
         }
 
         #endregion Methods

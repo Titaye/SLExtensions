@@ -32,20 +32,20 @@
         #region Methods
 
         [TestMethod]
-        public void ConvertTestFQN()
-        {
-            var testee = GetConvertTestsTestee();
-            var expected = "Fully Qualified";
-            object actual = testee.Convert(new CustomType(), typeof(object), null, System.Threading.Thread.CurrentThread.CurrentUICulture);
-            Assert.AreEqual(expected, actual);
-        }
-
-        [TestMethod]
         public void ConvertTestFallBack()
         {
             var testee = GetConvertTestsTestee();
             var expected = "FallBack";
             object actual = testee.Convert("not existing key", typeof(object), null, System.Threading.Thread.CurrentThread.CurrentUICulture);
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void ConvertTestFQN()
+        {
+            var testee = GetConvertTestsTestee();
+            var expected = "Fully Qualified";
+            object actual = testee.Convert(new CustomType(), typeof(object), null, System.Threading.Thread.CurrentThread.CurrentUICulture);
             Assert.AreEqual(expected, actual);
         }
 
@@ -131,20 +131,20 @@
         }
 
         [TestMethod]
-        public void DetermineResourceKeyBehaviorTestIProvideResourceKey()
-        {
-            var expected = ResourceSelectorBehavior.ValueAsKey;
-            var testee = new ResourceSelector();
-            var actual = ResourceSelector.DetermineResourceKeyBehavior(new TestImplementor());
-            Assert.AreEqual(expected, actual);
-        }
-
-        [TestMethod]
         public void DetermineResourceKeyBehaviorTestInt32()
         {
             var expected = ResourceSelectorBehavior.ValueAsKey;
             var testee = new ResourceSelector();
             var actual = ResourceSelector.DetermineResourceKeyBehavior(12);
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void DetermineResourceKeyBehaviorTestIProvideResourceKey()
+        {
+            var expected = ResourceSelectorBehavior.ValueAsKey;
+            var testee = new ResourceSelector();
+            var actual = ResourceSelector.DetermineResourceKeyBehavior(new TestImplementor());
             Assert.AreEqual(expected, actual);
         }
 

@@ -20,9 +20,6 @@
     {
         #region Fields
 
-        private static readonly Regex srtRegex = new Regex(srtPattern, RegexOptions.Multiline | RegexOptions.ExplicitCapture);
-        private static readonly Regex srtSplitRegex = new Regex(srtSplitPattern, RegexOptions.Multiline | RegexOptions.ExplicitCapture);
-
         private const string contentGroupName = "content";
         private const string endGroupName = "end";
         private const string srtPattern = @"^\d+\r?\n(?<start>\d\d:\d\d:\d\d(,\d\d\d)?)\s--\>\s(?<end>\d\d:\d\d:\d\d(,\d\d\d)?)\r?\n(?<content>(.+\n?)*)";
@@ -30,6 +27,9 @@
 
         //private const string strPattern = @"^\d+\r?\n((?<time>\d\d:\d\d:\d\d(,\d\d\d)?)(?:\s--\>\s)?){2}\r?\n(?<content>.*)(\r?\n){2}";
         private const string startGroupName = "start";
+
+        private static readonly Regex srtRegex = new Regex(srtPattern, RegexOptions.Multiline | RegexOptions.ExplicitCapture);
+        private static readonly Regex srtSplitRegex = new Regex(srtSplitPattern, RegexOptions.Multiline | RegexOptions.ExplicitCapture);
 
         #endregion Fields
 

@@ -4,12 +4,15 @@
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Media;
+    using System.Windows.Media.Imaging;
+
     using SLExtensions.Controls;
     using SLExtensions.Imaging;
-    using System.Windows.Media.Imaging;
 
     public partial class PageDynamicImaging : UserControl
     {
+        #region Constructors
+
         public PageDynamicImaging()
         {
             InitializeComponent();
@@ -24,5 +27,6 @@
             imgTesting.Source = bmp;
         }
 
+        #endregion Constructors
     }
 }

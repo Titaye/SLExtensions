@@ -82,10 +82,13 @@
     <Reference Include="System.Windows.Browser" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Clipper.cs" />
     <Compile Include="ColorPicker\ColorPicker.cs" />
     <Compile Include="ColorPicker\ColorSpace.cs" />
     <Compile Include="ColorPicker\SelectedColorEventArgs.cs" />
     <Compile Include="ControlExtensions\ContentPresenterExtensions.cs" />
+    <Compile Include="ControlExtensions\MarginExtensions.cs" />
+    <Compile Include="ControlExtensions\SliderExtensions.cs" />
     <Compile Include="Layout\AnimatingFillPanel.cs" />
     <Compile Include="Layout\AnimatingTilePanel.cs" />
     <Compile Include="Animation\AnimationWrapper.cs" />
@@ -105,6 +108,8 @@
     <Compile Include="CoolMenu\ICoolMenuBehavior.cs" />
     <Compile Include="CoolMenu\SelectedMenuItemArgs.cs" />
     <Compile Include="CursorService.cs" />
+    <Compile Include="Range2D\Range2DBase.cs" />
+    <Compile Include="Range2D\Slider2D.cs" />
     <Compile Include="TreeView\DataTemplateSelector.cs" />
     <Compile Include="Decorator.cs" />
     <Compile Include="Sliders\DiscreteSlider.cs" />
@@ -182,6 +187,7 @@
     <Compile Include="VirtualizedItems\VirtualizedListBox.cs" />
     <Compile Include="VirtualizedItems\VirtualizedListBoxItem.cs" />
     <Compile Include="VirtualizedItems\VirtualizedStackPanel.cs" />
+    <Compile Include="VisualStates.cs" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="themes\generic.xaml">

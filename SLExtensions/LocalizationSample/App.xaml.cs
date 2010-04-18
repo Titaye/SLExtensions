@@ -57,11 +57,6 @@
             _rootProxy.Children.Add(new ApplicationWithCommonAndLocalizedResources.Page());
         }
 
-        void App_Progress(object sender, BootstrapEventArgs e)
-        {
-            _progressbar.Value = e.OverallProgress;
-        }
-
         private void Application_Exit(object sender, EventArgs e)
         {
         }
@@ -100,6 +95,11 @@
                 e.Handled = true;
                 Deployment.Current.Dispatcher.BeginInvoke(delegate { ReportErrorToDOM(e); });
             }
+        }
+
+        void App_Progress(object sender, BootstrapEventArgs e)
+        {
+            _progressbar.Value = e.OverallProgress;
         }
 
         private void ReportErrorToDOM(ApplicationUnhandledExceptionEventArgs e)

@@ -91,6 +91,16 @@
             Synchronize();
         }
 
+        private void appendForSynchro(SharepointList spl)
+        {
+            if (spl != null
+                //&& (spl.LastSyncTime == null || (DateTime.Now - spl.LastSyncTime) > SyncRefresh)
+                && spl.Name != SynchronizingListName)
+            {
+                pendingSynchro.Enqueue(spl);
+            }
+        }
+
         private void EndSynchronize()
         {
             SynchronizingListName = null;
@@ -168,7 +178,7 @@
 
                 BackgroundWorker worker = new BackgroundWorker();
                 worker.DoWork += delegate
-                {                    
+                {
                     SharepointSite.DownloadListChanges(spl, (success, list, data) =>
                     {
                         inListSynchroAsync = false;
@@ -189,16 +199,6 @@
                     });
                 };
                 worker.RunWorkerAsync();
-            }
-        }
-
-        private void appendForSynchro(SharepointList spl)
-        {
-            if (spl != null
-                //&& (spl.LastSyncTime == null || (DateTime.Now - spl.LastSyncTime) > SyncRefresh)
-                && spl.Name != SynchronizingListName)
-            {
-                pendingSynchro.Enqueue(spl);
             }
         }
 

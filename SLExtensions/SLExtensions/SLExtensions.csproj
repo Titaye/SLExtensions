@@ -165,7 +165,7 @@
     <Compile Include="IO\Compression\Zip\ZipInputStream.cs" />
     <Compile Include="IO\Compression\Zip\ZipNameTransform.cs" />
     <Compile Include="IO\Compression\Zip\ZipOutputStream.cs" />
-    <Compile Include="LoginProvider\Infocard.cs" />
+    <Compile Include="LogOnProvider\Infocard.cs" />
     <Compile Include="Markup\MarkupContent.cs" />
     <Compile Include="Markup\MarkupType.cs" />
     <Compile Include="NotifyingObject.cs" />
@@ -184,7 +184,7 @@
     <Compile Include="Extensions\StringBuilderExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Markup\StringReaderExtensions.cs" />
-    <Compile Include="Text\Iso8859Helper.cs" />
+    <Compile Include="Text\Iso8859Encoding.cs" />
     <Compile Include="Text\Parsers\ILexer.cs" />
     <Compile Include="Text\Parsers\IToken.cs" />
     <Compile Include="Text\Parsers\Lexer.cs" />

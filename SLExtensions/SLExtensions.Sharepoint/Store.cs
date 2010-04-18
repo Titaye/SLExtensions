@@ -23,15 +23,13 @@
     {
         #region Fields
 
-        private static IsolatedStorageFile _storage;
         private static Dictionary<string, SharepointList> cache = new Dictionary<string, SharepointList>();
-
         private static object storageSync = new object();
+        private static IsolatedStorageFile _storage;
 
         #endregion Fields
 
         #region Properties
-
 
         public static IsolatedStorageFile Storage
         {

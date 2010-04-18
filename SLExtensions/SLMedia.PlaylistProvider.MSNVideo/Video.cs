@@ -65,19 +65,19 @@
     //  </usage>
     //  </video>
     public class Video : SLMedia.Video.VideoItem
-    { 
+    {
         #region Fields
 
         public const string NamespaceMsnVideoCatalog = "urn:schemas-microsoft-com:msnvideo:catalog";
 
         private const string UriSchemeMMS = "mms://";
 
+        private IEnumerable<File> files;
+        private IEnumerable<VideoFile> videos;
+
         #endregion Fields
 
         #region Properties
-
-
-        private IEnumerable<File> files;
 
         public IEnumerable<File> Files
         {
@@ -100,7 +100,6 @@
             }
         }
 
-        
         [ScriptableMemberAttribute]
         public string LCID
         {
@@ -133,8 +132,6 @@
             get;
             set;
         }
-
-        private IEnumerable<VideoFile> videos;
 
         public IEnumerable<VideoFile> Videos
         {

@@ -72,16 +72,6 @@ namespace SLExtensions.Controls.Layers
                 new PropertyMetadata((s, e) => ((LayerHost)s).OnLayerSourcesChanged((ObservableCollection<LayerSource>)e.OldValue, (ObservableCollection<LayerSource>)e.NewValue)));
 
         /// <summary>
-        /// Zoom dependency propety
-        /// </summary>
-        private static readonly DependencyProperty ZoomProperty = 
-            DependencyProperty.Register(
-                "Zoom",
-                typeof(double),
-                typeof(LayerHost),
-                new PropertyMetadata((s, e) => ((LayerHost)s).OnZoomChanged((double)e.OldValue, (double)e.NewValue)));
-
-        /// <summary>
         /// Template layers host element name
         /// </summary>
         private const string LayersHostElementName = "LayersHost";
@@ -90,6 +80,16 @@ namespace SLExtensions.Controls.Layers
         /// Template root element name
         /// </summary>
         private const string RootElementName = "RootElement";
+
+        /// <summary>
+        /// Zoom dependency propety
+        /// </summary>
+        private static readonly DependencyProperty ZoomProperty = 
+            DependencyProperty.Register(
+                "Zoom",
+                typeof(double),
+                typeof(LayerHost),
+                new PropertyMetadata((s, e) => ((LayerHost)s).OnZoomChanged((double)e.OldValue, (double)e.NewValue)));
 
         /// <summary>
         /// Clip geometry
@@ -714,6 +714,14 @@ namespace SLExtensions.Controls.Layers
         }
 
         /// <summary>
+        /// Loads the layers.
+        /// </summary>
+        private void LoadLayers()
+        {
+            this.AddLayerDefinitions(this.LayerDefinitions);
+        }
+
+        /// <summary>
         /// Loads the layer sources.
         /// </summary>
         private void LoadLayerSources()
@@ -722,14 +730,6 @@ namespace SLExtensions.Controls.Layers
             {
                 this.AddLayerSource(item);
             }
-        }
-
-        /// <summary>
-        /// Loads the layers.
-        /// </summary>
-        private void LoadLayers()
-        {
-            this.AddLayerDefinitions(this.LayerDefinitions);
         }
 
         /// <summary>

@@ -36,7 +36,6 @@
 // obligated to do so.  If you do not wish to do so, delete this
 // exception statement from your version.
 //
-
 namespace SLExtensions.IO.Compression.Zip.Encryption
 {
     using System;

@@ -116,18 +116,6 @@ namespace SLExtensions.Controls
         protected const string ScriptVariableIframeDocument = "iframeDocument";
         protected const string ScriptVariableIframeDocumentFocusable = "iframeDocumentFocusable";
 
-        private HtmlEditorMenuItem _currentExpandedMenuItem = HtmlEditorMenuItem.None;
-        HtmlElement _htmlAnchorFocusElement = null;
-        HtmlElement _htmlDivContainerElement = null;
-        HtmlDocument _htmlIframeDocument = null;
-        HtmlElement _htmlIframeEditorElement = null;
-        HtmlWindow _htmlIframeWindow = null;
-        bool _iframeHasFocus = false;
-        bool _iframeInitialized = false;
-        private string _initialText = string.Empty;
-        bool _isDisposed = false;
-        Guid _uniqueID;
-
         //private string text;
         //public string Text
         //{
@@ -148,6 +136,17 @@ namespace SLExtensions.Controls
         //}
         private bool isReadOnly;
         DispatcherTimer timerInitialize = null;
+        private HtmlEditorMenuItem _currentExpandedMenuItem = HtmlEditorMenuItem.None;
+        HtmlElement _htmlAnchorFocusElement = null;
+        HtmlElement _htmlDivContainerElement = null;
+        HtmlDocument _htmlIframeDocument = null;
+        HtmlElement _htmlIframeEditorElement = null;
+        HtmlWindow _htmlIframeWindow = null;
+        bool _iframeHasFocus = false;
+        bool _iframeInitialized = false;
+        private string _initialText = string.Empty;
+        bool _isDisposed = false;
+        Guid _uniqueID;
 
         #endregion Fields
 

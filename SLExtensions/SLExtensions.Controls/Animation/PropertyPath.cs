@@ -10,8 +10,9 @@
     using System.Windows.Input;
     using System.Windows.Media;
     using System.Windows.Media.Animation;
-    using sysPropertyPath = System.Windows.PropertyPath;
     using System.Windows.Shapes;
+
+    using sysPropertyPath = System.Windows.PropertyPath;
 
     public class PropertyPath
     {

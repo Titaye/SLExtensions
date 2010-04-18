@@ -1,60 +1,76 @@
-﻿//---------------------------------------------------------------------
+﻿#region Header
+
+//---------------------------------------------------------------------
 // <copyright file="TouchHelper.cs" company="Microsoft">
 //    Copyright (c) Microsoft Corporation.  All rights reserved.
 // </copyright>
 //---------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using System.Windows;
-using System.Windows.Input;
-using System.Windows.Media;
+#endregion Header
 
 namespace SLExtensions.Manipulation
 {
-    /// <summary>
-    /// Passes data for TouchReported event.
-    /// </summary>
-    public class TouchReportedEventArgs : EventArgs
-    {
-        internal TouchReportedEventArgs(IEnumerable<TouchPoint> touchPoints)
-        {
-            TouchPoints = touchPoints;
-        }
-
-        /// <summary>
-        /// Returns reported touch points. 
-        /// </summary>
-        public IEnumerable<TouchPoint> TouchPoints { get; private set; }
-    }
-
+    using System;
+    using System.Collections.Generic;
+    using System.Windows;
+    using System.Windows.Input;
+    using System.Windows.Media;
 
     /// <summary>
     /// Passes data for touch events.
     /// </summary>
     public class TouchEventArgs : EventArgs
     {
+        #region Constructors
+
         internal TouchEventArgs(TouchPoint touchPoint)
         {
             TouchPoint = touchPoint;
         }
 
+        #endregion Constructors
+
+        #region Properties
+
         /// <summary>
         /// Returns the associated touch point.
         /// </summary>
-        public TouchPoint TouchPoint { get; private set; }
-    }
+        public TouchPoint TouchPoint
+        {
+            get; private set;
+        }
 
+        #endregion Properties
+    }
 
     /// <summary>
     /// A group of touch event handlers.
     /// </summary>
     public class TouchHandlers
     {
-        public EventHandler<TouchEventArgs> TouchDown { get; set; }
-        public EventHandler<TouchEventArgs> CapturedTouchUp { get; set; }
-        public EventHandler<TouchReportedEventArgs> CapturedTouchReported { get; set; }
-        public EventHandler<TouchEventArgs> LostTouchCapture { get; set; }
+        #region Properties
+
+        public EventHandler<TouchReportedEventArgs> CapturedTouchReported
+        {
+            get; set;
+        }
+
+        public EventHandler<TouchEventArgs> CapturedTouchUp
+        {
+            get; set;
+        }
+
+        public EventHandler<TouchEventArgs> LostTouchCapture
+        {
+            get; set;
+        }
+
+        public EventHandler<TouchEventArgs> TouchDown
+        {
+            get; set;
+        }
+
+        #endregion Properties
     }
 
     /// <summary>
@@ -63,24 +79,29 @@ namespace SLExtensions.Manipulation
     /// </summary>
     public static class TouchHelper
     {
-        // indicates if touch input is enabled or not
-        private static bool isEnabled;
-
-        // current event handlers
-        private static readonly Dictionary<UIElement, TouchHandlers> currentHandlers =
-            new Dictionary<UIElement, TouchHandlers>();
-
-        private static readonly Dictionary<UIElement, List<EventHandler<TouchReportedEventArgs>>> previewHandlers =
-            new Dictionary<UIElement, List<EventHandler<TouchReportedEventArgs>>>();
+        #region Fields
 
         // current captured touch devices (touchDevice.Id -> capturing UIElement)
         private static readonly Dictionary<int, UIElement> currentCaptures = new Dictionary<int, UIElement>();
+
+        // current event handlers
+        private static readonly Dictionary<UIElement, TouchHandlers> currentHandlers = 
+            new Dictionary<UIElement, TouchHandlers>();
 
         // current touch points (for captured touch devices only)
         private static readonly Dictionary<int, TouchPoint> currentTouchPoints = new Dictionary<int, TouchPoint>();
 
         // an empty array of TouchPoints
         private static readonly TouchPoint[] emptyTouchPoints = new TouchPoint[0];
+        private static readonly Dictionary<UIElement, List<EventHandler<TouchReportedEventArgs>>> previewHandlers = 
+            new Dictionary<UIElement, List<EventHandler<TouchReportedEventArgs>>>();
+
+        // indicates if touch input is enabled or not
+        private static bool isEnabled;
+
+        #endregion Fields
+
+        #region Properties
 
         /// <summary>
         /// Returns true if there is at least one touch over the root. Otheriwse - false.
@@ -93,10 +114,39 @@ namespace SLExtensions.Manipulation
             }
         }
 
-        public static void ClearAllCaptures()
+        #endregion Properties
+
+        #region Methods
+
+        /// <summary>
+        /// Adds event handlers for the given UIElement. Note: the method overrides all touch handler for the given element.
+        /// </summary>
+        /// <param name="element"></param>
+        /// <param name="handlers"></param>
+        public static void AddHandlers(UIElement element, TouchHandlers handlers)
         {
-            currentCaptures.Clear();
-            currentTouchPoints.Clear();
+            if (element == null)
+            {
+                throw new ArgumentNullException("element");
+            }
+
+            if (handlers == null)
+            {
+                throw new ArgumentNullException("handlers");
+            }
+
+            currentHandlers[element] = handlers;
+        }
+
+        public static void AddPreviewCapturedTouchReported(UIElement element, EventHandler<TouchReportedEventArgs> handler)
+        {
+            List<EventHandler<TouchReportedEventArgs>> handlers;
+            if (!previewHandlers.TryGetValue(element, out handlers))
+            {
+                handlers = new List<EventHandler<TouchReportedEventArgs>>();
+                previewHandlers.Add(element, handlers);
+            }
+            handlers.Add(handler);
         }
 
         /// <summary>
@@ -149,61 +199,11 @@ namespace SLExtensions.Manipulation
             return true;
         }
 
-        /// <summary>
-        /// Adds event handlers for the given UIElement. Note: the method overrides all touch handler for the given element.
-        /// </summary>
-        /// <param name="element"></param>
-        /// <param name="handlers"></param>
-        public static void AddHandlers(UIElement element, TouchHandlers handlers)
+        public static void ClearAllCaptures()
         {
-            if (element == null)
-            {
-                throw new ArgumentNullException("element");
-            }
-
-            if (handlers == null)
-            {
-                throw new ArgumentNullException("handlers");
-            }
-
-            currentHandlers[element] = handlers;
+            currentCaptures.Clear();
+            currentTouchPoints.Clear();
         }
-
-        /// <summary>
-        /// Removes event handlers from the given element.
-        /// </summary>
-        /// <param name="element"></param>
-        public static void RemoveHandlers(UIElement element)
-        {
-            if (element == null)
-            {
-                throw new ArgumentNullException("element");
-            }
-
-            currentHandlers.Remove(element);
-        }
-
-        public static void AddPreviewCapturedTouchReported(UIElement element, EventHandler<TouchReportedEventArgs> handler)
-        {
-            List<EventHandler<TouchReportedEventArgs>> handlers;
-            if (!previewHandlers.TryGetValue(element, out handlers))
-            {
-                handlers = new List<EventHandler<TouchReportedEventArgs>>();
-                previewHandlers.Add(element, handlers);
-            }
-            handlers.Add(handler);
-        }
-
-        public static void RemovePreviewCapturedTouchReported(UIElement element, EventHandler<TouchReportedEventArgs> handler)
-        {
-            List<EventHandler<TouchReportedEventArgs>> handlers;
-            if (!previewHandlers.TryGetValue(element, out handlers))
-            {
-                return;
-            }
-            handlers.Remove(handler);
-        }
-
 
         /// <summary>
         /// Enables or disables touch input.
@@ -230,11 +230,27 @@ namespace SLExtensions.Manipulation
         }
 
         /// <summary>
-        /// Enables touch input.
+        /// Removes event handlers from the given element.
         /// </summary>
-        private static void EnableInput()
+        /// <param name="element"></param>
+        public static void RemoveHandlers(UIElement element)
         {
-            Touch.FrameReported += TouchFrameReported;
+            if (element == null)
+            {
+                throw new ArgumentNullException("element");
+            }
+
+            currentHandlers.Remove(element);
+        }
+
+        public static void RemovePreviewCapturedTouchReported(UIElement element, EventHandler<TouchReportedEventArgs> handler)
+        {
+            List<EventHandler<TouchReportedEventArgs>> handlers;
+            if (!previewHandlers.TryGetValue(element, out handlers))
+            {
+                return;
+            }
+            handlers.Remove(handler);
         }
 
         /// <summary>
@@ -248,61 +264,57 @@ namespace SLExtensions.Manipulation
             currentTouchPoints.Clear();
         }
 
+        /// <summary>
+        /// Enables touch input.
+        /// </summary>
+        private static void EnableInput()
+        {
+            Touch.FrameReported += TouchFrameReported;
+        }
 
         /// <summary>
-        /// Handles TouchFrameReported event and raise TouchDown/Up/Move events.
+        /// Performs hit testing, find the first element in the parent chain that has TouchDown event handler and
+        /// raises TouchTouch event.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private static void TouchFrameReported(object sender, TouchFrameEventArgs e)
+        /// <param name="root"></param>
+        /// <param name="touchPoint"></param>
+        private static void HitTestAndRaiseDownEvent(UIElement root, TouchPoint touchPoint)
         {
-            // get te root
-            UIElement root = Application.Current.RootVisual;
-            if (root == null)
+            foreach (UIElement element in InputHitTest(root, touchPoint.Position))
             {
-                return;
-            }
-
-            foreach (TouchPoint touchPoint in e.GetTouchPoints(null))
-            {
-                int id = touchPoint.TouchDevice.Id;
-
-                // check if the touchDevice is captured or not.
-                UIElement captured;
-                currentCaptures.TryGetValue(id, out captured);
-
-                switch (touchPoint.Action)
+                TouchHandlers handlers;
+                if (currentHandlers.TryGetValue(element, out handlers))
                 {
-                    // TouchDown
-                    case TouchAction.Down:
-                        HitTestAndRaiseDownEvent(root, touchPoint);
-                        currentTouchPoints[id] = touchPoint;
+                    EventHandler<TouchEventArgs> handler = handlers.TouchDown;
+                    if (handler != null)
+                    {
+                        // call the first found handler and break
+                        handler(element, new TouchEventArgs(touchPoint));
                         break;
-
-                    // TouchUp
-                    case TouchAction.Up:
-                        // handle only captured touches
-                        if (captured != null)
-                        {
-                            RaiseUpEvent(captured, touchPoint);
-
-                            // release capture
-                            Capture(touchPoint.TouchDevice, null);
-                            captured = null;
-                        }
-                        currentTouchPoints.Remove(id);
-                        break;
-
-                    // TouchMove
-                    case TouchAction.Move:
-                        // just remember the new touchPoint, the event will be raised in bulk later
-                        currentTouchPoints[id] = touchPoint;
-                        break;
+                    }
                 }
             }
+        }
 
-            // raise CapturedReportEvents
-            RaiseCapturedReportEvent();
+        /// <summary>
+        /// Performs hit testing and returns a collection of UIElement the given point is within.
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="position"></param>
+        /// <returns></returns>
+        private static IEnumerable<UIElement> InputHitTest(UIElement root, Point position)
+        {
+            foreach (UIElement element in VisualTreeHelper.FindElementsInHostCoordinates(position, root))
+            {
+                yield return element;
+
+                for (UIElement parent = VisualTreeHelper.GetParent(element) as UIElement;
+                     parent != null;
+                     parent = VisualTreeHelper.GetParent(parent) as UIElement)
+                {
+                    yield return parent;
+                }
+            }
         }
 
         /// <summary>
@@ -380,51 +392,6 @@ namespace SLExtensions.Manipulation
         }
 
         /// <summary>
-        /// Performs hit testing, find the first element in the parent chain that has TouchDown event handler and
-        /// raises TouchTouch event.
-        /// </summary>
-        /// <param name="root"></param>
-        /// <param name="touchPoint"></param>
-        private static void HitTestAndRaiseDownEvent(UIElement root, TouchPoint touchPoint)
-        {
-            foreach (UIElement element in InputHitTest(root, touchPoint.Position))
-            {
-                TouchHandlers handlers;
-                if (currentHandlers.TryGetValue(element, out handlers))
-                {
-                    EventHandler<TouchEventArgs> handler = handlers.TouchDown;
-                    if (handler != null)
-                    {
-                        // call the first found handler and break
-                        handler(element, new TouchEventArgs(touchPoint));
-                        break;
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// Performs hit testing and returns a collection of UIElement the given point is within.
-        /// </summary>
-        /// <param name="root"></param>
-        /// <param name="position"></param>
-        /// <returns></returns>
-        private static IEnumerable<UIElement> InputHitTest(UIElement root, Point position)
-        {
-            foreach (UIElement element in VisualTreeHelper.FindElementsInHostCoordinates(position, root))
-            {
-                yield return element;
-
-                for (UIElement parent = VisualTreeHelper.GetParent(element) as UIElement;
-                     parent != null;
-                     parent = VisualTreeHelper.GetParent(parent) as UIElement)
-                {
-                    yield return parent;
-                }
-            }
-        }
-
-        /// <summary>
         /// Raises TouchUp event.
         /// </summary>
         /// <param name="element"></param>
@@ -441,5 +408,90 @@ namespace SLExtensions.Manipulation
                 }
             }
         }
+
+        /// <summary>
+        /// Handles TouchFrameReported event and raise TouchDown/Up/Move events.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private static void TouchFrameReported(object sender, TouchFrameEventArgs e)
+        {
+            // get te root
+            UIElement root = Application.Current.RootVisual;
+            if (root == null)
+            {
+                return;
+            }
+
+            foreach (TouchPoint touchPoint in e.GetTouchPoints(null))
+            {
+                int id = touchPoint.TouchDevice.Id;
+
+                // check if the touchDevice is captured or not.
+                UIElement captured;
+                currentCaptures.TryGetValue(id, out captured);
+
+                switch (touchPoint.Action)
+                {
+                    // TouchDown
+                    case TouchAction.Down:
+                        HitTestAndRaiseDownEvent(root, touchPoint);
+                        currentTouchPoints[id] = touchPoint;
+                        break;
+
+                    // TouchUp
+                    case TouchAction.Up:
+                        // handle only captured touches
+                        if (captured != null)
+                        {
+                            RaiseUpEvent(captured, touchPoint);
+
+                            // release capture
+                            Capture(touchPoint.TouchDevice, null);
+                            captured = null;
+                        }
+                        currentTouchPoints.Remove(id);
+                        break;
+
+                    // TouchMove
+                    case TouchAction.Move:
+                        // just remember the new touchPoint, the event will be raised in bulk later
+                        currentTouchPoints[id] = touchPoint;
+                        break;
+                }
+            }
+
+            // raise CapturedReportEvents
+            RaiseCapturedReportEvent();
+        }
+
+        #endregion Methods
+    }
+
+    /// <summary>
+    /// Passes data for TouchReported event.
+    /// </summary>
+    public class TouchReportedEventArgs : EventArgs
+    {
+        #region Constructors
+
+        internal TouchReportedEventArgs(IEnumerable<TouchPoint> touchPoints)
+        {
+            TouchPoints = touchPoints;
+        }
+
+        #endregion Constructors
+
+        #region Properties
+
+        /// <summary>
+        /// Returns reported touch points. 
+        /// </summary>
+        public IEnumerable<TouchPoint> TouchPoints
+        {
+            get; private set;
+        }
+
+        #endregion Properties
     }
 }

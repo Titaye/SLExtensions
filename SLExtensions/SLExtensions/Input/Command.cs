@@ -20,6 +20,12 @@ namespace SLExtensions.Input
     /// </summary>
     public class Command : ICommand
     {
+        #region Fields
+
+        private bool lastCanExecute = false;
+
+        #endregion Fields
+
         #region Constructors
 
         public Command()
@@ -65,6 +71,8 @@ namespace SLExtensions.Input
         /// </summary>
         public event EventHandler<CanExecuteEventArgs> CanExecute;
 
+        public event EventHandler CanExecuteChanged;
+
         /// <summary>
         /// Occurs when the command is executed.
         /// </summary>
@@ -109,6 +117,11 @@ namespace SLExtensions.Input
             }
         }
 
+        bool ICommand.CanExecute(object parameter)
+        {
+            return RaiseCanExecute(parameter);
+        }
+
         /// <summary>
         /// Raises the can execute event.
         /// </summary>
@@ -132,23 +145,16 @@ namespace SLExtensions.Input
         }
 
         #endregion Methods
-
-        #region ICommand Members
-
-        private bool lastCanExecute = false;
-
-        bool ICommand.CanExecute(object parameter)
-        {
-            return RaiseCanExecute(parameter);
-        }
-
-        public event EventHandler CanExecuteChanged;
-
-        #endregion
     }
 
     public class Command<T> : ICommand
     {
+        #region Fields
+
+        private bool lastCanExecute = false;
+
+        #endregion Fields
+
         #region Constructors
 
         public Command()
@@ -201,6 +207,8 @@ namespace SLExtensions.Input
         /// </summary>
         public event EventHandler<CanExecuteEventArgs<T>> CanExecute;
 
+        public event EventHandler CanExecuteChanged;
+
         /// <summary>
         /// Occurs when the command is executed.
         /// </summary>
@@ -236,6 +244,30 @@ namespace SLExtensions.Input
             }
         }
 
+        bool ICommand.CanExecute(object parameter)
+        {
+            if (parameter != null &&
+                !typeof(T).IsAssignableFrom(parameter.GetType()))
+            {
+                throw new ArgumentException("parameter is not cannot be converter to (" + typeof(T) + ")", "parameter");
+            }
+            T prm = (T)parameter;
+
+            return RaiseCanExecute(prm);
+        }
+
+        void ICommand.Execute(object parameter)
+        {
+            if (parameter != null &&
+                !typeof(T).IsAssignableFrom(parameter.GetType()))
+            {
+                throw new ArgumentException("parameter is not cannot be converter to (" + typeof(T) + ")", "parameter");
+            }
+            T prm = (T)parameter;
+
+            this.Execute(prm);
+        }
+
         /// <summary>
         /// Raises the can execute event.
         /// </summary>
@@ -259,37 +291,5 @@ namespace SLExtensions.Input
         }
 
         #endregion Methods
-
-        #region ICommand Members
-
-        private bool lastCanExecute = false;
-
-        void ICommand.Execute(object parameter)
-        {
-            if (parameter != null &&
-                !typeof(T).IsAssignableFrom(parameter.GetType()))
-            {
-                throw new ArgumentException("parameter is not cannot be converter to (" + typeof(T) + ")", "parameter");
-            }
-            T prm = (T)parameter;
-
-            this.Execute(prm);
-        }
-
-        bool ICommand.CanExecute(object parameter)
-        {
-            if (parameter != null &&
-                !typeof(T).IsAssignableFrom(parameter.GetType()))
-            {
-                throw new ArgumentException("parameter is not cannot be converter to (" + typeof(T) + ")", "parameter");
-            }
-            T prm = (T)parameter;
-
-            return RaiseCanExecute(prm);
-        }
-
-        public event EventHandler CanExecuteChanged;
-
-        #endregion
     }
 }

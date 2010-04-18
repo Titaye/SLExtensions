@@ -1,20 +1,22 @@
-﻿using System;
-using System.Net;
-using System.Linq;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Ink;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Animation;
-using System.Windows.Shapes;
-using System.Collections.Generic;
-
-namespace SLExtensions
+﻿namespace SLExtensions
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Net;
+    using System.Windows;
+    using System.Windows.Controls;
+    using System.Windows.Documents;
+    using System.Windows.Ink;
+    using System.Windows.Input;
+    using System.Windows.Media;
+    using System.Windows.Media.Animation;
+    using System.Windows.Shapes;
+
     public static class StringExtensions
     {
+        #region Methods
+
         public static string[] Split(this string input, char[] splitChar, int max)
         {
             if (input == null)
@@ -45,5 +47,7 @@ namespace SLExtensions
 
             return result;
         }
+
+        #endregion Methods
     }
 }

@@ -100,7 +100,7 @@
 
                 context.ClickedImageIndex = -1;
             };
-            
+
             msi.MouseLeave += delegate(object sender, MouseEventArgs e)
             {
                 if (mouseButtonPressed)
@@ -239,13 +239,13 @@
             set;
         }
 
-        public bool IsZoomOnClickEnabled
+        public bool IsZoomForceEnabled
         {
             get;
             set;
         }
 
-        public bool IsZoomForceEnabled
+        public bool IsZoomOnClickEnabled
         {
             get;
             set;
@@ -296,10 +296,6 @@
             }
         }
 
-        void Owner_ViewportChanged(object sender, RoutedEventArgs e)
-        {
-        }
-
         void msi_ImageOpenSucceeded(object sender, RoutedEventArgs e)
         {
             ImagesToShow.Clear();
@@ -310,6 +306,10 @@
                 needArrangeOnFistMotion = true;
                 Owner.UseSprings = false;
             }
+        }
+
+        void Owner_ViewportChanged(object sender, RoutedEventArgs e)
+        {
         }
 
         #endregion Methods

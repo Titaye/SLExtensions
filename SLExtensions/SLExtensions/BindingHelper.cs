@@ -13,7 +13,21 @@
 
     public class BindingHelper : FrameworkElement
     {
-        #region Value
+        #region Fields
+
+        /// <summary>
+        /// Value depedency property.
+        /// </summary>
+        public static readonly DependencyProperty ValueProperty = 
+            DependencyProperty.Register(
+                "Value",
+                typeof(object),
+                typeof(BindingHelper),
+                null);
+
+        #endregion Fields
+
+        #region Properties
 
         public object Value
         {
@@ -28,16 +42,6 @@
             }
         }
 
-        /// <summary>
-        /// Value depedency property.
-        /// </summary>
-        public static readonly DependencyProperty ValueProperty =
-            DependencyProperty.Register(
-                "Value",
-                typeof(object),
-                typeof(BindingHelper),
-                null);
-        #endregion Value
-
+        #endregion Properties
     }
 }

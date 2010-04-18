@@ -73,10 +73,6 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.Web.Media.Diagnostics, Version=2.4.204.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Libs\Microsoft.Web.Media.Diagnostics.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.Web.Media.SmoothStreaming, Version=2.4.204.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Libs\Microsoft.Web.Media.SmoothStreaming.dll</HintPath>

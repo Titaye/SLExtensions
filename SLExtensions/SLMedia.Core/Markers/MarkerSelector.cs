@@ -21,6 +21,7 @@
         private IMarker activeMarker;
         private bool isActive;
         private bool isEnabled;
+        private IList<IMarker> markers;
 
         #endregion Fields
 
@@ -92,7 +93,6 @@
             }
         }
 
-        private IList<IMarker> markers;
         public IList<IMarker> Markers
         {
             get { return this.markers; }

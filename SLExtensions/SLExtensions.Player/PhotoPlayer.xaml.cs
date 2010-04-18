@@ -53,10 +53,6 @@
             return size;
         }
 
-        private void Image_ImageFailed(object sender, ExceptionRoutedEventArgs e)
-        {
-        }
-
         void gridDescription_MouseEnter(object sender, MouseEventArgs e)
         {
             Storyboard sb = new Storyboard();
@@ -79,6 +75,10 @@
             anim.To = descriptionDesignMargin.Top;
             anim.Duration = new Duration(TimeSpan.FromMilliseconds(200));
             sb.Begin();
+        }
+
+        private void Image_ImageFailed(object sender, ExceptionRoutedEventArgs e)
+        {
         }
 
         #endregion Methods

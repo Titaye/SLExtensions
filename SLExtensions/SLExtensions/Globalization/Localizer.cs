@@ -1,9 +1,12 @@
 ﻿namespace SLExtensions.Globalization
 {
     using System;
+    using System.Collections;
     using System.Collections.Generic;
-    using System.Net;
+    using System.ComponentModel;
+    using System.Globalization;
     using System.Linq;
+    using System.Net;
     using System.Resources;
     using System.Windows;
     using System.Windows.Controls;
@@ -13,28 +16,25 @@
     using System.Windows.Media;
     using System.Windows.Media.Animation;
     using System.Windows.Shapes;
-    using System.Collections;
-    using System.Globalization;
-    using System.ComponentModel;
 
     public class Localizer
     {
-        static Localizer()
-        {
-            CachedResourceNames = new Dictionary<ResourceManager, Dictionary<string, string[]>>();
-        }
         #region Fields
 
         // Using a DependencyProperty as the backing store for Text.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty ContentKeyProperty =
+        public static readonly DependencyProperty ContentKeyProperty = 
             DependencyProperty.RegisterAttached("ContentKey", typeof(string), typeof(Localizer), new PropertyMetadata(OnPropertyChanged));
+
+        // Using a DependencyProperty as the backing store for Key.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty KeyProperty = 
+            DependencyProperty.RegisterAttached("Key", typeof(string), typeof(Localizer), new PropertyMetadata(OnPropertyChanged));
 
         // Using a DependencyProperty as the backing store for Localizer.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty LocalizerProperty = 
             DependencyProperty.RegisterAttached("Localizer", typeof(Localizer), typeof(Localizer), new PropertyMetadata(LocalizerChangedCallback));
 
         // Using a DependencyProperty as the backing store for ResourceManager.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty ResourceManagerProperty =
+        public static readonly DependencyProperty ResourceManagerProperty = 
             DependencyProperty.RegisterAttached("ResourceManager", typeof(ResourceManager), typeof(Localizer), new PropertyMetadata(OnPropertyChanged));
 
         // Using a DependencyProperty as the backing store for Text.  This enables animation, styling, binding, etc...
@@ -42,7 +42,7 @@
             DependencyProperty.RegisterAttached("TextKey", typeof(string), typeof(Localizer), new PropertyMetadata(OnPropertyChanged));
 
         // Using a DependencyProperty as the backing store for Tooltip.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty TooltipKeyProperty =
+        public static readonly DependencyProperty TooltipKeyProperty = 
             DependencyProperty.RegisterAttached("TooltipKey", typeof(string), typeof(Localizer), new PropertyMetadata(OnPropertyChanged));
 
         private static ResourceManager defaultResourceManager;
@@ -50,7 +50,21 @@
 
         #endregion Fields
 
+        #region Constructors
+
+        static Localizer()
+        {
+            CachedResourceNames = new Dictionary<ResourceManager, Dictionary<string, string[]>>();
+        }
+
+        #endregion Constructors
+
         #region Properties
+
+        public static Dictionary<ResourceManager, Dictionary<string, string[]>> CachedResourceNames
+        {
+            get; set;
+        }
 
         public static ResourceManager DefaultResourceManager
         {
@@ -75,6 +89,11 @@
         public static string GetContentKey(DependencyObject obj)
         {
             return (string)obj.GetValue(ContentKeyProperty);
+        }
+
+        public static string GetKey(DependencyObject obj)
+        {
+            return (string)obj.GetValue(KeyProperty);
         }
 
         public static Localizer GetLocalizer(DependencyObject obj)
@@ -120,6 +139,11 @@
             obj.SetValue(ContentKeyProperty, value);
         }
 
+        public static void SetKey(DependencyObject obj, string value)
+        {
+            obj.SetValue(KeyProperty, value);
+        }
+
         public static void SetLocalizer(DependencyObject obj, Localizer value)
         {
             obj.SetValue(LocalizerProperty, value);
@@ -139,8 +163,6 @@
         {
             obj.SetValue(TooltipKeyProperty, value);
         }
-
-        public static Dictionary<ResourceManager, Dictionary<string, string[]>> CachedResourceNames { get; set; }
 
         public virtual void Localize(DependencyObject d)
         {
@@ -246,25 +268,6 @@
             }
         }
 
-        private Dictionary<string, string[]> GetResourceNames(ResourceManager rm)
-        {
-            Dictionary<string, string[]> result;
-            if (!CachedResourceNames.TryGetValue(rm, out result))
-            {
-                result = (from dicEntry in rm.GetResourceSet(System.Globalization.CultureInfo.CurrentCulture, true, true)
-                                        .OfType<DictionaryEntry>()
-                          let keyParts = ((string)((DictionaryEntry)dicEntry).Key).Split(new[] { '_' }, 2)
-                          where keyParts.Length == 2
-                          let kv = new { k = keyParts[0], v = keyParts[1] }
-                          group kv by kv.k into g
-                          select g)
-                        .ToDictionary(i => i.Key, i => i.Select(_ => _.v).ToArray());
-                CachedResourceNames.Add(rm, result);
-            }
-
-            return result;
-        }
-
         private static void LocalizerChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             Localizer newLocalizer = e.NewValue as Localizer;
@@ -285,22 +288,25 @@
             localizer.Localize(d);
         }
 
+        private Dictionary<string, string[]> GetResourceNames(ResourceManager rm)
+        {
+            Dictionary<string, string[]> result;
+            if (!CachedResourceNames.TryGetValue(rm, out result))
+            {
+                result = (from dicEntry in rm.GetResourceSet(System.Globalization.CultureInfo.CurrentCulture, true, true)
+                                        .OfType<DictionaryEntry>()
+                          let keyParts = ((string)((DictionaryEntry)dicEntry).Key).Split(new[] { '_' }, 2)
+                          where keyParts.Length == 2
+                          let kv = new { k = keyParts[0], v = keyParts[1] }
+                          group kv by kv.k into g
+                          select g)
+                        .ToDictionary(i => i.Key, i => i.Select(_ => _.v).ToArray());
+                CachedResourceNames.Add(rm, result);
+            }
+
+            return result;
+        }
+
         #endregion Methods
-
-
-
-        public static string GetKey(DependencyObject obj)
-        {
-            return (string)obj.GetValue(KeyProperty);
-        }
-
-        public static void SetKey(DependencyObject obj, string value)
-        {
-            obj.SetValue(KeyProperty, value);
-        }
-
-        // Using a DependencyProperty as the backing store for Key.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty KeyProperty =
-            DependencyProperty.RegisterAttached("Key", typeof(string), typeof(Localizer), new PropertyMetadata(OnPropertyChanged));
     }
 }

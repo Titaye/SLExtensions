@@ -220,6 +220,11 @@
             return base.MeasureOverride(availableSize);
         }
 
+        void newValue_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            InvalidateMeasure();
+        }
+
         /// <summary>
         /// handles the ChildProperty changes.
         /// </summary>
@@ -248,11 +253,6 @@
         /// <param name="oldValue">The old value.</param>
         /// <param name="newValue">The new value.</param>
         private void OnStretchChanged(Stretch oldValue, Stretch newValue)
-        {
-            InvalidateMeasure();
-        }
-
-        void newValue_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             InvalidateMeasure();
         }

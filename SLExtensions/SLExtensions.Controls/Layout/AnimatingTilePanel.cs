@@ -60,11 +60,11 @@ namespace SLExtensions.Controls
                 typeof(AnimatingTilePanel),
                 null);
 
-        private static readonly DependencyProperty DataProperty = 
-            DependencyProperty.RegisterAttached("Data", typeof(AnimatingTilePanelData), typeof(AnimatingTilePanel), null);
-
         private const double c_diff = 0.1;
         private const double c_terminalVelocity = 10000;
+
+        private static readonly DependencyProperty DataProperty = 
+            DependencyProperty.RegisterAttached("Data", typeof(AnimatingTilePanelData), typeof(AnimatingTilePanel), null);
 
         //private bool m_appliedTemplate;
         private bool m_hasArranged; // Used to make sure items are not arranged on the initial load
@@ -335,23 +335,6 @@ namespace SLExtensions.Controls
             return availableSize;
         }
 
-        private static ItemsControl LookForItemsControl(FrameworkElement element)
-        {
-            if (element == null)
-            {
-                return null;
-            }
-            else if (element is ItemsControl)
-            {
-                return (ItemsControl)element;
-            }
-            else
-            {
-                FrameworkElement parent = VisualTreeHelper.GetParent(element) as FrameworkElement;
-                return LookForItemsControl(parent);
-            }
-        }
-
         private static void arrangeRow(ref List<UIElement> rowItems, ref double rowHeight, ref double left, bool animateNewItem, Size finalSize, double top)
         {
             double tmpLeft = 0;
@@ -431,6 +414,23 @@ namespace SLExtensions.Controls
             int row = index / childrenPerRow;
             int column = index % childrenPerRow;
             return new Point(.5 * fudge + column * (itemWidth + fudge), row * itemHeight);
+        }
+
+        private static ItemsControl LookForItemsControl(FrameworkElement element)
+        {
+            if (element == null)
+            {
+                return null;
+            }
+            else if (element is ItemsControl)
+            {
+                return (ItemsControl)element;
+            }
+            else
+            {
+                FrameworkElement parent = VisualTreeHelper.GetParent(element) as FrameworkElement;
+                return LookForItemsControl(parent);
+            }
         }
 
         private static bool updateElement(AnimatingTilePanelData data, double dampening, double attractionFactor, double variation)

@@ -21,15 +21,18 @@
     {
         #region Fields
 
-        private const string RichTextModeFullHtml = "FullHtml";
         private const string attributeRichTextMode = "RichTextMode";
+        private const string RichTextModeFullHtml = "FullHtml";
 
         #endregion Fields
 
         #region Properties
 
         [DataMember]
-        public object DefaultValue { get; set; }
+        public object DefaultValue
+        {
+            get; set;
+        }
 
         [DataMember]
         public string DisplayName

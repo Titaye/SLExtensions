@@ -24,7 +24,7 @@
         /// <summary>
         /// CommandName depedency property.
         /// </summary>
-        public static readonly DependencyProperty CommandNameProperty =
+        public static readonly DependencyProperty CommandNameProperty = 
             DependencyProperty.Register(
                 "CommandName",
                 typeof(string),
@@ -34,7 +34,7 @@
         /// <summary>
         /// CommandParameter depedency property.
         /// </summary>
-        public static readonly DependencyProperty CommandParameterProperty =
+        public static readonly DependencyProperty CommandParameterProperty = 
             DependencyProperty.Register(
                 "CommandParameter",
                 typeof(object),
@@ -44,7 +44,7 @@
         /// <summary>
         /// Key depedency property.
         /// </summary>
-        public static readonly DependencyProperty KeyProperty =
+        public static readonly DependencyProperty KeyProperty = 
             DependencyProperty.Register(
                 "Key",
                 typeof(Key),

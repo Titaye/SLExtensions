@@ -3227,6 +3227,15 @@ namespace SLExtensions.IO.Compression.Zip
             WriteLEShort(value >> 16);
         }
 
+        /// <summary>
+        /// Write a long in little endian byte order.
+        /// </summary>
+        void WriteLeLong(long value)
+        {
+            WriteLEInt(( int )(value & 0xffffffff));
+            WriteLEInt(( int )(value >> 32));
+        }
+
         void WriteLEShort(int value)
         {
             baseStream_.WriteByte(( byte )(value & 0xff));
@@ -3255,15 +3264,6 @@ namespace SLExtensions.IO.Compression.Zip
         {
             baseStream_.WriteByte(( byte )(value & 0xff));
             baseStream_.WriteByte(( byte )(value >> 8));
-        }
-
-        /// <summary>
-        /// Write a long in little endian byte order.
-        /// </summary>
-        void WriteLeLong(long value)
-        {
-            WriteLEInt(( int )(value & 0xffffffff));
-            WriteLEInt(( int )(value >> 32));
         }
 
         void WriteLocalEntryHeader(ZipUpdate update)

@@ -1,22 +1,41 @@
-﻿using System;
-using System.Net;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Ink;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Animation;
-using System.Windows.Shapes;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using sle = SLExtensions.Controls;
-using Microsoft.Silverlight.Testing.UnitTesting.UI;
-using Microsoft.Silverlight.Testing;
-namespace SLExtensions.Test
+﻿namespace SLExtensions.Test
 {
+    using System;
+    using System.Net;
+    using System.Windows;
+    using System.Windows.Controls;
+    using System.Windows.Documents;
+    using System.Windows.Ink;
+    using System.Windows.Input;
+    using System.Windows.Media;
+    using System.Windows.Media.Animation;
+    using System.Windows.Shapes;
+
+    using Microsoft.Silverlight.Testing;
+    using Microsoft.Silverlight.Testing.UnitTesting.UI;
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+    using sle = SLExtensions.Controls;
+
     [TestClass]
     public class SeparatorTest : SilverlightTest
     {
+        #region Methods
+
+        [TestMethod]
+        [Asynchronous]
+        public void TestBottomGrid()
+        {
+            bool isLoaded = false;
+            var container = new System.Windows.Controls.Grid ();
+            var testee = new sle.Separator{VerticalAlignment = VerticalAlignment.Bottom};
+            testee.Loaded += (sender, args) => isLoaded = true;
+            EnqueueCallback(() => container.Children.Add(testee));
+            EnqueueCallback(() => this.Silverlight.TestSurface.Children.Add(container));
+            EnqueueConditional(() => isLoaded);
+            EnqueueCallback(() => Assert.AreEqual(Orientation.Vertical, testee.Orientation));
+            EnqueueTestComplete();
+        }
 
         [TestMethod]
         [Asynchronous]
@@ -30,20 +49,6 @@ namespace SLExtensions.Test
             EnqueueCallback(() => this.Silverlight.TestSurface.Children.Add(container));
             EnqueueConditional(() => isLoaded);
             EnqueueCallback(() => Assert.AreEqual(Orientation.Horizontal, testee.Orientation));
-            EnqueueTestComplete();          
-        }
-        [TestMethod]
-        [Asynchronous]
-        public void TestVerticalStackPanel()
-        {
-            bool isLoaded = false;
-            var container = new System.Windows.Controls.StackPanel { Orientation = Orientation.Vertical };
-            var testee = new sle.Separator();
-            testee.Loaded += (sender, args) => isLoaded = true;
-            EnqueueCallback(() => container.Children.Add(testee));
-            EnqueueCallback(() => this.Silverlight.TestSurface.Children.Add(container));
-            EnqueueConditional(() => isLoaded);
-            EnqueueCallback(() => Assert.AreEqual(Orientation.Vertical, testee.Orientation));
             EnqueueTestComplete();
         }
 
@@ -79,21 +84,6 @@ namespace SLExtensions.Test
 
         [TestMethod]
         [Asynchronous]
-        public void TestBottomGrid()
-        {
-            bool isLoaded = false;
-            var container = new System.Windows.Controls.Grid ();
-            var testee = new sle.Separator{VerticalAlignment = VerticalAlignment.Bottom};
-            testee.Loaded += (sender, args) => isLoaded = true;
-            EnqueueCallback(() => container.Children.Add(testee));
-            EnqueueCallback(() => this.Silverlight.TestSurface.Children.Add(container));
-            EnqueueConditional(() => isLoaded);
-            EnqueueCallback(() => Assert.AreEqual(Orientation.Vertical, testee.Orientation));
-            EnqueueTestComplete();
-        }
-
-        [TestMethod]
-        [Asynchronous]
         public void TestTopGrid()
         {
             bool isLoaded = false;
@@ -107,8 +97,26 @@ namespace SLExtensions.Test
             EnqueueTestComplete();
         }
 
-        // These two test fail because of a Layout Bug in SLE StackPanel. This should be investigated.
+        [TestMethod]
+        [Asynchronous]
+        public void TestVerticalStackPanel()
+        {
+            bool isLoaded = false;
+            var container = new System.Windows.Controls.StackPanel { Orientation = Orientation.Vertical };
+            var testee = new sle.Separator();
+            testee.Loaded += (sender, args) => isLoaded = true;
+            EnqueueCallback(() => container.Children.Add(testee));
+            EnqueueCallback(() => this.Silverlight.TestSurface.Children.Add(container));
+            EnqueueConditional(() => isLoaded);
+            EnqueueCallback(() => Assert.AreEqual(Orientation.Vertical, testee.Orientation));
+            EnqueueTestComplete();
+        }
 
+        #endregion Methods
+
+        #region Other
+
+        // These two test fail because of a Layout Bug in SLE StackPanel. This should be investigated.
         //[TestMethod]
         //[Asynchronous]
         //public void TestHorizontalSLEStackPanel()
@@ -136,7 +144,7 @@ namespace SLExtensions.Test
         //    EnqueueConditional(() => isLoaded);
         //    EnqueueCallback(() => Assert.AreEqual(Orientation.Vertical, testee.Orientation));
         //    EnqueueTestComplete();
-        
 
+        #endregion Other
     }
 }

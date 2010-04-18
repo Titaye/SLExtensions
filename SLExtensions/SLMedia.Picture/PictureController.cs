@@ -131,6 +131,35 @@
             }
         }
 
+        void bmpImage_DownloadProgress(object sender, DownloadProgressEventArgs e)
+        {
+            double value = (double)e.Progress / 100;
+            lastCurrentItemDownloadProgress = value;
+            DownloadProgress = value;
+            if (value >= 1)
+            {
+                IsDownloading = false;
+
+                clearPopupPreviousItem();
+
+                if (IsPlaying)
+                {
+                    lastTick = DateTime.Now;
+                    slideShowTimer.Start();
+                }
+            }
+            else if (value > 0)
+            {
+                IsDownloading = true;
+            }
+        }
+
+        private void clearPopupPreviousItem()
+        {
+            if (lastPopupRectanglePreviousItem != null)
+                lastPopupRectanglePreviousItem.Fill = new SolidColorBrush(Colors.Black);
+        }
+
         private void FillPicture()
         {
             if (CurrentItem != null && lastPopupRectangleCurrentItem != null)
@@ -216,35 +245,6 @@
                 lastDisplayPictureSource.DownloadProgress += bmpImage_DownloadProgress;
             }
             refreshPopupImage();
-        }
-
-        void bmpImage_DownloadProgress(object sender, DownloadProgressEventArgs e)
-        {
-            double value = (double)e.Progress / 100;
-            lastCurrentItemDownloadProgress = value;
-            DownloadProgress = value;
-            if (value >= 1)
-            {
-                IsDownloading = false;
-
-                clearPopupPreviousItem();
-
-                if (IsPlaying)
-                {
-                    lastTick = DateTime.Now;
-                    slideShowTimer.Start();
-                }
-            }
-            else if (value > 0)
-            {
-                IsDownloading = true;
-            }
-        }
-
-        private void clearPopupPreviousItem()
-        {
-            if (lastPopupRectanglePreviousItem != null)
-                lastPopupRectanglePreviousItem.Fill = new SolidColorBrush(Colors.Black);
         }
 
         void refreshPopupImage()

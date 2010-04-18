@@ -49,17 +49,17 @@ namespace SLExtensions.IO.Compression.Zip.ZipCompression
     {
         #region Fields
 
-        static readonly int[] BL_ORDER = 
-        { 16, 17, 18, 0, 8, 7, 9, 6, 10, 5, 11, 4, 12, 3, 13, 2, 14, 1, 15 };
-        static readonly int[] repBits = { 2, 3,  7 };
-        static readonly int[] repMin = { 3, 3, 11 };
-
         const int BLLENS = 3;
         const int BLNUM = 2;
         const int DNUM = 1;
         const int LENS = 4;
         const int LNUM = 0;
         const int REPS = 5;
+
+        static readonly int[] BL_ORDER = 
+        { 16, 17, 18, 0, 8, 7, 9, 6, 10, 5, 11, 4, 12, 3, 13, 2, 14, 1, 15 };
+        static readonly int[] repBits = { 2, 3,  7 };
+        static readonly int[] repMin = { 3, 3, 11 };
 
         byte[] blLens;
         InflaterHuffmanTree blTree;

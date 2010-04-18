@@ -10,12 +10,13 @@
     using System.Windows.Input;
     using System.Windows.Media;
     using System.Windows.Media.Animation;
+    using System.Windows.Media.Imaging;
     using System.Windows.Shapes;
 
     /// <summary>
     /// Utility class for encoding PNG image data.
     /// </summary>
-    public class PngEncoder
+    public static class PngEncoder
     {
         #region Fields
 
@@ -26,13 +27,13 @@
 
         private static byte[] _4BYTEDATA = { 0, 0, 0, 0 };
         private static byte[] _ARGB = { 0, 0, 0, 0, 0, 0, 0, 0, 8, 6, 0, 0, 0 };
+        private static uint[] _crcTable = new uint[256];
+        private static bool _crcTableComputed = false;
         private static byte[] _GAMA = { (byte)'g', (byte)'A', (byte)'M', (byte)'A' };
         private static byte[] _HEADER = { 0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A };
         private static byte[] _IDAT = { (byte)'I', (byte)'D', (byte)'A', (byte)'T' };
         private static byte[] _IEND = { (byte)'I', (byte)'E', (byte)'N', (byte)'D' };
         private static byte[] _IHDR = { (byte)'I', (byte)'H', (byte)'D', (byte)'R' };
-        private static uint[] _crcTable = new uint[256];
-        private static bool _crcTableComputed = false;
 
         #endregion Fields
 
@@ -45,7 +46,7 @@
         /// <param name="width">The width of the image.</param>
         /// <param name="height">The height of the image.</param>
         /// <returns>Returns a PNG encoded stream.</returns>
-        public static Stream Encode(byte[] data, int width, int height)
+        public static MemoryStream Encode(byte[] data, int width, int height)
         {
             MemoryStream ms = new MemoryStream();
             byte[] size;
@@ -170,6 +171,12 @@
             // See http://www.libpng.org/pub/png/book/chapter08.html#png.ch08.div.4
             // See http://www.gzip.org/zlib/rfc-zlib.html (ZLIB format)
             // See ftp://ftp.uu.net/pub/archiving/zip/doc/rfc1951.txt (ZLIB compression format)
+        }
+
+        public static MemoryStream SaveAsPng(this WriteableBitmap source)
+        {
+            EditableImage img = new EditableImage(source);
+            return img.GetStream();
         }
 
         private static uint ComputeAdler32(byte[] buf)

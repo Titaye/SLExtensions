@@ -1,25 +1,26 @@
-﻿using System;
-using System.Net;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Ink;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Animation;
-using System.Windows.Shapes;
-using System.Text.RegularExpressions;
-using System.Collections.Generic;
-using System.Globalization;
-
-namespace SLExtensions
+﻿namespace SLExtensions
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Globalization;
+    using System.Net;
+    using System.Text.RegularExpressions;
+    using System.Windows;
+    using System.Windows.Controls;
+    using System.Windows.Documents;
+    using System.Windows.Ink;
+    using System.Windows.Input;
+    using System.Windows.Media;
+    using System.Windows.Media.Animation;
+    using System.Windows.Shapes;
+
     public static class ColorExtensions
     {
         #region Fields
 
         private static readonly Regex ColorRegex = new Regex("#?(?<a>[0-9a-f]{2})?(?<r>[0-9a-f]{2})(?<g>[0-9a-f]{2})(?<b>[0-9a-f]{2})", RegexOptions.IgnoreCase);
 
+        private static Dictionary<string, Color> colorCache = new Dictionary<string, Color>(StringComparer.OrdinalIgnoreCase);
         private static Color? _AliceBlue;
         private static Color? _AntiqueWhite;
         private static Color? _Aqua;
@@ -49,6 +50,7 @@ namespace SLExtensions
         private static Color? _DarkKhaki;
         private static Color? _DarkMagenta;
         private static Color? _DarkOliveGreen;
+        private static Color? _Darkorange;
         private static Color? _DarkOrchid;
         private static Color? _DarkRed;
         private static Color? _DarkSalmon;
@@ -57,7 +59,6 @@ namespace SLExtensions
         private static Color? _DarkSlateGray;
         private static Color? _DarkTurquoise;
         private static Color? _DarkViolet;
-        private static Color? _Darkorange;
         private static Color? _DeepPink;
         private static Color? _DeepSkyBlue;
         private static Color? _DimGray;
@@ -160,7 +161,6 @@ namespace SLExtensions
         private static Color? _WhiteSmoke;
         private static Color? _Yellow;
         private static Color? _YellowGreen;
-        private static Dictionary<string, Color> colorCache = new Dictionary<string, Color>(StringComparer.OrdinalIgnoreCase);
 
         #endregion Fields
 
@@ -458,6 +458,17 @@ namespace SLExtensions
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Darkorange")]
+        public static Color Darkorange
+        {
+            get
+            {
+                if (!_Darkorange.HasValue)
+                    _Darkorange = GetColor("#FF8C00");
+                return _Darkorange.Value;
+            }
+        }
+
         public static Color DarkOrchid
         {
             get
@@ -535,17 +546,6 @@ namespace SLExtensions
                 if (!_DarkViolet.HasValue)
                     _DarkViolet = GetColor("#9400D3");
                 return _DarkViolet.Value;
-            }
-        }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Darkorange")]
-        public static Color Darkorange
-        {
-            get
-            {
-                if (!_Darkorange.HasValue)
-                    _Darkorange = GetColor("#FF8C00");
-                return _Darkorange.Value;
             }
         }
 
@@ -1579,6 +1579,8 @@ namespace SLExtensions
 
         #endregion Properties
 
+        #region Methods
+
         public static Color? GetColor(string value)
         {
             if (!string.IsNullOrEmpty(value))
@@ -1623,11 +1625,13 @@ namespace SLExtensions
                     {
                         colorCache[value] = color.Value;
                         return color;
-                    }                    
+                    }
                 }
             }
 
             return null;
         }
+
+        #endregion Methods
     }
 }

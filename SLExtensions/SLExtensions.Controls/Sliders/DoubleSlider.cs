@@ -33,6 +33,13 @@
                 typeof(DoubleSlider),
                 new PropertyMetadata((d, e) => ((DoubleSlider)d).OnLargeChangeChanged((double)e.OldValue, (double)e.NewValue)));
 
+        /// <summary> 
+        /// Identifies the Maximum dependency property. 
+        /// </summary> 
+        public static readonly DependencyProperty MaximumProperty = 
+                    DependencyProperty.Register("Maximum", typeof(double),
+                          typeof(DoubleSlider), new PropertyMetadata(OnMaximumChanged));
+
         /// <summary>
         /// MaxValue depedency property.
         /// </summary>
@@ -44,11 +51,11 @@
                 new PropertyMetadata((d, e) => ((DoubleSlider)d).OnMaxValueChanged((double)e.OldValue, (double)e.NewValue)));
 
         /// <summary> 
-        /// Identifies the Maximum dependency property. 
+        /// Identifies the Minimum dependency property. 
         /// </summary> 
-        public static readonly DependencyProperty MaximumProperty = 
-                    DependencyProperty.Register("Maximum", typeof(double),
-                          typeof(DoubleSlider), new PropertyMetadata(OnMaximumChanged));
+        public static readonly DependencyProperty MinimumProperty = 
+                    DependencyProperty.Register("Minimum", typeof(double),
+                          typeof(DoubleSlider), new PropertyMetadata(OnMinimumChanged));
 
         /// <summary>
         /// MinValue depedency property.
@@ -59,13 +66,6 @@
                 typeof(double),
                 typeof(DoubleSlider),
                 new PropertyMetadata((d, e) => ((DoubleSlider)d).OnMinValueChanged((double)e.OldValue, (double)e.NewValue)));
-
-        /// <summary> 
-        /// Identifies the Minimum dependency property. 
-        /// </summary> 
-        public static readonly DependencyProperty MinimumProperty = 
-                    DependencyProperty.Register("Minimum", typeof(double),
-                          typeof(DoubleSlider), new PropertyMetadata(OnMinimumChanged));
 
         /// <summary> 
         /// Identifies the Orientation dependency property. 
@@ -132,6 +132,15 @@
             }
         }
 
+        /// <summary> 
+        /// Gets or sets the Maximum possible Value of the double object. 
+        /// </summary> 
+        public double Maximum
+        {
+            get { return (double)GetValue(MaximumProperty); }
+            set { SetValue(MaximumProperty, value); }
+        }
+
         public double MaxValue
         {
             get
@@ -146,12 +155,12 @@
         }
 
         /// <summary> 
-        /// Gets or sets the Maximum possible Value of the double object. 
+        /// Gets or sets the Minimum possible Value of the double object. 
         /// </summary> 
-        public double Maximum
+        public double Minimum
         {
-            get { return (double)GetValue(MaximumProperty); }
-            set { SetValue(MaximumProperty, value); }
+            get { return (double)GetValue(MinimumProperty); }
+            set { SetValue(MinimumProperty, value); }
         }
 
         public double MinValue
@@ -165,15 +174,6 @@
             {
                 SetValue(MinValueProperty, value);
             }
-        }
-
-        /// <summary> 
-        /// Gets or sets the Minimum possible Value of the double object. 
-        /// </summary> 
-        public double Minimum
-        {
-            get { return (double)GetValue(MinimumProperty); }
-            set { SetValue(MinimumProperty, value); }
         }
 
         /// <summary> 

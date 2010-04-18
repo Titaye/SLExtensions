@@ -63,6 +63,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SLExtensions.Sharepoint", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SLMedia.SmoothStreaming", "SLMedia.SmoothStreaming\SLMedia.SmoothStreaming.csproj", "{FBA7B006-28E0-45A6-B033-210B12A3E919}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SLExtensions.Manipulation", "SLExtensions.Manipulation\SLExtensions.Manipulation.csproj", "{755E497E-9FEC-4C7D-818E-FD93F308F03B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -173,6 +175,10 @@ Global
 		{FBA7B006-28E0-45A6-B033-210B12A3E919}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FBA7B006-28E0-45A6-B033-210B12A3E919}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FBA7B006-28E0-45A6-B033-210B12A3E919}.Release|Any CPU.Build.0 = Release|Any CPU
+		{755E497E-9FEC-4C7D-818E-FD93F308F03B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{755E497E-9FEC-4C7D-818E-FD93F308F03B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{755E497E-9FEC-4C7D-818E-FD93F308F03B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{755E497E-9FEC-4C7D-818E-FD93F308F03B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

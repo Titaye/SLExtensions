@@ -1,22 +1,23 @@
-﻿using System;
-using System.Net;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Ink;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Animation;
-using System.Windows.Shapes;
-using System.IO;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows.Browser;
-
-namespace SLExtensions
+﻿namespace SLExtensions
 {
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Net;
+    using System.Text;
+    using System.Windows;
+    using System.Windows.Browser;
+    using System.Windows.Controls;
+    using System.Windows.Documents;
+    using System.Windows.Ink;
+    using System.Windows.Input;
+    using System.Windows.Media;
+    using System.Windows.Media.Animation;
+    using System.Windows.Shapes;
+
     public static class WebClientExtensions
     {
+        #region Methods
 
         /// <summary>
         /// Sends a file in multipart HTML form. The request is sent using POST method
@@ -119,5 +120,7 @@ namespace SLExtensions
             webclient.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
             webclient.UploadStringAsync(uri, "POST", dataBuilder.ToString(), userToken);
         }
+
+        #endregion Methods
     }
 }

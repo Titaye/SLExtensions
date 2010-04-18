@@ -1,6 +1,7 @@
 ﻿namespace SLExtensions.Data
 {
     using System;
+    using System.Collections;
     using System.Globalization;
     using System.Net;
     using System.Windows;
@@ -39,6 +40,12 @@
             if (value is int)
             {
                 return ((int)value == 0) ? false : true;
+            }
+
+            if (value is IEnumerable)
+            {
+                var iter = ((IEnumerable)value).GetEnumerator();
+                return iter.MoveNext();
             }
 
             string strValue = value as string;
@@ -91,6 +98,16 @@
                         return !b;
                     }
                     return b;
+                }
+
+                if (value is IEnumerable)
+                {
+                    var iter = ((IEnumerable)value).GetEnumerator();
+                    if ("!".Equals(parameter) || "!?".Equals(parameter))
+                    {
+                        return !iter.MoveNext();
+                    }
+                    return iter.MoveNext();
                 }
 
                 bool convertResult;

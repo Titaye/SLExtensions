@@ -18,7 +18,6 @@
     using System.Windows.Shapes;
 
     using SLExtensions;
-    using SLExtensions.Collections.ObjectModel;
 
     public class MarkerSelectorFilter : FrameworkElement, INotifyPropertyChanged
     {
@@ -35,16 +34,6 @@
                 new PropertyMetadata((d, e) => ((MarkerSelectorFilter)d).OnFilterActiveOnlyChanged((bool)e.OldValue, (bool)e.NewValue)));
 
         /// <summary>
-        /// Item depedency property.
-        /// </summary>
-        public static readonly DependencyProperty ItemProperty = 
-            DependencyProperty.Register(
-                "Item",
-                typeof(IMediaItem),
-                typeof(MarkerSelectorFilter),
-                new PropertyMetadata((d, e) => ((MarkerSelectorFilter)d).OnItemChanged((IMediaItem)e.OldValue, (IMediaItem)e.NewValue)));
-
-        /// <summary>
         /// Key depedency property.
         /// </summary>
         public static readonly DependencyProperty KeyProperty = 
@@ -53,6 +42,16 @@
                 typeof(string),
                 typeof(MarkerSelectorFilter),
                 new PropertyMetadata((d, e) => ((MarkerSelectorFilter)d).OnKeyChanged((string)e.OldValue, (string)e.NewValue)));
+
+        /// <summary>
+        /// MarkerSelectors depedency property.
+        /// </summary>
+        public static readonly DependencyProperty MarkerSelectorsProperty = 
+            DependencyProperty.Register(
+                "MarkerSelectors",
+                typeof(IEnumerable<IMarkerSelector>),
+                typeof(MarkerSelectorFilter),
+                new PropertyMetadata((d, e) => ((MarkerSelectorFilter)d).OnMarkerSelectorsChanged((IEnumerable<IMarkerSelector>)e.OldValue, (IEnumerable<IMarkerSelector>)e.NewValue)));
 
         /// <summary>
         /// Value depedency property.
@@ -64,7 +63,7 @@
                 typeof(MarkerSelectorFilter),
                 new PropertyMetadata((d, e) => ((MarkerSelectorFilter)d).OnValueChanged((object)e.OldValue, (object)e.NewValue)));
 
-        private ObservableCollection<IMarkerSelector> lastCollection;
+        private IEnumerable<IMarkerSelector> lastCollection;
         private List<IMarkerSelector> subscribedSelectors = new List<IMarkerSelector>();
 
         #endregion Fields
@@ -99,19 +98,6 @@
             }
         }
 
-        public IMediaItem Item
-        {
-            get
-            {
-                return (IMediaItem)GetValue(ItemProperty);
-            }
-
-            set
-            {
-                SetValue(ItemProperty, value);
-            }
-        }
-
         public string Key
         {
             get
@@ -122,6 +108,19 @@
             set
             {
                 SetValue(KeyProperty, value);
+            }
+        }
+
+        public IEnumerable<IMarkerSelector> MarkerSelectors
+        {
+            get
+            {
+                return (IEnumerable<IMarkerSelector>)GetValue(MarkerSelectorsProperty);
+            }
+
+            set
+            {
+                SetValue(MarkerSelectorsProperty, value);
             }
         }
 
@@ -144,30 +143,15 @@
 
         public void Refresh()
         {
-            var item = Item;
-            if (item != null)
+            if (lastCollection != null)
             {
-                lastCollection = item.MarkerSelectors;
-                foreach (var mrkSelector in lastCollection)
-                {
-                    subscribedSelectors.Add(mrkSelector);
-                    mrkSelector.IsActiveChanged += new EventHandler(mrkSelector_IsActiveChanged);
-                }
-                lastCollection.CollectionChanged += new System.Collections.Specialized.NotifyCollectionChangedEventHandler(MarkerSources_CollectionChanged);
-            }
-            else
-            {
-                if (lastCollection != null)
-                {
-                    foreach (var mrkSelector in lastCollection)
-                    {
-                        subscribedSelectors.Remove(mrkSelector);
-                        mrkSelector.IsActiveChanged -= new EventHandler(mrkSelector_IsActiveChanged);
-                    }
-                    lastCollection.CollectionChanged -= new System.Collections.Specialized.NotifyCollectionChangedEventHandler(MarkerSources_CollectionChanged);
-                }
+                UnbindSelectors(lastCollection);
                 lastCollection = null;
             }
+
+            var newSelectors = MarkerSelectors;
+            if (newSelectors != null)
+                BindSelectors(newSelectors);
 
             FilterList();
         }
@@ -178,6 +162,20 @@
             {
                 PropertyChanged(this, new PropertyChangedEventArgs(name));
             }
+        }
+
+        private void BindSelectors(IEnumerable<IMarkerSelector> newCollection)
+        {
+            lastCollection = newCollection;
+
+            foreach (var mrkSelector in lastCollection)
+            {
+                SubscribeSelector(mrkSelector);
+            }
+
+            var notifyCollection = lastCollection as INotifyCollectionChanged;
+            if (notifyCollection != null)
+                notifyCollection.CollectionChanged += MarkerSources_CollectionChanged;
         }
 
         private void FilterList()
@@ -196,16 +194,15 @@
         {
             if (e.Action == NotifyCollectionChangedAction.Reset)
             {
-                foreach (var mrkSelector in subscribedSelectors)
+                foreach (var mrkSelector in subscribedSelectors.ToArray())
                 {
-                    mrkSelector.IsActiveChanged -= new EventHandler(mrkSelector_IsActiveChanged);
+                    UnSubscribeSelector(mrkSelector);
                 }
                 subscribedSelectors.Clear();
 
                 foreach (var mrkSelector in lastCollection)
                 {
-                    subscribedSelectors.Add(mrkSelector);
-                    mrkSelector.IsActiveChanged += new EventHandler(mrkSelector_IsActiveChanged);
+                    SubscribeSelector(mrkSelector);
                 }
             }
             else
@@ -214,8 +211,7 @@
                 {
                     foreach (var mrkSelector in e.OldItems.OfType<IMarkerSelector>())
                     {
-                        subscribedSelectors.Remove(mrkSelector);
-                        mrkSelector.IsActiveChanged -= new EventHandler(mrkSelector_IsActiveChanged);
+                        UnSubscribeSelector(mrkSelector);
                     }
                 }
 
@@ -223,13 +219,17 @@
                 {
                     foreach (var mrkSelector in e.NewItems.OfType<IMarkerSelector>())
                     {
-                        subscribedSelectors.Add(mrkSelector);
-                        mrkSelector.IsActiveChanged += new EventHandler(mrkSelector_IsActiveChanged);
+                        SubscribeSelector(mrkSelector);
                     }
                 }
 
             }
 
+            FilterList();
+        }
+
+        void mrkSelector_IsActiveChanged(object sender, EventArgs e)
+        {
             FilterList();
         }
 
@@ -244,21 +244,21 @@
         }
 
         /// <summary>
-        /// handles the ItemProperty changes.
-        /// </summary>
-        /// <param name="oldValue">The old value.</param>
-        /// <param name="newValue">The new value.</param>
-        private void OnItemChanged(IMediaItem oldValue, IMediaItem newValue)
-        {
-            Refresh();
-        }
-
-        /// <summary>
         /// handles the KeyProperty changes.
         /// </summary>
         /// <param name="oldValue">The old value.</param>
         /// <param name="newValue">The new value.</param>
         private void OnKeyChanged(string oldValue, string newValue)
+        {
+            Refresh();
+        }
+
+        /// <summary>
+        /// handles the MarkerSelectorsProperty changes.
+        /// </summary>
+        /// <param name="oldValue">The old value.</param>
+        /// <param name="newValue">The new value.</param>
+        private void OnMarkerSelectorsChanged(IEnumerable<IMarkerSelector> oldValue, IEnumerable<IMarkerSelector> newValue)
         {
             Refresh();
         }
@@ -273,9 +273,28 @@
             OnPropertyChanged("Value");
         }
 
-        void mrkSelector_IsActiveChanged(object sender, EventArgs e)
+        private void SubscribeSelector(IMarkerSelector selector)
         {
-            FilterList();
+            subscribedSelectors.Add(selector);
+            selector.IsActiveChanged += mrkSelector_IsActiveChanged;
+        }
+
+        private void UnbindSelectors(IEnumerable<IMarkerSelector> lastCollection)
+        {
+            foreach (var mrkSelector in lastCollection)
+            {
+                UnSubscribeSelector(mrkSelector);
+            }
+
+            var notifyCollection = lastCollection as INotifyCollectionChanged;
+            if(notifyCollection != null)
+                notifyCollection.CollectionChanged -= MarkerSources_CollectionChanged;
+        }
+
+        private void UnSubscribeSelector(IMarkerSelector selector)
+        {
+            subscribedSelectors.Remove(selector);
+            selector.IsActiveChanged -= mrkSelector_IsActiveChanged;
         }
 
         #endregion Methods

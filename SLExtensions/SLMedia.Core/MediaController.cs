@@ -54,9 +54,9 @@
         private IMediaItem lastSelectedItem;
         private string mediaName;
         private IEnumerable<IMediaItem> nextItems;
-        private PlayStates playState;
         private ObservableCollection<IMediaItem> playlist;
         private IPlaylistSource playlistSource;
+        private PlayStates playState;
         private TimeSpan position;
         private IEnumerable<IMediaItem> previousItems;
         private List<ScriptCommandItem> scriptCommands;
@@ -413,21 +413,6 @@
         }
 
         [ScriptableMemberAttribute]
-        public PlayStates PlayState
-        {
-            get { return playState; }
-            set
-            {
-                if (playState != value)
-                {
-                    playState = value;
-                    IsPlaying = PlayState == PlayStates.Playing;
-                    OnPropertyChanged(this.GetPropertyName(n => n.PlayState));
-                }
-            }
-        }
-
-        [ScriptableMemberAttribute]
         public ObservableCollection<IMediaItem> Playlist
         {
             get { return playlist; }
@@ -470,6 +455,21 @@
                     }
 
                     OnPropertyChanged(this.GetPropertyName(n => n.PlaylistSource));
+                }
+            }
+        }
+
+        [ScriptableMemberAttribute]
+        public PlayStates PlayState
+        {
+            get { return playState; }
+            set
+            {
+                if (playState != value)
+                {
+                    playState = value;
+                    IsPlaying = PlayState == PlayStates.Playing;
+                    OnPropertyChanged(this.GetPropertyName(n => n.PlayState));
                 }
             }
         }
@@ -962,6 +962,33 @@
             IsNextEnabled = nextIsEnabled;
         }
 
+        private void SetMarkers()
+        {
+            var item = CurrentItem;
+            if (item == null)
+            {
+                currentMarkerIndexes.Clear();
+                return;
+            }
+            // Store cached sources in a list and remove them if still in CurrentItem MarkerSources
+            // Remaining items will be removed from cache
+            var notProcessedMarkerSources = currentMarkerIndexes.Keys.ToList();
+
+            var markerSelectors = item.MarkerSelectors;
+            if (item != null && markerSelectors != null)
+            {
+                foreach (var markerSelector in markerSelectors.Where(s => s.IsActive))
+                {
+                    SetActiveMarkerForSelector(notProcessedMarkerSources, markerSelector, position, currentMarkerIndexes);
+                }
+            }
+
+            foreach (var markerSource in notProcessedMarkerSources)
+            {
+                currentMarkerIndexes.Remove(markerSource);
+            }
+        }
+
         void SetMarkerSelectorActive_Executed(object sender, ExecutedEventArgs e)
         {
             var prm = e.Parameter as MarkerSelectorCommandParameter;
@@ -1002,33 +1029,6 @@
             }
         }
 
-        private void SetMarkers()
-        {
-            var item = CurrentItem;
-            if (item == null)
-            {
-                currentMarkerIndexes.Clear();
-                return;
-            }
-            // Store cached sources in a list and remove them if still in CurrentItem MarkerSources
-            // Remaining items will be removed from cache
-            var notProcessedMarkerSources = currentMarkerIndexes.Keys.ToList();
-
-            var markerSelectors = item.MarkerSelectors;
-            if (item != null && markerSelectors != null)
-            {
-                foreach (var markerSelector in markerSelectors.Where(s => s.IsActive))
-                {
-                    SetActiveMarkerForSelector(notProcessedMarkerSources, markerSelector, position, currentMarkerIndexes);
-                }
-            }
-
-            foreach (var markerSource in notProcessedMarkerSources)
-            {
-                currentMarkerIndexes.Remove(markerSource);
-            }
-        }
-
         private void SwitchFullscreenPopup()
         {
             if (fullscreenPopup == null && IsPopupFullscreen)
@@ -1052,20 +1052,20 @@
             }
         }
 
-        private void UnbindPlaylistSource()
-        {
-            if (PlaylistSource != null)
-            {
-                PlaylistSource.PlaylistChanged -= new EventHandler(PlaylistSource_PlaylistChanged);
-            }
-        }
-
         void timerTick_Tick(object sender, EventArgs e)
         {
             RefreshPosition();
             if ((ScriptCommands != null) && (ContentPub != null))
             {
                 TickScriptCommands();
+            }
+        }
+
+        private void UnbindPlaylistSource()
+        {
+            if (PlaylistSource != null)
+            {
+                PlaylistSource.PlaylistChanged -= new EventHandler(PlaylistSource_PlaylistChanged);
             }
         }
 

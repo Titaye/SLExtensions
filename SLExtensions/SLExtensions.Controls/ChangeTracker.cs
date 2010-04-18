@@ -22,6 +22,12 @@
     {
         #region Fields
 
+        private const string CommitButtonName = "CommitButton";
+        private const string ModificationStatesGroupName = "ModificationStates";
+        private const string ModifiedStateName = "Modified";
+        private const string ReverButtonName = "RevertButton";
+        private const string UnchangedStateName = "Unchanged";
+
         /// <summary>
         /// ChangeTracker depedency property.
         /// </summary>
@@ -41,12 +47,6 @@
                 typeof(bool),
                 typeof(ChangeTracker),
                 new PropertyMetadata((d, e) => ((ChangeTracker)d).OnIsModifiedChanged((bool)e.OldValue, (bool)e.NewValue)));
-
-        private const string CommitButtonName = "CommitButton";
-        private const string ModificationStatesGroupName = "ModificationStates";
-        private const string ModifiedStateName = "Modified";
-        private const string ReverButtonName = "RevertButton";
-        private const string UnchangedStateName = "Unchanged";
 
         private Button commitButton;
         private bool lockChanges = false;
@@ -218,6 +218,21 @@
             IsModified = false;
         }
 
+        void commitButton_Click(object sender, RoutedEventArgs e)
+        {
+            Commit();
+        }
+
+        void notify_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (lockChanges)
+                return;
+
+            properties[e.PropertyName] = DataContext.GetType().GetProperty(e.PropertyName).GetValue(DataContext, null);
+            IsModified = true;
+            OnModificationOccured();
+        }
+
         /// <summary>
         /// handles the ChangeTrackerProperty changes.
         /// </summary>
@@ -248,21 +263,6 @@
                 VisualStateManager.GoToState(this, ModifiedStateName, true);
             else
                 VisualStateManager.GoToState(this, UnchangedStateName, true);
-        }
-
-        void commitButton_Click(object sender, RoutedEventArgs e)
-        {
-            Commit();
-        }
-
-        void notify_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (lockChanges)
-                return;
-
-            properties[e.PropertyName] = DataContext.GetType().GetProperty(e.PropertyName).GetValue(DataContext, null);
-            IsModified = true;
-            OnModificationOccured();
         }
 
         void revertButton_Click(object sender, RoutedEventArgs e)

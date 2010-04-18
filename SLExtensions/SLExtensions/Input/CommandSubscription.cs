@@ -5,8 +5,8 @@
 namespace SLExtensions.Input
 {
     using System;
-    using System.Linq;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Net;
     using System.Reflection;
     using System.Windows;
@@ -27,9 +27,8 @@ namespace SLExtensions.Input
         #region Fields
 
         // Using a DependencyProperty as the backing store for ICommandSubscription.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty CommandSubscriptionsProperty =
+        public static readonly DependencyProperty CommandSubscriptionsProperty = 
             DependencyProperty.RegisterAttached("CommandSubscriptions", typeof(List<CommandSubscription>), typeof(CommandSubscription), null);
-
 
         #endregion Fields
 
@@ -50,6 +49,11 @@ namespace SLExtensions.Input
 
         #region Properties
 
+        public ICommand Command
+        {
+            get; private set;
+        }
+
         /// <summary>
         /// Gets the element attached to the command
         /// </summary>
@@ -59,8 +63,6 @@ namespace SLExtensions.Input
             get;
             private set;
         }
-
-        public ICommand Command { get; private set; }
 
         #endregion Properties
 
@@ -154,16 +156,13 @@ namespace SLExtensions.Input
         //    {
         //        return;
         //    }
-
         //    CommandSubscription currentSubscription;
         //    if (!elementSubscriptions.TryGetValue(command, out currentSubscription))
         //    {
         //        return;
         //    }
-
         //    currentSubscription.Unregister();
         //}
-
         /// <summary>
         /// Executes the command
         /// </summary>
@@ -176,10 +175,10 @@ namespace SLExtensions.Input
                 if (!ctrl.IsEnabled)
                     return;
             }
-            
+
             object parameter = CommandService.GetCommandParameter(this.Element);
             parameter = PreProcessParameter(parameter);
-            
+
             object command = CommandService.GetCommand(this.Element);
 
             var ICmd = command as ICommand;
@@ -196,7 +195,7 @@ namespace SLExtensions.Input
                     ICommand cmd = CommandService.FindCommand(commandName);
                     cmd.Execute(parameter);
                 }
-            }            
+            }
         }
 
         protected virtual void HookEvents()

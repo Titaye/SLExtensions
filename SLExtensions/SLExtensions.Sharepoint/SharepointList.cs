@@ -53,6 +53,11 @@
             get; set;
         }
 
+        public Uri ServerUri
+        {
+            get; set;
+        }
+
         [DataMember]
         public string SyncToken
         {
@@ -76,8 +81,6 @@
         }
 
         #endregion Properties
-
-        public Uri ServerUri { get; set; }
 
         #region Methods
 

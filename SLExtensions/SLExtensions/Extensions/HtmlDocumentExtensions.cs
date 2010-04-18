@@ -1,20 +1,22 @@
-﻿using System;
-using System.Net;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Ink;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Animation;
-using System.Windows.Shapes;
-using System.Windows.Browser;
-using System.Text;
-
-namespace SLExtensions
+﻿namespace SLExtensions
 {
+    using System;
+    using System.Net;
+    using System.Text;
+    using System.Windows;
+    using System.Windows.Browser;
+    using System.Windows.Controls;
+    using System.Windows.Documents;
+    using System.Windows.Ink;
+    using System.Windows.Input;
+    using System.Windows.Media;
+    using System.Windows.Media.Animation;
+    using System.Windows.Shapes;
+
     public static class HtmlDocumentExtensions
     {
+        #region Methods
+
         /// <summary>
         /// Gets a cookie from its name.
         /// </summary>
@@ -75,6 +77,6 @@ namespace SLExtensions
             document.Cookies = cookieDefinition.ToString();
         }
 
-
+        #endregion Methods
     }
 }

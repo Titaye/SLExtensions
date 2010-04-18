@@ -13,7 +13,6 @@
     using System.Windows.Shapes;
     using System.Windows.Threading;
 
-
     [DefaultTrigger(typeof(UIElement), typeof(System.Windows.Interactivity.EventTrigger), new object[] { "MouseMove" })]
     public class MouseActivityGoToState : TargetedTriggerAction<Control>
     {
@@ -22,7 +21,7 @@
         /// <summary>
         /// ForceShow depedency property.
         /// </summary>
-        public static readonly DependencyProperty ForceShowProperty =
+        public static readonly DependencyProperty ForceShowProperty = 
             DependencyProperty.Register(
                 "ForceShow",
                 typeof(bool),
@@ -30,19 +29,9 @@
                 new PropertyMetadata((d, e) => ((MouseActivityGoToState)d).OnForceShowChanged((bool)e.OldValue, (bool)e.NewValue)));
 
         /// <summary>
-        /// State depedency property.
-        /// </summary>
-        public static readonly DependencyProperty StateProperty =
-            DependencyProperty.Register(
-                "State",
-                typeof(string),
-                typeof(MouseActivityGoToState),
-                null);
-
-        /// <summary>
         /// InactivityState depedency property.
         /// </summary>
-        public static readonly DependencyProperty InactivityStateProperty =
+        public static readonly DependencyProperty InactivityStateProperty = 
             DependencyProperty.Register(
                 "InactivityState",
                 typeof(string),
@@ -52,7 +41,7 @@
         /// <summary>
         /// IsActive depedency property.
         /// </summary>
-        public static readonly DependencyProperty IsActiveProperty =
+        public static readonly DependencyProperty IsActiveProperty = 
             DependencyProperty.Register(
                 "IsActive",
                 typeof(bool),
@@ -60,9 +49,19 @@
                 new PropertyMetadata((d, e) => ((MouseActivityGoToState)d).OnIsActiveChanged((bool)e.OldValue, (bool)e.NewValue)));
 
         /// <summary>
+        /// State depedency property.
+        /// </summary>
+        public static readonly DependencyProperty StateProperty = 
+            DependencyProperty.Register(
+                "State",
+                typeof(string),
+                typeof(MouseActivityGoToState),
+                null);
+
+        /// <summary>
         /// Timeout depedency property.
         /// </summary>
-        public static readonly DependencyProperty TimeoutProperty =
+        public static readonly DependencyProperty TimeoutProperty = 
             DependencyProperty.Register(
                 "Timeout",
                 typeof(TimeSpan),
@@ -104,19 +103,6 @@
             }
         }
 
-        public string State
-        {
-            get
-            {
-                return (string)GetValue(StateProperty);
-            }
-
-            set
-            {
-                SetValue(StateProperty, value);
-            }
-        }
-
         public string InactivityState
         {
             get
@@ -143,6 +129,18 @@
             }
         }
 
+        public string State
+        {
+            get
+            {
+                return (string)GetValue(StateProperty);
+            }
+
+            set
+            {
+                SetValue(StateProperty, value);
+            }
+        }
 
         public TimeSpan Timeout
         {
@@ -168,7 +166,13 @@
             RefreshState();
         }
 
-
+        protected virtual void OnIsActiveChanged()
+        {
+            if (IsActiveChanged != null)
+            {
+                IsActiveChanged(this, EventArgs.Empty);
+            }
+        }
 
         protected override void OnTargetChanged(Control oldTarget, Control newTarget)
         {
@@ -179,20 +183,6 @@
                 oldTarget.Loaded -= Target_Loaded;
 
             RefreshState();
-        }
-
-
-        void Target_Loaded(object sender, RoutedEventArgs e)
-        {
-            RefreshState();
-        }
-
-        protected virtual void OnIsActiveChanged()
-        {
-            if (IsActiveChanged != null)
-            {
-                IsActiveChanged(this, EventArgs.Empty);
-            }
         }
 
         /// <summary>
@@ -232,6 +222,16 @@
             OnIsActiveChanged();
         }
 
+        /// <summary>
+        /// handles the TimeoutProperty changes.
+        /// </summary>
+        /// <param name="oldValue">The old value.</param>
+        /// <param name="newValue">The new value.</param>
+        private void OnTimeoutChanged(TimeSpan oldValue, TimeSpan newValue)
+        {
+            timer.Interval = newValue;
+        }
+
         private void RefreshState()
         {
             if (Target != null)
@@ -247,14 +247,9 @@
             }
         }
 
-        /// <summary>
-        /// handles the TimeoutProperty changes.
-        /// </summary>
-        /// <param name="oldValue">The old value.</param>
-        /// <param name="newValue">The new value.</param>
-        private void OnTimeoutChanged(TimeSpan oldValue, TimeSpan newValue)
+        void Target_Loaded(object sender, RoutedEventArgs e)
         {
-            timer.Interval = newValue;
+            RefreshState();
         }
 
         void timer_Tick(object sender, EventArgs e)
