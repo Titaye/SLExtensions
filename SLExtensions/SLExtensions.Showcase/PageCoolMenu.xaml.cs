@@ -52,6 +52,17 @@
                                             });
         }
 
+        private void btnAdd_Click(object sender, RoutedEventArgs e)
+        {
+            AddRectangle();
+        }
+
+        private void btnRemove_Click(object sender, RoutedEventArgs e)
+        {
+            if (coolMenuRectangle.Items.Count > 0)
+                coolMenuRectangle.Items.RemoveAt(coolMenuRectangle.Items.Count - 1);
+        }
+
         void CoolMenuSample_Loaded(object sender, RoutedEventArgs e)
         {
             var col = new System.Collections.ObjectModel.ObservableCollection<string>
@@ -73,17 +84,6 @@
             byte[] colorBytes = new byte[3];
             m_random.NextBytes(colorBytes);
             return Color.FromArgb(255, colorBytes[0], colorBytes[1], colorBytes[2]);
-        }
-
-        private void btnAdd_Click(object sender, RoutedEventArgs e)
-        {
-            AddRectangle();
-        }
-
-        private void btnRemove_Click(object sender, RoutedEventArgs e)
-        {
-            if (coolMenuRectangle.Items.Count > 0)
-                coolMenuRectangle.Items.RemoveAt(coolMenuRectangle.Items.Count - 1);
         }
 
         #endregion Methods

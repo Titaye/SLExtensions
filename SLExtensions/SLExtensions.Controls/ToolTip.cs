@@ -88,8 +88,8 @@ namespace SLExtensions.Controls
         private bool _beginClosing;
         private bool _closingCompleted = true;
         private Size _lastSize;
-        private bool _openPopup;
         private bool _openingCompleted = true;
+        private bool _openPopup;
         private Popup _parentPopup;
 
         #endregion Fields

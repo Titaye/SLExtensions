@@ -96,13 +96,13 @@
                 typeof(StarSelector),
                 new PropertyMetadata(ValuePropertyChanged));
 
-        private readonly IList<Star> m_stars = new List<Star>();
-
         private const string STATE_DISABLED = "StateDisabled";
         private const string STATE_MOUSEDOWN = "StateMouseDown";
         private const string STATE_MOUSEUP = "StateMouseUp";
         private const string STATE_NORMAL = "StateNormal";
         private const string STATE_READONLY = "StateReadOnly";
+
+        private readonly IList<Star> m_stars = new List<Star>();
 
         private bool m_ratingMode = false;
         private double m_ratingModeValue = 0;
@@ -294,41 +294,6 @@
             }
         }
 
-        private void RaiseValueChanged()
-        {
-            if (ValueChanged != null)
-                ValueChanged(this, new RoutedEventArgs());
-        }
-
-        private void UpdateVisuals()
-        {
-            double useVal = this.DisplayValue;
-            if (m_ratingMode)
-                useVal = m_ratingModeValue;
-
-            double rounded = Math.Round((useVal) * 2, 0) / 2;
-            int wholePart = (int)Math.Floor(rounded);
-            double fractionPart = rounded - wholePart;
-
-            for (int i = 1; i <= m_stars.Count; i++)
-            {
-                if (i <= wholePart)
-                {
-                    m_stars[i - 1].Value = StarSelectState.Selected;
-                }
-                else if (i == wholePart + 1 && fractionPart == 0.5)
-                {
-                    m_stars[i - 1].Value = StarSelectState.HalfSelected;
-                }
-                else
-                {
-                    m_stars[i - 1].Value = StarSelectState.NotSelected;
-                }
-
-                m_stars[i - 1].Disabled = this.Disabled;
-            }
-        }
-
         void m_starContainer_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             if (this.ReadOnly || this.Disabled)
@@ -343,6 +308,31 @@
                 return;
 
             VisualStateManager.GoToState(this, STATE_MOUSEUP, true);
+        }
+
+        private void RaiseValueChanged()
+        {
+            if (ValueChanged != null)
+                ValueChanged(this, new RoutedEventArgs());
+        }
+
+        void starContainer_MouseEnter(object sender, MouseEventArgs e)
+        {
+            if (this.ReadOnly || this.Disabled)
+                return;
+
+            m_ratingMode = true;
+            UpdateVisuals();
+        }
+
+        void starContainer_MouseLeave(object sender, MouseEventArgs e)
+        {
+            if (this.ReadOnly || this.Disabled)
+                return;
+
+            VisualStateManager.GoToState(this, STATE_NORMAL, true);
+            m_ratingMode = false;
+            UpdateVisuals();
         }
 
         void s_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
@@ -385,23 +375,33 @@
             UpdateVisuals();
         }
 
-        void starContainer_MouseEnter(object sender, MouseEventArgs e)
+        private void UpdateVisuals()
         {
-            if (this.ReadOnly || this.Disabled)
-                return;
+            double useVal = this.DisplayValue;
+            if (m_ratingMode)
+                useVal = m_ratingModeValue;
 
-            m_ratingMode = true;
-            UpdateVisuals();
-        }
+            double rounded = Math.Round((useVal) * 2, 0) / 2;
+            int wholePart = (int)Math.Floor(rounded);
+            double fractionPart = rounded - wholePart;
 
-        void starContainer_MouseLeave(object sender, MouseEventArgs e)
-        {
-            if (this.ReadOnly || this.Disabled)
-                return;
+            for (int i = 1; i <= m_stars.Count; i++)
+            {
+                if (i <= wholePart)
+                {
+                    m_stars[i - 1].Value = StarSelectState.Selected;
+                }
+                else if (i == wholePart + 1 && fractionPart == 0.5)
+                {
+                    m_stars[i - 1].Value = StarSelectState.HalfSelected;
+                }
+                else
+                {
+                    m_stars[i - 1].Value = StarSelectState.NotSelected;
+                }
 
-            VisualStateManager.GoToState(this, STATE_NORMAL, true);
-            m_ratingMode = false;
-            UpdateVisuals();
+                m_stars[i - 1].Disabled = this.Disabled;
+            }
         }
 
         #endregion Methods

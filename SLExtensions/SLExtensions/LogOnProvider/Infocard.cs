@@ -31,16 +31,14 @@
         public const string FieldsLocality = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/locality";
         public const string FieldsMobilePhone = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/mobilephone";
         public const string FieldsOtherPhone = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/otherphone";
-        public const string FieldsPPID = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/privatepersonalidentifier";
         public const string FieldsPostalCode = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/postalcode";
+        public const string FieldsPPID = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/privatepersonalidentifier";
         public const string FieldsStateOrProvince = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/stateorprovince";
         public const string FieldsStreetAddress = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/streetaddress";
         public const string FieldsSurname = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname";
         public const string FieldsWebpage = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/webpage";
         public const string SAML10 = "urn:oasis:names:tc:SAML:1.0:assertion";
         public const string SAML11 = "http://docs.oasis-open.org/wss/oasis-wss-saml-token-profile-1.1#SAMLV1.1";
-
-        private static readonly Regex regExIE = new Regex(@"MSIE ([0-9]{1,}[\.0-9]{0,})");
 
         private const string detectInfoCardJs = @"var _idfxAreCardsSupported;
           function idfxAreCardsSupported() {
@@ -97,6 +95,8 @@
           };
         idfxAreCardsSupported();
         ";
+
+        private static readonly Regex regExIE = new Regex(@"MSIE ([0-9]{1,}[\.0-9]{0,})");
 
         private static bool? areCardSupported = null;
 

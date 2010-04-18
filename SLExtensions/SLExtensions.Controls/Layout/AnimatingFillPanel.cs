@@ -41,15 +41,15 @@ namespace SLExtensions.Controls
                 typeof(AnimatingFillPanel),
                 null);
 
+        private const double c_diff = 0.1;
+        private const double c_terminalVelocity = 10000;
+
         private static readonly DependencyProperty DataProperty = 
             DependencyProperty.RegisterAttached("Data", typeof(AnimatingFillPanelData), typeof(AnimatingFillPanel), null);
 
         // Using a DependencyProperty as the backing store for FillData.  This enables animation, styling, binding, etc...
         private static readonly DependencyProperty FillDataProperty = 
             DependencyProperty.RegisterAttached("FillData", typeof(Rect), typeof(AnimatingFillPanel), null);
-
-        private const double c_diff = 0.1;
-        private const double c_terminalVelocity = 10000;
 
         //private bool m_appliedTemplate;
         private bool m_hasArranged; // Used to make sure items are not arranged on the initial load
@@ -251,6 +251,27 @@ namespace SLExtensions.Controls
             return availableSize;
         }
 
+        // Given a child index, child size and children per row, figure out where the child goes
+        private static Point calculateChildOffset(
+            int index,
+            int childrenPerRow,
+            double itemWidth,
+            double itemHeight,
+            double panelWidth,
+            int totalChildren)
+        {
+            double fudge = 0;
+            if (totalChildren > childrenPerRow)
+            {
+                fudge = (panelWidth - childrenPerRow * itemWidth) / childrenPerRow;
+                Debug.Assert(fudge >= 0);
+            }
+
+            int row = index / childrenPerRow;
+            int column = index % childrenPerRow;
+            return new Point(.5 * fudge + column * (itemWidth + fudge), row * itemHeight);
+        }
+
         private static Rect GetFillData(DependencyObject obj)
         {
             return (Rect)obj.GetValue(FillDataProperty);
@@ -276,27 +297,6 @@ namespace SLExtensions.Controls
         private static void SetFillData(DependencyObject obj, Rect value)
         {
             obj.SetValue(FillDataProperty, value);
-        }
-
-        // Given a child index, child size and children per row, figure out where the child goes
-        private static Point calculateChildOffset(
-            int index,
-            int childrenPerRow,
-            double itemWidth,
-            double itemHeight,
-            double panelWidth,
-            int totalChildren)
-        {
-            double fudge = 0;
-            if (totalChildren > childrenPerRow)
-            {
-                fudge = (panelWidth - childrenPerRow * itemWidth) / childrenPerRow;
-                Debug.Assert(fudge >= 0);
-            }
-
-            int row = index / childrenPerRow;
-            int column = index % childrenPerRow;
-            return new Point(.5 * fudge + column * (itemWidth + fudge), row * itemHeight);
         }
 
         private static bool updateElement(AnimatingFillPanelData data, double dampening, double attractionFactor, double variation)

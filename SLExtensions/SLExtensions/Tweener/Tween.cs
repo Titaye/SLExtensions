@@ -19,6 +19,11 @@
         #region Fields
 
         /// <summary>
+        /// The default number of keyframes to generate per second.
+        /// </summary>
+        public const int DefaultFps = 20;
+
+        /// <summary>
         /// The frames-per-second attached property.
         /// </summary>
         /// <remarks>The FPS attached property defines the number of keyframes to generate per second.</remarks>
@@ -42,11 +47,6 @@
         /// </summary>
         public static readonly DependencyProperty TransitionTypeProperty = 
             DependencyProperty.RegisterAttached("TransitionType", typeof(TransitionType), typeof(Tween), new PropertyMetadata(OnTweenChanged));
-
-        /// <summary>
-        /// The default number of keyframes to generate per second.
-        /// </summary>
-        public const int DefaultFps = 20;
 
         #endregion Fields
 

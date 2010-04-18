@@ -21,8 +21,8 @@
     {
         #region Fields
 
-        private const string RichTextModeFullHtml = "FullHtml";
         private const string attributeRichTextMode = "RichTextMode";
+        private const string RichTextModeFullHtml = "FullHtml";
 
         #endregion Fields
 

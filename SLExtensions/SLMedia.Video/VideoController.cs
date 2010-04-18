@@ -360,22 +360,6 @@
             RefreshMediaElementState();
         }
 
-        private void SetPlayStateToVideoAdapter()
-        {
-            if (VideoAdapter == null)
-                return;
-
-            if (IsPlaying == true)
-                VideoAdapter.Play();
-            else
-                VideoAdapter.Pause();
-        }
-
-        void VideoAdapter_CurrentStateChanged(object sender, RoutedEventArgs e)
-        {
-            RefreshMediaElementState();
-        }
-
         void setAudioTrack_Executed(object sender, ExecutedEventArgs e)
         {
             AudioTrack track = e.Parameter as AudioTrack;
@@ -393,9 +377,25 @@
             }
         }
 
+        private void SetPlayStateToVideoAdapter()
+        {
+            if (VideoAdapter == null)
+                return;
+
+            if (IsPlaying == true)
+                VideoAdapter.Play();
+            else
+                VideoAdapter.Pause();
+        }
+
         void videoAdapter_BufferingProgressChanged(object sender, RoutedEventArgs e)
         {
             BufferingProgress = VideoAdapter.BufferingProgress;
+        }
+
+        void VideoAdapter_CurrentStateChanged(object sender, RoutedEventArgs e)
+        {
+            RefreshMediaElementState();
         }
 
         void videoAdapter_DownloadProgressChanged(object sender, RoutedEventArgs e)

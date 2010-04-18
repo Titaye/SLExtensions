@@ -62,9 +62,24 @@ namespace SLExtensions.IO.Compression.Zip.ZipCompression
         /// </summary>
         public DeflaterPending pending;
 
-        // The lengths of the bit length codes are sent in order of decreasing
-        // probability, to avoid transmitting the lengths for unused bit length codes.
-        static readonly int[] BL_ORDER = { 16, 17, 18, 0, 8, 7, 9, 6, 10, 5, 11, 4, 12, 3, 13, 2, 14, 1, 15 };
+        // Number of codes used to transfer bit lengths
+        const int BITLEN_NUM = 19;
+        const int BUFSIZE = 1 << (DeflaterConstants.DEFAULT_MEM_LEVEL + 6);
+
+        // Number of distance codes
+        const int DIST_NUM = 30;
+        const int EOF_SYMBOL = 256;
+        const int LITERAL_NUM = 286;
+
+        // repeat a zero length 11-138 times  (7 bits of repeat count)
+        const int REP_11_138 = 18;
+
+        // repeat a zero length 3-10 times  (3 bits of repeat count)
+        const int REP_3_10 = 17;
+
+        // repeat previous bit length 3-6 times (2 bits of repeat count)
+        const int REP_3_6 = 16;
+
         static readonly byte[] bit4Reverse = {
             0,
             8,
@@ -84,23 +99,9 @@ namespace SLExtensions.IO.Compression.Zip.ZipCompression
             15
         };
 
-        // Number of codes used to transfer bit lengths
-        const int BITLEN_NUM = 19;
-        const int BUFSIZE = 1 << (DeflaterConstants.DEFAULT_MEM_LEVEL + 6);
-
-        // Number of distance codes
-        const int DIST_NUM = 30;
-        const int EOF_SYMBOL = 256;
-        const int LITERAL_NUM = 286;
-
-        // repeat a zero length 11-138 times  (7 bits of repeat count)
-        const int REP_11_138 = 18;
-
-        // repeat a zero length 3-10 times  (3 bits of repeat count)
-        const int REP_3_10 = 17;
-
-        // repeat previous bit length 3-6 times (2 bits of repeat count)
-        const int REP_3_6 = 16;
+        // The lengths of the bit length codes are sent in order of decreasing
+        // probability, to avoid transmitting the lengths for unused bit length codes.
+        static readonly int[] BL_ORDER = { 16, 17, 18, 0, 8, 7, 9, 6, 10, 5, 11, 4, 12, 3, 13, 2, 14, 1, 15 };
 
         static short[] staticDCodes;
         static byte[] staticDLength;
@@ -108,14 +109,14 @@ namespace SLExtensions.IO.Compression.Zip.ZipCompression
         static byte[] staticLLength;
 
         Tree blTree;
+        Tree distTree;
 
         // Buffer for distances
         short[] d_buf;
-        Tree distTree;
         int extra_bits;
-        byte[] l_buf;
         int last_lit;
         Tree literalTree;
+        byte[] l_buf;
 
         #endregion Fields
 

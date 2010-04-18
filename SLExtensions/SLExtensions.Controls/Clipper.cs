@@ -7,11 +7,11 @@
     {
         #region Fields
 
-        public static readonly DependencyProperty ClipToBoundsProperty =
+        public static readonly DependencyProperty ClipToBoundsProperty = 
             DependencyProperty.RegisterAttached("ClipToBounds", typeof(bool), typeof(Clipper),
                                                 new PropertyMetadata(ClipToBoundsChangedCallback));
 
-        internal static readonly DependencyProperty FrameworkElementExtensionsProperty =
+        internal static readonly DependencyProperty FrameworkElementExtensionsProperty = 
             DependencyProperty.RegisterAttached("FrameworkElementExtensions", typeof(Clipper),
                                                 typeof(Clipper), null);
 

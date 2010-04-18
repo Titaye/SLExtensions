@@ -228,6 +228,11 @@
             FilterList();
         }
 
+        void mrkSelector_IsActiveChanged(object sender, EventArgs e)
+        {
+            FilterList();
+        }
+
         /// <summary>
         /// handles the FilterActiveOnlyProperty changes.
         /// </summary>
@@ -274,12 +279,6 @@
             selector.IsActiveChanged += mrkSelector_IsActiveChanged;
         }
 
-        private void UnSubscribeSelector(IMarkerSelector selector)
-        {
-            subscribedSelectors.Remove(selector);
-            selector.IsActiveChanged -= mrkSelector_IsActiveChanged;
-        }
-
         private void UnbindSelectors(IEnumerable<IMarkerSelector> lastCollection)
         {
             foreach (var mrkSelector in lastCollection)
@@ -292,9 +291,10 @@
                 notifyCollection.CollectionChanged -= MarkerSources_CollectionChanged;
         }
 
-        void mrkSelector_IsActiveChanged(object sender, EventArgs e)
+        private void UnSubscribeSelector(IMarkerSelector selector)
         {
-            FilterList();
+            subscribedSelectors.Remove(selector);
+            selector.IsActiveChanged -= mrkSelector_IsActiveChanged;
         }
 
         #endregion Methods

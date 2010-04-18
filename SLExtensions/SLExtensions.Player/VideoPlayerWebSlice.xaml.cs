@@ -67,14 +67,14 @@
         {
         }
 
+        private void media_MediaFailed(object sender, ExceptionRoutedEventArgs e)
+        {
+        }
+
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
             if (this.VideoLinkUri != null)
                 hlVideoLink.NavigateUri = this.VideoLinkUri;
-        }
-
-        private void media_MediaFailed(object sender, ExceptionRoutedEventArgs e)
-        {
         }
 
         #endregion Methods

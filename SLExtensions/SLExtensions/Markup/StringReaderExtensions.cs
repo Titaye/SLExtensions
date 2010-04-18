@@ -20,12 +20,12 @@
     {
         #region Fields
 
-        private static readonly Regex attributesRegex = new Regex(@"(?<key>\w+)=('(?<value>[^']*)'|""(?<value>[^""]*)""|(?<value>[\w_$]+))", RegexOptions.Multiline);
-
         private const char gt = '>';
         private const char lt = '<';
         private const char slash = '/';
         private const char space = ' ';
+
+        private static readonly Regex attributesRegex = new Regex(@"(?<key>\w+)=('(?<value>[^']*)'|""(?<value>[^""]*)""|(?<value>[\w_$]+))", RegexOptions.Multiline);
 
         #endregion Fields
 

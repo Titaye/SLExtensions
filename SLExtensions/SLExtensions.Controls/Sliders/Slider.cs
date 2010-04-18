@@ -150,17 +150,6 @@
             base.OnValueChanged(oldValue, newValue);
         }
 
-        /// <summary>
-        /// handles the MoveValueProperty changes.
-        /// </summary>
-        /// <param name="oldValue">The old value.</param>
-        /// <param name="newValue">The new value.</param>
-        private void OnMoveValueChanged(double oldValue, double newValue)
-        {
-            if (!isDragging)
-                Value = newValue;
-        }
-
         void horizontalThumb_DragCompleted(object sender, DragCompletedEventArgs e)
         {
             isDragging = false;
@@ -172,6 +161,17 @@
         {
             isDragging = true;
             OnDragStarted();
+        }
+
+        /// <summary>
+        /// handles the MoveValueProperty changes.
+        /// </summary>
+        /// <param name="oldValue">The old value.</param>
+        /// <param name="newValue">The new value.</param>
+        private void OnMoveValueChanged(double oldValue, double newValue)
+        {
+            if (!isDragging)
+                Value = newValue;
         }
 
         void verticalThumb_DragCompleted(object sender, DragCompletedEventArgs e)

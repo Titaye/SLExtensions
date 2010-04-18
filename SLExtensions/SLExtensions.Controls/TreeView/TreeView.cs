@@ -32,16 +32,6 @@ namespace SLExtensions.Controls
         #region Fields
 
         /// <summary>
-        /// Dependency property for selecting on expand
-        /// </summary>
-        public static readonly DependencyProperty SelectOnExpandChangeProperty = 
-            DependencyProperty.Register(
-                "SelectOnExpandChange",
-                typeof(bool),
-                typeof(TreeView),
-                new PropertyMetadata((d, e) => ((TreeView)d).OnSelectOnExpandChangeChanged((bool)e.OldValue, (bool)e.NewValue)));
-
-        /// <summary>
         /// Dependency property for the selected item
         /// </summary>
         public static readonly DependencyProperty SelectedItemProperty = 
@@ -60,6 +50,16 @@ namespace SLExtensions.Controls
                 typeof(TreeViewItem),
                 typeof(TreeView),
                 new PropertyMetadata((d, e) => ((TreeView)d).OnSelectedNodeChanged((TreeViewItem)e.OldValue, (TreeViewItem)e.NewValue)));
+
+        /// <summary>
+        /// Dependency property for selecting on expand
+        /// </summary>
+        public static readonly DependencyProperty SelectOnExpandChangeProperty = 
+            DependencyProperty.Register(
+                "SelectOnExpandChange",
+                typeof(bool),
+                typeof(TreeView),
+                new PropertyMetadata((d, e) => ((TreeView)d).OnSelectOnExpandChangeChanged((bool)e.OldValue, (bool)e.NewValue)));
 
         /// <summary>
         /// Dependency property for the template selector
@@ -128,25 +128,6 @@ namespace SLExtensions.Controls
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether we are selecting the nodes when the node is expanding or collapsing
-        /// </summary>
-        /// <value>
-        /// 	<c>true</c> if select on expanding or collapsing otherwise, <c>false</c>.
-        /// </value>
-        public bool SelectOnExpandChange
-        {
-            get
-            {
-                return (bool)GetValue(SelectOnExpandChangeProperty);
-            }
-
-            set
-            {
-                SetValue(SelectOnExpandChangeProperty, value);
-            }
-        }
-
-        /// <summary>
         /// Gets or sets the selected item.
         /// </summary>
         /// <value>The selected item.</value>
@@ -177,6 +158,25 @@ namespace SLExtensions.Controls
             set
             {
                 SetValue(SelectedNodeProperty, value);
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether we are selecting the nodes when the node is expanding or collapsing
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if select on expanding or collapsing otherwise, <c>false</c>.
+        /// </value>
+        public bool SelectOnExpandChange
+        {
+            get
+            {
+                return (bool)GetValue(SelectOnExpandChangeProperty);
+            }
+
+            set
+            {
+                SetValue(SelectOnExpandChangeProperty, value);
             }
         }
 
@@ -545,15 +545,6 @@ namespace SLExtensions.Controls
         }
 
         /// <summary>
-        /// handles the SelectOnExpandChange property changes.
-        /// </summary>
-        /// <param name="oldValue">if set to <c>true</c> [old value].</param>
-        /// <param name="newValue">if set to <c>true</c> [new value].</param>
-        private void OnSelectOnExpandChangeChanged(bool oldValue, bool newValue)
-        {
-        }
-
-        /// <summary>
         /// handles the SelectedItemChanged property changes.
         /// </summary>
         /// <param name="oldValue">The old value.</param>
@@ -575,6 +566,15 @@ namespace SLExtensions.Controls
                 oldValue.IsSelected = false;
             if (newValue != null)
                 newValue.IsSelected = true;
+        }
+
+        /// <summary>
+        /// handles the SelectOnExpandChange property changes.
+        /// </summary>
+        /// <param name="oldValue">if set to <c>true</c> [old value].</param>
+        /// <param name="newValue">if set to <c>true</c> [new value].</param>
+        private void OnSelectOnExpandChangeChanged(bool oldValue, bool newValue)
+        {
         }
 
         #endregion Methods

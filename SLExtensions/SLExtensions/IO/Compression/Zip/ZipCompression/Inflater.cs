@@ -77,6 +77,24 @@ namespace SLExtensions.IO.Compression.Zip.ZipCompression
     {
         #region Fields
 
+        const int DECODE_BLOCKS = 2;
+        const int DECODE_CHKSUM = 11;
+        const int DECODE_DICT = 1;
+        const int DECODE_DYN_HEADER = 6;
+
+        /// <summary>
+        /// These are the possible states for an inflater
+        /// </summary>
+        const int DECODE_HEADER = 0;
+        const int DECODE_HUFFMAN = 7;
+        const int DECODE_HUFFMAN_DIST = 9;
+        const int DECODE_HUFFMAN_DISTBITS = 10;
+        const int DECODE_HUFFMAN_LENBITS = 8;
+        const int DECODE_STORED = 5;
+        const int DECODE_STORED_LEN1 = 3;
+        const int DECODE_STORED_LEN2 = 4;
+        const int FINISHED = 12;
+
         /// <summary>
         /// Extra bits for distance codes
         /// </summary>
@@ -110,24 +128,6 @@ namespace SLExtensions.IO.Compression.Zip.ZipCompression
                                   0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2,
                                   3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 0
                               };
-
-        const int DECODE_BLOCKS = 2;
-        const int DECODE_CHKSUM = 11;
-        const int DECODE_DICT = 1;
-        const int DECODE_DYN_HEADER = 6;
-
-        /// <summary>
-        /// These are the possible states for an inflater
-        /// </summary>
-        const int DECODE_HEADER = 0;
-        const int DECODE_HUFFMAN = 7;
-        const int DECODE_HUFFMAN_DIST = 9;
-        const int DECODE_HUFFMAN_DISTBITS = 10;
-        const int DECODE_HUFFMAN_LENBITS = 8;
-        const int DECODE_STORED = 5;
-        const int DECODE_STORED_LEN1 = 3;
-        const int DECODE_STORED_LEN2 = 4;
-        const int FINISHED = 12;
 
         Adler32 adler;
         InflaterDynHeader dynHeader;

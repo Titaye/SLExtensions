@@ -216,6 +216,12 @@
             RefreshState();
         }
 
+        void notifyingObject_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == Property)
+                RefreshState();
+        }
+
         /// <summary>
         /// handles the PropertyProperty changes.
         /// </summary>
@@ -407,12 +413,6 @@
                     }
                 }
             }
-        }
-
-        void notifyingObject_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName == Property)
-                RefreshState();
         }
 
         #endregion Methods

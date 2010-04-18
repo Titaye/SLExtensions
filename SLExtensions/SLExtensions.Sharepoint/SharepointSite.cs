@@ -292,6 +292,22 @@
             });
         }
 
+        static void attachmentDownloader_OpenReadCompleted(object sender, OpenReadCompletedEventArgs e)
+        {
+            SharepointListWrapper wrapper = (SharepointListWrapper)e.UserState;
+            TemplateDataBase data = wrapper.LastSyncRows[0];
+            if (e.Error == null)
+            {
+                string uri = data.ToBeDownloaded[0];
+                byte[] buffer = new byte[e.Result.Length];
+                e.Result.Read(buffer, 0, buffer.Length);
+                data.ReadDownloadedDataFromStore();
+                data.DownloadedData[uri] = buffer;
+            }
+            data.ToBeDownloaded.RemoveAt(0);
+            downloadAttachments(wrapper);
+        }
+
         private static ListsSoapClient CreateListSoapClient(SharepointList list)
         {
             if (list.ServerUri == null)
@@ -305,6 +321,43 @@
             var wslist = new ListsSoapClient(basicbinding, new EndpointAddress(serverUri));
 
             return wslist;
+        }
+
+        private static void downloadAttachments(SharepointListWrapper wrapper)
+        {
+            while (wrapper.LastSyncRows != null
+                && wrapper.LastSyncRows.Count > 0)
+            {
+                var item = wrapper.LastSyncRows[0];
+                if (item.ToBeDownloaded == null
+                    || item.ToBeDownloaded.Count == 0)
+                {
+                    wrapper.LastSyncRows.RemoveAt(0);
+                    continue;
+                }
+                break;
+            }
+
+            TemplateDataBase row = null;
+            if(wrapper.LastSyncRows != null)
+                row = wrapper.LastSyncRows.FirstOrDefault();
+
+            if (row == null
+                || row.ToBeDownloaded == null
+                || row.ToBeDownloaded.Count == 0)
+            {
+                EndSynchronize(wrapper);
+            }
+            else
+            {
+
+                Uri uri = new Uri(row.ToBeDownloaded[0], UriKind.RelativeOrAbsolute);
+                WebClient attachmentDownloader = new WebClient();
+                attachmentDownloader.OpenReadCompleted += new OpenReadCompletedEventHandler(attachmentDownloader_OpenReadCompleted);
+                if (!uri.IsAbsoluteUri)
+                    uri = new Uri(Application.Current.Host.Source, uri);
+                attachmentDownloader.OpenReadAsync(uri, wrapper);
+            }
         }
 
         private static void DownloadListChanges(SharepointListWrapper wrapper)
@@ -379,59 +432,6 @@
 
             //skip row parsing, we are reseting all the list
             EndSynchronize(wrapper);
-        }
-
-        static void attachmentDownloader_OpenReadCompleted(object sender, OpenReadCompletedEventArgs e)
-        {
-            SharepointListWrapper wrapper = (SharepointListWrapper)e.UserState;
-            TemplateDataBase data = wrapper.LastSyncRows[0];
-            if (e.Error == null)
-            {
-                string uri = data.ToBeDownloaded[0];
-                byte[] buffer = new byte[e.Result.Length];
-                e.Result.Read(buffer, 0, buffer.Length);
-                data.ReadDownloadedDataFromStore();
-                data.DownloadedData[uri] = buffer;
-            }
-            data.ToBeDownloaded.RemoveAt(0);
-            downloadAttachments(wrapper);
-        }
-
-        private static void downloadAttachments(SharepointListWrapper wrapper)
-        {
-            while (wrapper.LastSyncRows != null
-                && wrapper.LastSyncRows.Count > 0)
-            {
-                var item = wrapper.LastSyncRows[0];
-                if (item.ToBeDownloaded == null
-                    || item.ToBeDownloaded.Count == 0)
-                {
-                    wrapper.LastSyncRows.RemoveAt(0);
-                    continue;
-                }
-                break;
-            }
-
-            TemplateDataBase row = null;
-            if(wrapper.LastSyncRows != null)
-                row = wrapper.LastSyncRows.FirstOrDefault();
-
-            if (row == null
-                || row.ToBeDownloaded == null
-                || row.ToBeDownloaded.Count == 0)
-            {
-                EndSynchronize(wrapper);
-            }
-            else
-            {
-
-                Uri uri = new Uri(row.ToBeDownloaded[0], UriKind.RelativeOrAbsolute);
-                WebClient attachmentDownloader = new WebClient();
-                attachmentDownloader.OpenReadCompleted += new OpenReadCompletedEventHandler(attachmentDownloader_OpenReadCompleted);
-                if (!uri.IsAbsoluteUri)
-                    uri = new Uri(Application.Current.Host.Source, uri);
-                attachmentDownloader.OpenReadAsync(uri, wrapper);
-            }
         }
 
         static void wslist_GetListCompleted(object sender, GetListCompletedEventArgs e)

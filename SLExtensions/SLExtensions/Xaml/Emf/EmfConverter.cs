@@ -524,20 +524,6 @@ namespace SLExtensions.Xaml.Emf
             WriteEndElement(output);
         }
 
-        private void WritePolyPolygon(byte[] parameters, EmfContext context, XmlWriter output)
-        {
-            int count = ReadInt16(parameters, 0);
-            int position = count * 2 + 2;
-            for (int i = 0; i < count; i++) {
-                int pointsCount = ReadInt16(parameters, (i * 2) + 2);
-                string points = ReadPoints(parameters, position, pointsCount, context);
-
-                position += 4 * pointsCount;
-
-                WritePolygon(points, context, output);
-            }
-        }
-
         private void WritePolygon(byte[] parameters, EmfContext context, XmlWriter output)
         {
             int count = ReadInt16(parameters, 0);
@@ -564,6 +550,20 @@ namespace SLExtensions.Xaml.Emf
             WriteStroke(context.Pen, output);
             WriteAttribute(output, "Points", points);
             WriteEndElement(output);
+        }
+
+        private void WritePolyPolygon(byte[] parameters, EmfContext context, XmlWriter output)
+        {
+            int count = ReadInt16(parameters, 0);
+            int position = count * 2 + 2;
+            for (int i = 0; i < count; i++) {
+                int pointsCount = ReadInt16(parameters, (i * 2) + 2);
+                string points = ReadPoints(parameters, position, pointsCount, context);
+
+                position += 4 * pointsCount;
+
+                WritePolygon(points, context, output);
+            }
         }
 
         private void WriteRectangle(byte[] parameters, EmfContext context, XmlWriter output)

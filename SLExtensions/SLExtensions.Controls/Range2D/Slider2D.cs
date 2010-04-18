@@ -81,12 +81,13 @@ namespace SLExtensions.Controls
         internal const string ElementTemplateRootName = "TemplateRoot";
         internal const string ElementThumbName = "Thumb";
 
+        private bool isMouseCaptured;
+
         /// <summary> 
         /// Accumulates drag offsets in case the mouse drags off the end of the track.
         /// </summary>
         private double _dragValueX;
         private double _dragValueY;
-        private bool isMouseCaptured;
 
         #endregion Fields
 

@@ -296,10 +296,6 @@
             }
         }
 
-        void Owner_ViewportChanged(object sender, RoutedEventArgs e)
-        {
-        }
-
         void msi_ImageOpenSucceeded(object sender, RoutedEventArgs e)
         {
             ImagesToShow.Clear();
@@ -310,6 +306,10 @@
                 needArrangeOnFistMotion = true;
                 Owner.UseSprings = false;
             }
+        }
+
+        void Owner_ViewportChanged(object sender, RoutedEventArgs e)
+        {
         }
 
         #endregion Methods

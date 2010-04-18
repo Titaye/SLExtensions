@@ -27,13 +27,13 @@
 
         private static byte[] _4BYTEDATA = { 0, 0, 0, 0 };
         private static byte[] _ARGB = { 0, 0, 0, 0, 0, 0, 0, 0, 8, 6, 0, 0, 0 };
+        private static uint[] _crcTable = new uint[256];
+        private static bool _crcTableComputed = false;
         private static byte[] _GAMA = { (byte)'g', (byte)'A', (byte)'M', (byte)'A' };
         private static byte[] _HEADER = { 0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A };
         private static byte[] _IDAT = { (byte)'I', (byte)'D', (byte)'A', (byte)'T' };
         private static byte[] _IEND = { (byte)'I', (byte)'E', (byte)'N', (byte)'D' };
         private static byte[] _IHDR = { (byte)'I', (byte)'H', (byte)'D', (byte)'R' };
-        private static uint[] _crcTable = new uint[256];
-        private static bool _crcTableComputed = false;
 
         #endregion Fields
 

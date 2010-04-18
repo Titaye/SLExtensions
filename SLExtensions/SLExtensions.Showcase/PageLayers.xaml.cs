@@ -35,26 +35,20 @@
 
         #region Methods
 
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            idx++;
-
-            int viewIdx = idx % 7;
-            loadView(viewIdx);
-        }
-
-        void Page_Loaded(object sender, RoutedEventArgs e)
-        {
-            loadView(0);
-            //LayoutRoot.Children.Add(new SLExtensions.Controls.Layers.GoogleMaps.AerialView());
-        }
-
         private void btnItems_Click(object sender, RoutedEventArgs e)
         {
             TestData datasource = (TestData)Resources["datasource"];
             datasource.Data.Add(new TestData() { GPSPoint = new Point((double)rnd.Next(-18000, +18000) / 100, (double)rnd.Next(-8000, +8000) / 100) });
             //<!--<map:LayerSource ItemsSource="{Binding Data, Source={StaticResource datasource}}" ItemTemplate="{StaticResource itemTemplate}" map:LayerHost.Layer="pointsLayer"  />-->
             //ptSource.ItemsSource = new TestData().Data;
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            idx++;
+
+            int viewIdx = idx % 7;
+            loadView(viewIdx);
         }
 
         private void loadView(int viewIdx)
@@ -111,6 +105,12 @@
         {
             // Set the point at x:250px at the current zoom level as the new top left corner
             map.SetTopLeftPoint(new Point(250, 0), true);
+        }
+
+        void Page_Loaded(object sender, RoutedEventArgs e)
+        {
+            loadView(0);
+            //LayoutRoot.Children.Add(new SLExtensions.Controls.Layers.GoogleMaps.AerialView());
         }
 
         private void zoomIn_Click(object sender, RoutedEventArgs e)

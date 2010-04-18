@@ -690,17 +690,6 @@ namespace SLExtensions.IO.Compression.Zip
         }
 
         /// <summary>
-        /// Get a value indicating this entry is for a DOS/Windows system.
-        /// </summary>
-        public bool IsDOSEntry
-        {
-            get {
-                return ((HostSystem == ( int )HostSystemID.Msdos) ||
-                    (HostSystem == ( int )HostSystemID.WindowsNT));
-            }
-        }
-
-        /// <summary>
         /// Gets a value indicating if the entry is a directory.
         /// however.
         /// </summary>
@@ -720,6 +709,17 @@ namespace SLExtensions.IO.Compression.Zip
                     HasDosAttributes(16)
                     ;
                 return result;
+            }
+        }
+
+        /// <summary>
+        /// Get a value indicating this entry is for a DOS/Windows system.
+        /// </summary>
+        public bool IsDOSEntry
+        {
+            get {
+                return ((HostSystem == ( int )HostSystemID.Msdos) ||
+                    (HostSystem == ( int )HostSystemID.WindowsNT));
             }
         }
 

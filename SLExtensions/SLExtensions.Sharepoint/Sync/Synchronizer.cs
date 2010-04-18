@@ -91,6 +91,16 @@
             Synchronize();
         }
 
+        private void appendForSynchro(SharepointList spl)
+        {
+            if (spl != null
+                //&& (spl.LastSyncTime == null || (DateTime.Now - spl.LastSyncTime) > SyncRefresh)
+                && spl.Name != SynchronizingListName)
+            {
+                pendingSynchro.Enqueue(spl);
+            }
+        }
+
         private void EndSynchronize()
         {
             SynchronizingListName = null;
@@ -189,16 +199,6 @@
                     });
                 };
                 worker.RunWorkerAsync();
-            }
-        }
-
-        private void appendForSynchro(SharepointList spl)
-        {
-            if (spl != null
-                //&& (spl.LastSyncTime == null || (DateTime.Now - spl.LastSyncTime) > SyncRefresh)
-                && spl.Name != SynchronizingListName)
-            {
-                pendingSynchro.Enqueue(spl);
             }
         }
 

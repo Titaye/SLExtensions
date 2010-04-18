@@ -18,8 +18,8 @@
     using SLExtensions.Input;
 
     using SLMedia.Core;
-    using SLMedia.PlaylistProvider.MSNVideo;
     using SLMedia.PlaylistProvider.MediaRSS;
+    using SLMedia.PlaylistProvider.MSNVideo;
 
     public partial class App : Application
     {

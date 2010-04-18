@@ -284,12 +284,6 @@ namespace SLExtensions.IO.Compression.Zip
         public const int CENSIG64 = 'P' | ('K' << 8) | (6 << 16) | (6 << 24);
 
         /// <summary>
-        /// Size of cryptographic header stored before entry data
-        /// </summary>
-        [Obsolete("Use CryptoHeaderSize instead")]
-        public const int CRYPTO_HEADER_SIZE = 12;
-
-        /// <summary>
         /// Size of central header entry (excluding variable fields)
         /// </summary>
         public const int CentralHeaderBaseSize = 46;
@@ -308,6 +302,12 @@ namespace SLExtensions.IO.Compression.Zip
         /// Size of 'classic' cryptographic header stored before any entry data
         /// </summary>
         public const int CryptoHeaderSize = 12;
+
+        /// <summary>
+        /// Size of cryptographic header stored before entry data
+        /// </summary>
+        [Obsolete("Use CryptoHeaderSize instead")]
+        public const int CRYPTO_HEADER_SIZE = 12;
 
         /// <summary>
         /// Signature for data descriptor
@@ -334,6 +334,16 @@ namespace SLExtensions.IO.Compression.Zip
         /// <summary>
         /// End of central directory record signature
         /// </summary>
+        public const int EndOfCentralDirectorySignature = 'P' | ('K' << 8) | (5 << 16) | (6 << 24);
+
+        /// <summary>
+        /// Size of end of central record (excluding variable fields)
+        /// </summary>
+        public const int EndOfCentralRecordBaseSize = 22;
+
+        /// <summary>
+        /// End of central directory record signature
+        /// </summary>
         [Obsolete("Use EndOfCentralDirectorySignature instead")]
         public const int ENDSIG = 'P' | ('K' << 8) | (5 << 16) | (6 << 24);
 
@@ -356,14 +366,14 @@ namespace SLExtensions.IO.Compression.Zip
         public const int EXTSIG = 'P' | ('K' << 8) | (7 << 16) | (8 << 24);
 
         /// <summary>
-        /// End of central directory record signature
+        /// Size of local entry header (excluding variable length fields at end)
         /// </summary>
-        public const int EndOfCentralDirectorySignature = 'P' | ('K' << 8) | (5 << 16) | (6 << 24);
+        public const int LocalHeaderBaseSize = 30;
 
         /// <summary>
-        /// Size of end of central record (excluding variable fields)
+        /// Signature for local entry header
         /// </summary>
-        public const int EndOfCentralRecordBaseSize = 22;
+        public const int LocalHeaderSignature = 'P' | ('K' << 8) | (3 << 16) | (4 << 24);
 
         /// <summary>
         /// Size of local entry header (excluding variable length fields at end)
@@ -378,26 +388,10 @@ namespace SLExtensions.IO.Compression.Zip
         public const int LOCSIG = 'P' | ('K' << 8) | (3 << 16) | (4 << 24);
 
         /// <summary>
-        /// Size of local entry header (excluding variable length fields at end)
-        /// </summary>
-        public const int LocalHeaderBaseSize = 30;
-
-        /// <summary>
-        /// Signature for local entry header
-        /// </summary>
-        public const int LocalHeaderSignature = 'P' | ('K' << 8) | (3 << 16) | (4 << 24);
-
-        /// <summary>
         /// Signature for spanning entry
         /// </summary>
         [Obsolete("Use SpanningSignature instead")]
         public const int SPANNINGSIG = 'P' | ('K' << 8) | (7 << 16) | (8 << 24);
-
-        /// <summary>
-        /// Signature for temporary spanning entry
-        /// </summary>
-        [Obsolete("Use SpanningTempSignature instead")]
-        public const int SPANTEMPSIG = 'P' | ('K' << 8) | ('0' << 16) | ('0' << 24);
 
         /// <summary>
         /// Signature for spanning entry
@@ -410,20 +404,10 @@ namespace SLExtensions.IO.Compression.Zip
         public const int SpanningTempSignature = 'P' | ('K' << 8) | ('0' << 16) | ('0' << 24);
 
         /// <summary>
-        /// The version made by field for entries in the central header when created by this library
+        /// Signature for temporary spanning entry
         /// </summary>
-        /// <remarks>
-        /// This is also the Zip version for the library when comparing against the version required to extract
-        /// for an entry.  See <see cref="ZipInputStream.CanDecompressEntry">ZipInputStream.CanDecompressEntry</see>.
-        /// </remarks>
-        [Obsolete("Use VersionMadeBy instead")]
-        public const int VERSION_MADE_BY = 45;
-
-        /// <summary>
-        /// The minimum version required to support strong encryption
-        /// </summary>
-        [Obsolete("Use VersionStrongEncryption instead")]
-        public const int VERSION_STRONG_ENCRYPTION = 50;
+        [Obsolete("Use SpanningTempSignature instead")]
+        public const int SPANTEMPSIG = 'P' | ('K' << 8) | ('0' << 16) | ('0' << 24);
 
         /// <summary>
         /// The version made by field for entries in the central header when created by this library
@@ -443,6 +427,22 @@ namespace SLExtensions.IO.Compression.Zip
         /// The version required for Zip64 extensions
         /// </summary>
         public const int VersionZip64 = 45;
+
+        /// <summary>
+        /// The version made by field for entries in the central header when created by this library
+        /// </summary>
+        /// <remarks>
+        /// This is also the Zip version for the library when comparing against the version required to extract
+        /// for an entry.  See <see cref="ZipInputStream.CanDecompressEntry">ZipInputStream.CanDecompressEntry</see>.
+        /// </remarks>
+        [Obsolete("Use VersionMadeBy instead")]
+        public const int VERSION_MADE_BY = 45;
+
+        /// <summary>
+        /// The minimum version required to support strong encryption
+        /// </summary>
+        [Obsolete("Use VersionStrongEncryption instead")]
+        public const int VERSION_STRONG_ENCRYPTION = 50;
 
         /// <summary>
         /// Signature for Zip64 central directory locator

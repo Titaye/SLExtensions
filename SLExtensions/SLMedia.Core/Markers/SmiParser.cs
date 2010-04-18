@@ -26,10 +26,8 @@
     {
         #region Fields
 
-        private static readonly StringComparer strComp = StringComparer.OrdinalIgnoreCase;
-
-        private const string BRMarkup = "br";
         private const string BodyMarkup = "body";
+        private const string BRMarkup = "br";
         private const string CommentMarkup = "!--";
         private const char CurlyBraceClose = '}';
         private const char CurlyBraceOpen = '{';
@@ -38,6 +36,8 @@
         private const string SamiMarkup = "sami";
         private const string StyleMarkup = "style";
         private const string SyncMarkup = "sync";
+
+        private static readonly StringComparer strComp = StringComparer.OrdinalIgnoreCase;
 
         #endregion Fields
 
@@ -284,6 +284,47 @@
             }
         }
 
+        private static MarkupContent readSyncNode(StringReader reader, MarkupContent markupContent, Dictionary<string, Dictionary<string, string>> styles, Dictionary<string, List<SmiMarker>> markersByLanguage)
+        {
+            MarkupType markupType;
+
+            TimeSpan position = TimeSpan.Zero;
+            var start = markupContent.Parameters.TryGetValue("start");
+            var startInt = 0;
+            if (!int.TryParse(start, out startInt))
+                return null;
+
+            position = TimeSpan.FromMilliseconds(startInt);
+
+            while (reader.Peek() != -1)
+            {
+                reader.ReadToMarkup();
+                if (!reader.PeekIsMarkup())
+                    return null;
+
+                markupType = reader.ReadMarkup(out markupContent, strComp);
+
+                if (markupType == MarkupType.ClosingNode
+                    && strComp.Compare(markupContent.Name, SyncMarkup) == 0)
+                    break;
+
+                if (markupType == MarkupType.StartNode
+                    && strComp.Compare(markupContent.Name, PMarkup) == 0)
+                {
+                    var invalidSamiNextMarkupContent = ReadSyncPNode(reader, styles,
+                                                markupContent,
+                                                position, markersByLanguage);
+                    if (invalidSamiNextMarkupContent != null)
+                    {
+                        // malformed sami
+                        return invalidSamiNextMarkupContent;
+                    }
+                }
+            }
+
+            return null;
+        }
+
         private static MarkupContent ReadSyncPNode(StringReader reader, Dictionary<string, Dictionary<string, string>> styles,
             MarkupContent markupContent,
             TimeSpan position, Dictionary<string, List<SmiMarker>> markersByLanguage)
@@ -356,47 +397,6 @@
             }
 
             return malformedContent;
-        }
-
-        private static MarkupContent readSyncNode(StringReader reader, MarkupContent markupContent, Dictionary<string, Dictionary<string, string>> styles, Dictionary<string, List<SmiMarker>> markersByLanguage)
-        {
-            MarkupType markupType;
-
-            TimeSpan position = TimeSpan.Zero;
-            var start = markupContent.Parameters.TryGetValue("start");
-            var startInt = 0;
-            if (!int.TryParse(start, out startInt))
-                return null;
-
-            position = TimeSpan.FromMilliseconds(startInt);
-
-            while (reader.Peek() != -1)
-            {
-                reader.ReadToMarkup();
-                if (!reader.PeekIsMarkup())
-                    return null;
-
-                markupType = reader.ReadMarkup(out markupContent, strComp);
-
-                if (markupType == MarkupType.ClosingNode
-                    && strComp.Compare(markupContent.Name, SyncMarkup) == 0)
-                    break;
-
-                if (markupType == MarkupType.StartNode
-                    && strComp.Compare(markupContent.Name, PMarkup) == 0)
-                {
-                    var invalidSamiNextMarkupContent = ReadSyncPNode(reader, styles,
-                                                markupContent,
-                                                position, markersByLanguage);
-                    if (invalidSamiNextMarkupContent != null)
-                    {
-                        // malformed sami
-                        return invalidSamiNextMarkupContent;
-                    }
-                }
-            }
-
-            return null;
         }
 
         #endregion Methods

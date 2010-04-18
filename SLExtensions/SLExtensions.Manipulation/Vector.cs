@@ -1,21 +1,31 @@
+#region Header
+
 //---------------------------------------------------------------------
 // <copyright file="Vector.cs" company="Microsoft">
 //    Copyright (c) Microsoft Corporation.  All rights reserved.
 // </copyright>
 //---------------------------------------------------------------------
 
-using System;
-using System.Windows;
+#endregion Header
 
 namespace SLExtensions.Manipulation
 {
+    using System;
+    using System.Windows;
+
     /// <summary>
     /// Represents a displacement in 2-D space.
     /// </summary>
     internal struct Vector
     {
+        #region Fields
+
         private double x;
         private double y;
+
+        #endregion Fields
+
+        #region Constructors
 
         /// <summary>
         /// Initializes a new instance of the VectorD structure.
@@ -26,6 +36,32 @@ namespace SLExtensions.Manipulation
         {
             this.x = x;
             this.y = y;
+        }
+
+        #endregion Constructors
+
+        #region Properties
+
+        /// <summary>
+        /// Gets the length of this vector.
+        /// </summary>
+        public double Length
+        {
+            get
+            {
+                return Math.Sqrt(LengthSquared);
+            }
+        }
+
+        /// <summary>
+        /// Gets the square of the length of this vector.
+        /// </summary>
+        public double LengthSquared
+        {
+            get
+            {
+                return this * this;
+            }
         }
 
         /// <summary>
@@ -46,9 +82,9 @@ namespace SLExtensions.Manipulation
             // unused set { y = value; }
         }
 
-#if false // unused
-        #region Conversion
+        #endregion Properties
 
+        #if false // unused
 
         /// <summary>
         /// Creates a point with the X and Y values of this vector.
@@ -71,36 +107,9 @@ namespace SLExtensions.Manipulation
             return new SizeD(vector.x, vector.y);
         }
 
-        #endregion
-#endif
+        #endif
 
-        #region Negation
-
-        /// <summary>
-        /// Negates the specified vector.
-        /// </summary>
-        /// <param name="vector">The vector to negate.</param>
-        /// <returns>A vector with X and Y values opposite of the X and Y values of vector.
-        ///</returns>
-        public static Vector operator -(Vector vector)
-        {
-            return new Vector(-vector.x, -vector.y);
-        }
-
-#if false // unused
-        /// <summary>
-        /// Negates this vector.
-        /// </summary>
-        public void Negate()
-        {
-            x = -x;
-            y = -y;
-        }
-#endif
-
-        #endregion
-
-        #region Equality
+        #region Methods
 
         /// <summary>
         /// Compares two vectors for inequality.
@@ -113,152 +122,6 @@ namespace SLExtensions.Manipulation
         {
             return (vector1.x != vector2.x || vector1.y != vector2.y);
         }
-
-        /// <summary>
-        /// Compares two vectors for equality.
-        /// </summary>
-        /// <param name="vector1">The first vector to compare.</param>
-        /// <param name="vector2">The second vector to compare.</param>
-        /// <returns>true if the X and Y components of vector1 and vector2
-        /// are equal; otherwise, false.</returns>
-        public static bool operator ==(Vector vector1, Vector vector2)
-        {
-            return (vector1.x == vector2.x && vector1.y == vector2.y);
-        }
-
-        /// <summary>
-        /// Determines whether the specified System.Object is a VectorD structure and,
-        /// if it is, whether it has the same X and Y values as this vector.
-        /// </summary>
-        /// <param name="o">The vector to compare.</param>
-        /// <returns>true if o is a VectorD and has the same X and Y values as this vector;
-        /// otherwise, false.</returns>
-        public override bool Equals(object o)
-        {
-            if (o is Vector)
-            {
-                return (Vector)o == this;
-            }
-            return false;
-        }
-
-#if false // unused
-        /// <summary>
-        /// Compares the two specified vectors for equality.
-        /// </summary>
-        /// <param name="vector1">The first vector to compare.</param>
-        /// <param name="vector2">The second vector to compare.</param>
-        /// <returns>true if the X and Y components of vector1 and vector2 are equal;
-        /// otherwise, false.</returns>
-        public static bool Equals(VectorD vector1, VectorD vector2)
-        {
-            return vector1 == vector2;
-        }
-
-        /// <summary>
-        /// Compares two vectors for equality.
-        /// </summary>
-        /// <param name="value">The vector to compare with this vector.</param>
-        /// <returns>true if value has the same X and Y values as this vector;
-        /// otherwise, false.</returns>
-        public bool Equals(VectorD value)
-        {
-            return value == this;
-        }
-#endif
-
-        #endregion
-
-        #region Addition
-
-        /// <summary>
-        /// Adds two vectors and returns the result as a vector.
-        /// </summary>
-        /// <param name="vector1">The first vector to add.</param>
-        /// <param name="vector2">The second vector to add.</param>
-        /// <returns>The sum of vector1 and vector2.</returns>
-        public static Vector operator +(Vector vector1, Vector vector2)
-        {
-            return new Vector(vector1.x + vector2.x, vector1.y + vector2.y);
-        }
-
-#if false // unused
-        /// <summary>
-        /// Adds two vectors and returns the result.
-        /// </summary>
-        /// <param name="vector1">The first vector to add.</param>
-        /// <param name="vector2">The second vector to add.</param>
-        /// <returns> The sum of vector1 and vector2.</returns>
-        public static VectorD Add(VectorD vector1, VectorD vector2)
-        {
-            return vector1 + vector2;
-        }
-#endif
-        /// <summary>
-        /// Translates a point by the specified vector and returns the resulting point.
-        /// </summary>
-        /// <param name="vector">The vector used to translate point.</param>
-        /// <param name="point">The point to translate.</param>
-        /// <returns>The result of translating point by vector.</returns>
-        public static Point operator +(Vector vector, Point point)
-        {
-            return new Point(point.X + vector.x, point.Y + vector.y);
-        }
-
-
-        /// <summary>
-        /// Translates the specified point by the specified vector and returns the resulting point.
-        /// </summary>
-        /// <param name="vector">The amount to translate the specified point.</param>
-        /// <param name="point">The point to translate.</param>
-        /// <returns>The result of translating point by vector.</returns>
-        public static Point Add(Vector vector, Point point)
-        {
-            return vector + point;
-        }
-
-        #endregion
-
-        #region Subtraction
-
-        /// <summary>
-        /// Subtracts one specified vector from another.
-        /// </summary>
-        /// <param name="vector1">The vector from which vector2 is subtracted.</param>
-        /// <param name="vector2">The vector to subtract from vector1.</param>
-        /// <returns>The difference between vector1 and vector2.</returns>
-        public static Vector operator -(Vector vector1, Vector vector2)
-        {
-            return new Vector(vector1.x - vector2.x, vector1.y - vector2.y);
-        }
-
-        /// <summary>
-        /// Subtracts one specified point from another.
-        /// </summary>
-        /// <param name="point1">The point1 from which point2 is subtracted.</param>
-        /// <param name="point2">The point2 to subtract from point1.</param>
-        /// <returns>The difference between point1 and point2.</returns>
-        public static Vector Subtruct(Point point1, Point point2)
-        {
-            return new Vector(point1.X - point2.X, point1.Y - point2.Y);
-        }
-
-#if false // unused
-        /// <summary>
-        /// Subtracts the specified vector from another specified vector.
-        /// </summary>
-        /// <param name="vector1">The vector from which vector2 is subtracted.</param>
-        /// <param name="vector2">The vector to subtract from vector1.</param>
-        /// <returns>The difference between vector1 and vector2.</returns>
-        public static VectorD Subtract(VectorD vector1, VectorD vector2)
-        {
-            return vector1 - vector2;
-        }
-#endif
-
-        #endregion
-
-        #region Scaling
 
         /// <summary>
         /// Multiplies the specified scalar by the specified vector and returns the resulting vector.
@@ -283,6 +146,62 @@ namespace SLExtensions.Manipulation
         }
 
         /// <summary>
+        /// Calculates the dot product of the two specified vector structures.
+        /// </summary>
+        /// <param name="vector1">The first vector to multiply.</param>
+        /// <param name="vector2">The second vector to multiply.</param>
+        /// <returns>Returns the scalar dot product of vector1 and vector2, which is calculated
+        /// using the following formula: vector1.X * vector2.X + vector1.Y * vector2.Y</returns>
+        public static double operator *(Vector vector1, Vector vector2)
+        {
+            return (vector1.x * vector2.x) + (vector1.y * vector2.y);
+        }
+
+        /// <summary>
+        /// Adds two vectors and returns the result as a vector.
+        /// </summary>
+        /// <param name="vector1">The first vector to add.</param>
+        /// <param name="vector2">The second vector to add.</param>
+        /// <returns>The sum of vector1 and vector2.</returns>
+        public static Vector operator +(Vector vector1, Vector vector2)
+        {
+            return new Vector(vector1.x + vector2.x, vector1.y + vector2.y);
+        }
+
+        /// <summary>
+        /// Translates a point by the specified vector and returns the resulting point.
+        /// </summary>
+        /// <param name="vector">The vector used to translate point.</param>
+        /// <param name="point">The point to translate.</param>
+        /// <returns>The result of translating point by vector.</returns>
+        public static Point operator +(Vector vector, Point point)
+        {
+            return new Point(point.X + vector.x, point.Y + vector.y);
+        }
+
+        /// <summary>
+        /// Negates the specified vector.
+        /// </summary>
+        /// <param name="vector">The vector to negate.</param>
+        /// <returns>A vector with X and Y values opposite of the X and Y values of vector.
+        ///</returns>
+        public static Vector operator -(Vector vector)
+        {
+            return new Vector(-vector.x, -vector.y);
+        }
+
+        /// <summary>
+        /// Subtracts one specified vector from another.
+        /// </summary>
+        /// <param name="vector1">The vector from which vector2 is subtracted.</param>
+        /// <param name="vector2">The vector to subtract from vector1.</param>
+        /// <returns>The difference between vector1 and vector2.</returns>
+        public static Vector operator -(Vector vector1, Vector vector2)
+        {
+            return new Vector(vector1.x - vector2.x, vector1.y - vector2.y);
+        }
+
+        /// <summary>
         /// Divides the specified vector by the specified scalar and returns the resulting vector.
         /// </summary>
         /// <param name="vector">The vector to divide.</param>
@@ -293,7 +212,164 @@ namespace SLExtensions.Manipulation
             return new Vector(vector.x / scalar, vector.y / scalar);
         }
 
-#if false // unused
+        /// <summary>
+        /// Compares two vectors for equality.
+        /// </summary>
+        /// <param name="vector1">The first vector to compare.</param>
+        /// <param name="vector2">The second vector to compare.</param>
+        /// <returns>true if the X and Y components of vector1 and vector2
+        /// are equal; otherwise, false.</returns>
+        public static bool operator ==(Vector vector1, Vector vector2)
+        {
+            return (vector1.x == vector2.x && vector1.y == vector2.y);
+        }
+
+        /// <summary>
+        /// Translates the specified point by the specified vector and returns the resulting point.
+        /// </summary>
+        /// <param name="vector">The amount to translate the specified point.</param>
+        /// <param name="point">The point to translate.</param>
+        /// <returns>The result of translating point by vector.</returns>
+        public static Point Add(Vector vector, Point point)
+        {
+            return vector + point;
+        }
+
+        /// <summary>
+        /// Subtracts one specified point from another.
+        /// </summary>
+        /// <param name="point1">The point1 from which point2 is subtracted.</param>
+        /// <param name="point2">The point2 to subtract from point1.</param>
+        /// <returns>The difference between point1 and point2.</returns>
+        public static Vector Subtruct(Point point1, Point point2)
+        {
+            return new Vector(point1.X - point2.X, point1.Y - point2.Y);
+        }
+
+        /// <summary>
+        /// Determines whether the specified System.Object is a VectorD structure and,
+        /// if it is, whether it has the same X and Y values as this vector.
+        /// </summary>
+        /// <param name="o">The vector to compare.</param>
+        /// <returns>true if o is a VectorD and has the same X and Y values as this vector;
+        /// otherwise, false.</returns>
+        public override bool Equals(object o)
+        {
+            if (o is Vector)
+            {
+                return (Vector)o == this;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Returns the hash code for this vector.
+        /// </summary>
+        /// <returns>The hash code for this vector.</returns>
+        public override int GetHashCode()
+        {
+            return (x.GetHashCode() ^ y.GetHashCode());
+        }
+
+        /// <summary>
+        /// Rotates a vector by a specified number of radians.
+        /// </summary>
+        /// <param name="radians">in radians</param>
+        public void Rotate(double radians)
+        {
+            double sin = Math.Sin(radians);
+            double cos = Math.Cos(radians);
+            double xPrime = (X * cos) - (Y * sin);
+            double yPrime = (X * sin) + (Y * cos);
+            this.x = xPrime;
+            this.y = yPrime;
+        }
+
+        #endregion Methods
+
+        #if false // unused
+
+        /// <summary>
+        /// Negates this vector.
+        /// </summary>
+        public void Negate()
+        {
+            x = -x;
+            y = -y;
+        }
+
+        #endif
+
+        #if false // unused
+
+        /// <summary>
+        /// Compares the two specified vectors for equality.
+        /// </summary>
+        /// <param name="vector1">The first vector to compare.</param>
+        /// <param name="vector2">The second vector to compare.</param>
+        /// <returns>true if the X and Y components of vector1 and vector2 are equal;
+        /// otherwise, false.</returns>
+        public static bool Equals(VectorD vector1, VectorD vector2)
+        {
+            return vector1 == vector2;
+        }
+
+        /// <summary>
+        /// Compares two vectors for equality.
+        /// </summary>
+        /// <param name="value">The vector to compare with this vector.</param>
+        /// <returns>true if value has the same X and Y values as this vector;
+        /// otherwise, false.</returns>
+        public bool Equals(VectorD value)
+        {
+            return value == this;
+        }
+
+        #endif
+
+        #if false // unused
+
+        /// <summary>
+        /// Adds two vectors and returns the result.
+        /// </summary>
+        /// <param name="vector1">The first vector to add.</param>
+        /// <param name="vector2">The second vector to add.</param>
+        /// <returns> The sum of vector1 and vector2.</returns>
+        public static VectorD Add(VectorD vector1, VectorD vector2)
+        {
+            return vector1 + vector2;
+        }
+
+        #endif
+
+        #if false // unused
+
+        /// <summary>
+        /// Subtracts the specified vector from another specified vector.
+        /// </summary>
+        /// <param name="vector1">The vector from which vector2 is subtracted.</param>
+        /// <param name="vector2">The vector to subtract from vector1.</param>
+        /// <returns>The difference between vector1 and vector2.</returns>
+        public static VectorD Subtract(VectorD vector1, VectorD vector2)
+        {
+            return vector1 - vector2;
+        }
+
+        #endif
+
+        #if false // unused
+
+        /// <summary>
+        /// Divides the specified vector by the specified scalar and returns the result.
+        /// </summary>
+        /// <param name="vector">The vector structure to divide.</param>
+        /// <param name="scalar">The amount by which vector is divided.</param>
+        /// <returns>The result of dividing vector by scalar.</returns>
+        public static VectorD Divide(VectorD vector, double scalar)
+        {
+            return vector / scalar;
+        }
+
         /// <summary>
         /// Multiplies the specified scalar by the specified vector and returns the resulting vector.
         /// </summary>
@@ -316,35 +392,10 @@ namespace SLExtensions.Manipulation
             return vector * scalar;
         }
 
-        /// <summary>
-        /// Divides the specified vector by the specified scalar and returns the result.
-        /// </summary>
-        /// <param name="vector">The vector structure to divide.</param>
-        /// <param name="scalar">The amount by which vector is divided.</param>
-        /// <returns>The result of dividing vector by scalar.</returns>
-        public static VectorD Divide(VectorD vector, double scalar)
-        {
-            return vector / scalar;
-        }
-#endif
+        #endif
 
-        #endregion
+        #if false // unused
 
-        #region Dot-Product
-
-        /// <summary>
-        /// Calculates the dot product of the two specified vector structures.
-        /// </summary>
-        /// <param name="vector1">The first vector to multiply.</param>
-        /// <param name="vector2">The second vector to multiply.</param>
-        /// <returns>Returns the scalar dot product of vector1 and vector2, which is calculated
-        /// using the following formula: vector1.X * vector2.X + vector1.Y * vector2.Y</returns>
-        public static double operator *(Vector vector1, Vector vector2)
-        {
-            return (vector1.x * vector2.x) + (vector1.y * vector2.y);
-        }
-
-#if false // unused
         /// <summary>
         /// Calculates the dot product of the two specified vectors and returns the result.
         /// </summary>
@@ -356,35 +407,11 @@ namespace SLExtensions.Manipulation
         {
             return vector1 * vector2;
         }
-#endif
 
-        #endregion
+        #endif
 
-        #region Magnitude
+        #if false // unused
 
-        /// <summary>
-        /// Gets the length of this vector.
-        /// </summary>
-        public double Length
-        {
-            get
-            {
-                return Math.Sqrt(LengthSquared);
-            }
-        }
-
-        /// <summary>
-        /// Gets the square of the length of this vector.
-        /// </summary>
-        public double LengthSquared
-        {
-            get
-            {
-                return this * this;
-            }
-        }
-
-#if false // unused
         /// <summary>
         /// Normalizes this vector.
         /// </summary>
@@ -394,13 +421,33 @@ namespace SLExtensions.Manipulation
             x /= length;
             y /= length;
         }
-#endif
 
-        #endregion
+        #endif
 
-        #region Vector Operations
+        #if false // unused
 
-#if false // unused
+        /// <summary>
+        /// Retrieves the angle, expressed in radians, between the two specified vectors.
+        /// </summary>
+        /// <param name="vector1">The first vector to evaluate.</param>
+        /// <param name="vector2">The second vector to evaluate.</param>
+        /// <returns>The angle, in radians, between vector1 and vector2.</returns>
+        public static double AngleBetween(VectorD vector1, VectorD vector2)
+        {
+            vector1.Normalize();
+            vector2.Normalize();
+            double angle = Math.Atan2(vector2.y, vector2.x) - Math.Atan2(vector1.y, vector1.x);
+            if (angle > Math.PI)
+            {
+                angle -= Math.PI * 2.0;
+            }
+            else if (angle < -Math.PI)
+            {
+                angle += Math.PI * 2.0;
+            }
+            return angle;
+        }
+
         /// <summary>
         /// Calculates the cross product of two vectors.
         /// </summary>
@@ -425,52 +472,6 @@ namespace SLExtensions.Manipulation
             return CrossProduct(vector1, vector2);
         }
 
-        /// <summary>
-        /// Retrieves the angle, expressed in radians, between the two specified vectors.
-        /// </summary>
-        /// <param name="vector1">The first vector to evaluate.</param>
-        /// <param name="vector2">The second vector to evaluate.</param>
-        /// <returns>The angle, in radians, between vector1 and vector2.</returns>
-        public static double AngleBetween(VectorD vector1, VectorD vector2)
-        {
-            vector1.Normalize();
-            vector2.Normalize();
-            double angle = Math.Atan2(vector2.y, vector2.x) - Math.Atan2(vector1.y, vector1.x);
-            if (angle > Math.PI)
-            {
-                angle -= Math.PI * 2.0;
-            }
-            else if (angle < -Math.PI)
-            {
-                angle += Math.PI * 2.0;
-            }
-            return angle;
-        }
-#endif
-
-        #endregion
-
-        /// <summary>
-        /// Returns the hash code for this vector.
-        /// </summary>
-        /// <returns>The hash code for this vector.</returns>
-        public override int GetHashCode()
-        {
-            return (x.GetHashCode() ^ y.GetHashCode());
-        }
-
-        /// <summary>
-        /// Rotates a vector by a specified number of radians.
-        /// </summary>
-        /// <param name="radians">in radians</param>
-        public void Rotate(double radians)
-        {
-            double sin = Math.Sin(radians);
-            double cos = Math.Cos(radians);
-            double xPrime = (X * cos) - (Y * sin);
-            double yPrime = (X * sin) + (Y * cos);
-            this.x = xPrime;
-            this.y = yPrime;
-        }
+        #endif
     }
 }

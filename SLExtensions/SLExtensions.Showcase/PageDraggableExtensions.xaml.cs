@@ -40,13 +40,6 @@ namespace SLExtensions.Showcase
 
         #region Methods
 
-        private void InitButtonContent()
-        {
-            btnStackPanel.Content = strStackPanelEnabled;   // Set to strStackPanelEnabled
-            btnGrid.Content = strGridEnabled;               // Set to strStackPanelEnabled
-            btnLoginForm.Content = strLoginFormEnabled;     // Set to strLoginFormEnabled
-        }
-
         /// <summary>
         /// Triggered when Login or cancel buttons are pressed on the spDemoLoginForm
         /// </summary>
@@ -128,6 +121,13 @@ namespace SLExtensions.Showcase
                 spDemoStackPanel.StopDraggable();             // Stop Dragging
                 btnStackPanel.Content = strStackPanelEnabled; // Change Button Text
             }
+        }
+
+        private void InitButtonContent()
+        {
+            btnStackPanel.Content = strStackPanelEnabled;   // Set to strStackPanelEnabled
+            btnGrid.Content = strGridEnabled;               // Set to strStackPanelEnabled
+            btnLoginForm.Content = strLoginFormEnabled;     // Set to strLoginFormEnabled
         }
 
         #endregion Methods

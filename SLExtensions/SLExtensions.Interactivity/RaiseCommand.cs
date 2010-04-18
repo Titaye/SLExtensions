@@ -41,6 +41,10 @@
                 typeof(RaiseCommand),
                 null);
 
+        // Using a DependencyProperty as the backing store for Command.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty CommandProperty = 
+            DependencyProperty.Register("Command", typeof(ICommand), typeof(RaiseCommand), null);
+
         /// <summary>
         /// Key depedency property.
         /// </summary>
@@ -73,6 +77,12 @@
 
         #region Properties
 
+        public ICommand Command
+        {
+            get { return (ICommand)GetValue(CommandProperty); }
+            set { SetValue(CommandProperty, value); }
+        }
+
         public string CommandName
         {
             get
@@ -99,18 +109,6 @@
             }
         }
 
-
-
-        public ICommand Command
-        {
-            get { return (ICommand)GetValue(CommandProperty); }
-            set { SetValue(CommandProperty, value); }
-        }
-
-        // Using a DependencyProperty as the backing store for Command.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty CommandProperty =
-            DependencyProperty.Register("Command", typeof(ICommand), typeof(RaiseCommand), null);
-        
         public Key Key
         {
             get

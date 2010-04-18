@@ -50,10 +50,6 @@
     {
         #region Fields
 
-        /// <summary>
-        /// Current state of the SocketManager
-        /// </summary>
-        private PersistantSocketState _State = PersistantSocketState.Disconnected;
         bool _disposed;
 
         /// <summary>
@@ -80,6 +76,11 @@
         /// inbut buffer size
         /// </summary>
         int _receiveBufferLength;
+
+        /// <summary>
+        /// Current state of the SocketManager
+        /// </summary>
+        private PersistantSocketState _State = PersistantSocketState.Disconnected;
 
         /// <summary>
         /// Dispatcher used to raise events to the UI Thread
