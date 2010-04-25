@@ -12,8 +12,8 @@
     using System.Windows.Media;
     using System.Windows.Media.Animation;
     using System.Windows.Shapes;
-
     using SLExtensions.ComponentModel;
+
 
     public class BindingListener : FrameworkElement
     {
@@ -134,5 +134,17 @@
         }
 
         #endregion Methods
+
+        public void Bind(Binding binding)
+        {
+            if (binding == null)
+            {
+                ClearValue(ValueProperty);
+            }
+            else
+            {
+                SetBinding(ValueProperty, binding);
+            }
+        }
     }
 }

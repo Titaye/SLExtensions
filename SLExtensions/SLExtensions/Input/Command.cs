@@ -18,7 +18,7 @@ namespace SLExtensions.Input
     /// <summary>
     /// Command pattern implementation
     /// </summary>
-    public class Command : ICommand
+    public class Command : DependencyObject, ICommand
     {
         #region Fields
 
@@ -92,6 +92,45 @@ namespace SLExtensions.Input
             private set;
         }
 
+        #region IsEnabled
+
+        public bool IsEnabled
+        {
+            get
+            {
+                return (bool)GetValue(IsEnabledProperty);
+            }
+
+            set
+            {
+                SetValue(IsEnabledProperty, value);
+            }
+        }
+
+        /// <summary>
+        /// IsEnabled depedency property.
+        /// </summary>
+        public static readonly DependencyProperty IsEnabledProperty =
+            DependencyProperty.Register(
+                "IsEnabled",
+                typeof(bool),
+                typeof(Command),
+                new PropertyMetadata((d, e) => ((Command)d).OnIsEnabledChanged((bool)e.OldValue, (bool)e.NewValue)));
+
+        /// <summary>
+        /// handles the IsEnabledProperty changes.
+        /// </summary>
+        /// <param name="oldValue">The old value.</param>
+        /// <param name="newValue">The new value.</param>
+        private void OnIsEnabledChanged(bool oldValue, bool newValue)
+        {
+            if (this.CanExecuteChanged != null)
+                this.CanExecuteChanged(this, EventArgs.Empty);
+        }
+
+        #endregion IsEnabled
+
+
         #endregion Properties
 
         #region Methods
@@ -141,13 +180,14 @@ namespace SLExtensions.Input
             {
                 CanExecuteChanged(this, EventArgs.Empty);
             }
+            this.IsEnabled = result;
             return result;
         }
 
         #endregion Methods
     }
 
-    public class Command<T> : ICommand
+    public class Command<T> : DependencyObject, ICommand
     {
         #region Fields
 
@@ -287,9 +327,47 @@ namespace SLExtensions.Input
             {
                 CanExecuteChanged(this, EventArgs.Empty);
             }
+            this.IsEnabled = result;
             return result;
         }
 
+        #region IsEnabled
+
+        public bool IsEnabled
+        {
+            get
+            {
+                return (bool)GetValue(IsEnabledProperty);
+            }
+
+            set
+            {
+                SetValue(IsEnabledProperty, value);
+            }
+        }
+
+        /// <summary>
+        /// IsEnabled depedency property.
+        /// </summary>
+        public static readonly DependencyProperty IsEnabledProperty =
+            DependencyProperty.Register(
+                "IsEnabled",
+                typeof(bool),
+                typeof(Command<T>),
+                new PropertyMetadata((d, e) => ((Command<T>)d).OnIsEnabledChanged((bool)e.OldValue, (bool)e.NewValue)));
+
+        /// <summary>
+        /// handles the IsEnabledProperty changes.
+        /// </summary>
+        /// <param name="oldValue">The old value.</param>
+        /// <param name="newValue">The new value.</param>
+        private void OnIsEnabledChanged(bool oldValue, bool newValue)
+        {
+            if (this.CanExecuteChanged != null)
+                this.CanExecuteChanged(this, EventArgs.Empty);
+        }
+
+        #endregion IsEnabled
         #endregion Methods
     }
 }

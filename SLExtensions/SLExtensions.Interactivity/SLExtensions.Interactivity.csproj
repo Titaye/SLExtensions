@@ -94,16 +94,6 @@
     <Compile Include="RaiseCommand.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SLExtensions.Controls\SLExtensions.Controls.csproj">
-      <Project>{6ED2B488-1E6B-4A7D-9599-F787FE2FB208}</Project>
-      <Name>SLExtensions.Controls</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\SLExtensions\SLExtensions.csproj">
-      <Project>{A6D5DC26-6631-4780-ADB9-87C1F5E405DD}</Project>
-      <Name>SLExtensions</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
       <Visible>False</Visible>
       <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
