@@ -1,6 +1,0 @@
-﻿<boot:BootstrapApplication xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:boot="clr-namespace:SLExtensions.Bootstrapping;assembly=SLExtensions.Bootstrapping"
-             x:Class="SLExtensions.BootstrappingSample.App"            
-             >
-</boot:BootstrapApplication>

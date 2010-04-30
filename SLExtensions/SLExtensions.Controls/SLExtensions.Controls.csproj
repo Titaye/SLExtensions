@@ -1,0 +1,286 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Condition="'$(MSBuildToolsVersion)' == '3.5'">
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{6ED2B488-1E6B-4A7D-9599-F787FE2FB208}</ProjectGuid>
+    <ProjectTypeGuids>{A1591282-1198-4647-A2B1-27E5FF5F6F3B};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>SLExtensions.Controls</RootNamespace>
+    <AssemblyName>SLExtensions.Controls</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <SilverlightApplication>false</SilverlightApplication>
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+    <SccAuxPath>
+    </SccAuxPath>
+    <SccProvider>
+    </SccProvider>
+    <ValidateXaml>true</ValidateXaml>
+    <ThrowErrorsInValidation>false</ThrowErrorsInValidation>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <TargetFrameworkIdentifier>Silverlight</TargetFrameworkIdentifier>
+    <SilverlightVersion>$(TargetFrameworkVersion)</SilverlightVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>ClientBin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;SILVERLIGHT</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>ClientBin\</OutputPath>
+    <DefineConstants>TRACE;SILVERLIGHT</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System.Net" />
+    <Reference Include="System.Windows" />
+    <Reference Include="mscorlib" />
+    <Reference Include="system" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Windows.Browser" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Clipper.cs" />
+    <Compile Include="ColorPicker\ColorPicker.cs" />
+    <Compile Include="ColorPicker\ColorSpace.cs" />
+    <Compile Include="ColorPicker\SelectedColorEventArgs.cs" />
+    <Compile Include="ControlExtensions\ContentPresenterExtensions.cs" />
+    <Compile Include="ControlExtensions\MarginExtensions.cs" />
+    <Compile Include="ControlExtensions\SliderExtensions.cs" />
+    <Compile Include="Layout\AnimatingFillPanel.cs" />
+    <Compile Include="Layout\AnimatingTilePanel.cs" />
+    <Compile Include="Animation\AnimationWrapper.cs" />
+    <Compile Include="Animation\GoToStateCommandParameter.cs" />
+    <Compile Include="Animation\GoToStateCommandParameterTypeConverter.cs" />
+    <Compile Include="Animation\HtmlAnimation.cs" />
+    <Compile Include="Animation\HtmlAnimationPair.cs" />
+    <Compile Include="Animation\MarginWrapper.cs" />
+    <Compile Include="Animation\PropertyPath.cs" />
+    <Compile Include="Animation\VisualState.cs" />
+    <Compile Include="Animation\ZIndexWrapper.cs" />
+    <Compile Include="ChangeTracker.cs" />
+    <Compile Include="CoolMenu\CoolMenu.cs" />
+    <Compile Include="CoolMenu\CoolMenuItem.cs" />
+    <Compile Include="CoolMenu\CoolMenuItemContainerGenerator.cs" />
+    <Compile Include="CoolMenu\DefaultCoolMenuBehavior.cs" />
+    <Compile Include="CoolMenu\ICoolMenuBehavior.cs" />
+    <Compile Include="CoolMenu\SelectedMenuItemArgs.cs" />
+    <Compile Include="CursorService.cs" />
+    <Compile Include="Range2D\Range2DBase.cs" />
+    <Compile Include="Range2D\Slider2D.cs" />
+    <Compile Include="TreeView\DataTemplateSelector.cs" />
+    <Compile Include="Decorator.cs" />
+    <Compile Include="Sliders\DiscreteSlider.cs" />
+    <Compile Include="Layout\Dock.cs" />
+    <Compile Include="Layout\DockPanel.cs" />
+    <Compile Include="Sliders\DoubleSlider.cs" />
+    <Compile Include="DynamicTextBlock.cs" />
+    <Compile Include="FixedComboBox.cs" />
+    <Compile Include="Layout\FlowLayoutPanel.cs" />
+    <Compile Include="Layout\GridPageLayout.cs" />
+    <Compile Include="HtmlEditor.cs" />
+    <Compile Include="VirtualizedItems\IItemContainerGenerator.cs" />
+    <Compile Include="ControlExtensions\ImageBrushDownloader.cs" />
+    <Compile Include="ControlExtensions\ImageExtensions.cs" />
+    <Compile Include="Recaptcha\IReCaptchaVerifier.cs" />
+    <Compile Include="Layers\GoogleMaps\GMapAPI.cs" />
+    <Compile Include="Layers\Resource.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resource.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Recaptcha\MessageEventArgs.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Recaptcha\ReCaptcha.cs" />
+    <Compile Include="Recaptcha\ReCaptchaHttpPostVerifier.cs" />
+    <Compile Include="Recaptcha\ReCaptchaReloadReason.cs" />
+    <Compile Include="Recaptcha\ReCaptchaResponse.cs" />
+    <Compile Include="Recaptcha\ReCaptchaType.cs" />
+    <Compile Include="Separator.cs" />
+    <Compile Include="Sliders\Slider.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="SliderGauge\GaugePercentageChangedEventArgs.cs" />
+    <Compile Include="SliderGauge\SliderGauge.cs" />
+    <Compile Include="Layout\StackPanel.cs" />
+    <Compile Include="Animation\StoryboardExtensions.cs" />
+    <Compile Include="StarSelector\Star.cs" />
+    <Compile Include="StarSelector\StarSelector.cs" />
+    <Compile Include="SwappableContentControl.cs" />
+    <Compile Include="Layers\GoogleMaps\AerialView.cs" />
+    <Compile Include="Layers\GoogleMaps\GoogleMapSource.cs" />
+    <Compile Include="Layers\GoogleMaps\RoadView.cs" />
+    <Compile Include="Layers\GoogleMaps\RoadViewType.cs" />
+    <Compile Include="Layers\GPSLatitudeToMapConverter.cs" />
+    <Compile Include="Layers\GPSLongitudeToMapConverter.cs" />
+    <Compile Include="Layers\IMapProjection.cs" />
+    <Compile Include="Layers\Layer.cs" />
+    <Compile Include="Layers\LayerDefinition.cs" />
+    <Compile Include="Layers\LayerHost.cs" />
+    <Compile Include="Layers\LayerItem.cs" />
+    <Compile Include="Layers\LayerSource.cs" />
+    <Compile Include="Layers\MapProjections\Constants.cs" />
+    <Compile Include="Layers\MapProjections\MercatorProjection.cs" />
+    <Compile Include="Layers\TileSource.cs" />
+    <Compile Include="Layers\TileSourceData.cs" />
+    <Compile Include="Layers\VirtualEarth\AerialView.cs" />
+    <Compile Include="Layers\VirtualEarth\HybridView.cs" />
+    <Compile Include="Layers\VirtualEarth\RoadView.cs" />
+    <Compile Include="Layers\VirtualEarth\VETileSource.cs" />
+    <Compile Include="ControlExtensions\TextblockExtensions.cs" />
+    <Compile Include="Sliders\Timeline.cs" />
+    <Compile Include="ToolTip.cs" />
+    <Compile Include="ToolTipService.cs" />
+    <Compile Include="TreeView\TreeView.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="TreeView\TreeViewItem.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Tween\Equations.cs" />
+    <Compile Include="Tween\EquationType.cs" />
+    <Compile Include="Tween\Tween.cs" />
+    <Compile Include="Tween\TweenParameter.cs" />
+    <Compile Include="Layout\Viewbox.cs" />
+    <Compile Include="VirtualizedItems\VirtualizedListBox.cs" />
+    <Compile Include="VirtualizedItems\VirtualizedListBoxItem.cs" />
+    <Compile Include="VirtualizedItems\VirtualizedStackPanel.cs" />
+    <Compile Include="VisualStates.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="themes\generic.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Resource>
+    <EmbeddedResource Include="Layers\GoogleMaps\GTileMapDataTemplate.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Layers\Resource.resx">
+      <SubType>Designer</SubType>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resource.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Layers\VirtualEarth\VETileMapDataTemplate.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SLExtensions.Data\SLExtensions.Data.csproj">
+      <Project>{5F8DB48F-06D4-4985-BEF6-DC7E146BC0EF}</Project>
+      <Name>SLExtensions.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SLExtensions\SLExtensions.csproj">
+      <Project>{A6D5DC26-6631-4780-ADB9-87C1F5E405DD}</Project>
+      <Name>SLExtensions</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 2.0 %28x86%29</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.0 %28x86%29</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.VisualBasic.PowerPacks.10.0">
+      <Visible>False</Visible>
+      <ProductName>Microsoft Visual Basic PowerPacks 10.0</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\Silverlight\$(SilverlightVersion)\Microsoft.Silverlight.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{A1591282-1198-4647-A2B1-27E5FF5F6F3B}">
+        <SilverlightProjectProperties />
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>
