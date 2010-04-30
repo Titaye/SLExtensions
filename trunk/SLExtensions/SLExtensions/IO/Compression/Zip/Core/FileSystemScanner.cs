@@ -41,6 +41,7 @@ namespace SLExtensions.IO.Compression.Zip.Core
 {
     using System;
     using System.IO;
+    using System.Collections.Generic;
 
     #region Delegates
 
@@ -307,9 +308,10 @@ namespace SLExtensions.IO.Compression.Zip.Core
         void ScanDir(string directory, bool recurse)
         {
             try {
-                string[] names = System.IO.Directory.GetFiles(directory);
+                //string[]
+                List<string> names = (List<string>)System.IO.Directory.EnumerateFiles(directory);
                 bool hasMatch = false;
-                for (int fileIndex = 0; fileIndex < names.Length; ++fileIndex) {
+                for (int fileIndex = 0; fileIndex < names.Count; ++fileIndex) {
                     if ( !fileFilter_.IsMatch(names[fileIndex]) ) {
                         names[fileIndex] = null;
                     } else {
@@ -341,7 +343,7 @@ namespace SLExtensions.IO.Compression.Zip.Core
 
             if ( alive_ && recurse ) {
                 try {
-                    string[] names = System.IO.Directory.GetDirectories(directory);
+                    List<string> names = (List<string>)System.IO.Directory.EnumerateDirectories(directory);
                     foreach (string fulldir in names) {
                         if ((directoryFilter_ == null) || (directoryFilter_.IsMatch(fulldir))) {
                             ScanDir(fulldir, true);
