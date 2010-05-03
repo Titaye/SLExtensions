@@ -1632,6 +1632,18 @@
             return null;
         }
 
+        public static SolidColorBrush ToBrush(this Color? color)
+        {
+            if (color == null)
+                return null;
+            return color.Value.ToBrush();
+        }
+
+        public static SolidColorBrush ToBrush(this Color color)
+        {
+           return new SolidColorBrush(color);
+        }
+
         #endregion Methods
     }
 }

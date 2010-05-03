@@ -20,7 +20,7 @@
 
         public SmoothVideoItem()
         {
-            VideoAdapter = SmoothStreamingVideoAdapter.Instance;
+            VideoAdapter = new SmoothStreamingVideoAdapter();
         }
 
         #endregion Constructors

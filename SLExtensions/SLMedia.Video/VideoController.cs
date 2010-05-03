@@ -186,6 +186,13 @@
 
         #region Methods
 
+        public void Play(string source)
+        {
+            VideoItem vi = new VideoItem() { Source = source };
+
+            PlayItem(vi);
+        }
+
         protected override void IsPlayingChanged()
         {
             base.IsPlayingChanged();
