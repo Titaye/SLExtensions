@@ -1,36 +1,32 @@
 ﻿namespace SLExtensions
 {
     using System;
-    using System.ComponentModel;
     using System.Net;
     using System.Windows;
     using System.Windows.Controls;
-    using System.Windows.Data;
     using System.Windows.Documents;
     using System.Windows.Ink;
     using System.Windows.Input;
     using System.Windows.Media;
     using System.Windows.Media.Animation;
     using System.Windows.Shapes;
-
+    using System.Windows.Data;
+    using System.ComponentModel;
     using SLExtensions.ComponentModel;
 
-    public class BindingListener : DependencyObject
+    public class BindingListener : FrameworkElement
     {
         #region Fields
 
         /// <summary>
         /// Value depedency property.
         /// </summary>
-        public static readonly DependencyProperty ValueProperty = 
+        public static readonly DependencyProperty ValueProperty =
             DependencyProperty.Register(
                 "Value",
                 typeof(object),
                 typeof(BindingListener),
                 new PropertyMetadata((d, e) => ((BindingListener)d).OnValueChanged((object)e.OldValue, (object)e.NewValue)));
-
-        private static readonly DependencyProperty BindingHelperProperty = 
-            DependencyProperty.RegisterAttached("BindingHelper", typeof(FrameworkElement), typeof(BindingListener), null);
 
         #endregion Fields
 
@@ -79,6 +75,65 @@
                 ValueChanged(this, new PropertyValueChangedEventArgs(oldValue, newValue));
             }
         }
+
+        public void EnsureBindingSource(FrameworkElement source)
+        {
+
+            if (source == null)
+            {
+                ClearValue(DataContextProperty);
+                return;
+            }
+
+            var binding = GetBindingExpression(ValueProperty);
+            if (binding == null)
+                return;
+
+            SetBinding(DataContextProperty, new Binding("DataContext") { Source = source });
+
+            var oldBinding = binding.ParentBinding;
+            object newBindingSource = null;
+
+            if (oldBinding.ElementName != null)
+            {
+                Binding bd = new Binding();
+                bd.ElementName = oldBinding.ElementName;
+                source.SetBinding(BindingHelperProperty, bd);
+                newBindingSource = source.GetValue(BindingHelperProperty) as FrameworkElement;
+                source.ClearValue(BindingHelperProperty);
+            }
+            else if (oldBinding.RelativeSource != null)
+            {
+                Binding bd = new Binding();
+                bd.RelativeSource = oldBinding.RelativeSource;
+                source.SetBinding(BindingHelperProperty, bd);
+                newBindingSource = source.GetValue(BindingHelperProperty) as FrameworkElement;
+                source.ClearValue(BindingHelperProperty);
+            }
+
+            if (newBindingSource != null)
+            {
+                ClearValue(ValueProperty);
+                Binding newBinding = new Binding();
+                newBinding.BindsDirectlyToSource = oldBinding.BindsDirectlyToSource;
+                newBinding.Converter = oldBinding.Converter;
+                newBinding.ConverterCulture = oldBinding.ConverterCulture;
+                newBinding.ConverterParameter = oldBinding.ConverterParameter;
+                newBinding.Mode = oldBinding.Mode;
+                newBinding.NotifyOnValidationError = oldBinding.NotifyOnValidationError;
+                newBinding.Path = oldBinding.Path;
+                newBinding.Source = newBindingSource;
+                newBinding.UpdateSourceTrigger = oldBinding.UpdateSourceTrigger;
+                newBinding.ValidatesOnExceptions = oldBinding.ValidatesOnExceptions;
+                SetBinding(ValueProperty, newBinding);
+            }
+            //}
+        }
+
+        private static readonly DependencyProperty BindingHelperProperty =
+            DependencyProperty.RegisterAttached("BindingHelper", typeof(FrameworkElement), typeof(BindingListener), null);
+
+
 
         #endregion Methods
     }

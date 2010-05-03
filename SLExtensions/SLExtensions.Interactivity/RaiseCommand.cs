@@ -24,7 +24,7 @@
         /// <summary>
         /// CommandName depedency property.
         /// </summary>
-        public static readonly DependencyProperty CommandNameProperty = 
+        public static readonly DependencyProperty CommandNameProperty =
             DependencyProperty.Register(
                 "CommandName",
                 typeof(string),
@@ -34,21 +34,17 @@
         /// <summary>
         /// CommandParameter depedency property.
         /// </summary>
-        public static readonly DependencyProperty CommandParameterProperty = 
+        public static readonly DependencyProperty CommandParameterProperty =
             DependencyProperty.Register(
                 "CommandParameter",
                 typeof(object),
                 typeof(RaiseCommand),
                 null);
 
-        // Using a DependencyProperty as the backing store for Command.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty CommandProperty = 
-            DependencyProperty.Register("Command", typeof(ICommand), typeof(RaiseCommand), null);
-
         /// <summary>
         /// Key depedency property.
         /// </summary>
-        public static readonly DependencyProperty KeyProperty = 
+        public static readonly DependencyProperty KeyProperty =
             DependencyProperty.Register(
                 "Key",
                 typeof(Key),
@@ -77,10 +73,22 @@
 
         #region Properties
 
-        public ICommand Command
+        public Binding CommandBinding
         {
-            get { return (ICommand)GetValue(CommandProperty); }
-            set { SetValue(CommandProperty, value); }
+            get { return this.commandBinding; }
+            set
+            {
+                if (this.commandBinding != value)
+                {
+                    this.commandBinding = value;
+                    if (value == null)
+                        bindingListenerCommand.ClearValue(BindingListener.ValueProperty);
+                    else
+                        bindingListenerCommand.SetBinding(BindingListener.ValueProperty, value);
+
+                    bindingListenerCommand.EnsureBindingSource(Target);
+                }
+            }
         }
 
         public string CommandName
@@ -106,6 +114,25 @@
             set
             {
                 SetValue(CommandParameterProperty, value);
+            }
+        }
+
+        public Binding CommandParameterBinding
+        {
+            get { return this.commandParameterBinding; }
+            set
+            {
+                if (this.commandParameterBinding != value)
+                {
+                    this.commandParameterBinding = value;
+
+                    if (value == null)
+                        bindingListenerCommandParameter.ClearValue(BindingListener.ValueProperty);
+                    else
+                        bindingListenerCommandParameter.SetBinding(BindingListener.ValueProperty, value);
+
+                    bindingListenerCommandParameter.EnsureBindingSource(Target);
+                }
             }
         }
 
@@ -143,6 +170,13 @@
             {
                 cmd.Execute(CommandParameter);
             }
+        }
+
+        protected override void OnTargetChanged(FrameworkElement oldTarget, FrameworkElement newTarget)
+        {
+            base.OnTargetChanged(oldTarget, newTarget);
+            bindingListenerCommand.EnsureBindingSource(newTarget);
+            bindingListenerCommandParameter.EnsureBindingSource(newTarget);
         }
 
         #endregion Methods

@@ -149,8 +149,11 @@
             if (brushes.Count == 0)
                 return null;
 
+            int? val = value as int?;
+
             //int idx = counter % param.Brushes.Count;
-            int idx = counter % brushes.Count;
+
+            int idx = val.HasValue && val.Value > -1 ? val.Value % brushes.Count : counter % brushes.Count;
             counter++;
 
             return brushes[idx];
