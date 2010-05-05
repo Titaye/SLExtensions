@@ -90,6 +90,7 @@
     <Compile Include="ControlExtensions\ContentPresenterExtensions.cs" />
     <Compile Include="ControlExtensions\MarginExtensions.cs" />
     <Compile Include="ControlExtensions\SliderExtensions.cs" />
+    <Compile Include="Data\XamlImageSourceConverter.cs" />
     <Compile Include="Layout\AnimatingFillPanel.cs" />
     <Compile Include="Layout\AnimatingTilePanel.cs" />
     <Compile Include="Animation\AnimationWrapper.cs" />

@@ -167,6 +167,8 @@
     <Compile Include="IO\Compression\Zip\ZipInputStream.cs" />
     <Compile Include="IO\Compression\Zip\ZipNameTransform.cs" />
     <Compile Include="IO\Compression\Zip\ZipOutputStream.cs" />
+    <Compile Include="Locator.cs" />
+    <Compile Include="LocatorKey.cs" />
     <Compile Include="LogOnProvider\Infocard.cs" />
     <Compile Include="Markup\MarkupContent.cs" />
     <Compile Include="Markup\MarkupType.cs" />
@@ -174,6 +176,7 @@
     <Compile Include="NotifyingObjectExtensions.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="NotifyingDictionary.cs" />
     <Compile Include="PasswordHelper.cs" />
     <Compile Include="Extensions\PointExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
