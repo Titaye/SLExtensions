@@ -89,6 +89,7 @@
     <Compile Include="Localize.cs" />
     <Compile Include="MapState.cs" />
     <Compile Include="MapStateMapping.cs" />
+    <Compile Include="MouseActivityExclusion.cs" />
     <Compile Include="MouseActivityGoToState.cs" />
     <Compile Include="MouseWheelScrollBehavior.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
