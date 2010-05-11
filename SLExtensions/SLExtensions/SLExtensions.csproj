@@ -116,6 +116,7 @@
     <Compile Include="Imaging\PngEncoder.cs" />
     <Compile Include="Input\CanExecuteEventArgs.cs" />
     <Compile Include="Input\Command.cs" />
+    <Compile Include="Input\CommandManager.cs" />
     <Compile Include="Input\CommandService.cs" />
     <Compile Include="Input\CommandSubscription.cs" />
     <Compile Include="Input\IProvideCommandSubscription.cs" />

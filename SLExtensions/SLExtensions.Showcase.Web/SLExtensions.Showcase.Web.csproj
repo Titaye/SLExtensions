@@ -20,7 +20,7 @@
     </SccAuxPath>
     <SccProvider>
     </SccProvider>
-    <SilverlightApplicationList>{997C0F08-47C4-4027-88A4-1BCE1E65D1D4}|..\SLExtensions.Showcase\SLExtensions.Showcase.csproj|ClientBin|False,{66D58D46-3966-4DD9-94F5-75A051CBC881}|..\SLExtensions.Player\SLExtensions.Player.csproj|ClientBin|False</SilverlightApplicationList>
+    <SilverlightApplicationList>{997C0F08-47C4-4027-88A4-1BCE1E65D1D4}|..\SLExtensions.Showcase\SLExtensions.Showcase.csproj|ClientBin|False,{66D58D46-3966-4DD9-94F5-75A051CBC881}|..\SLExtensions.Player\SLExtensions.Player.csproj|ClientBin|False,{3C830469-3D22-45FE-B59F-F7396E98A202}|..\SilverlightApplication1\SilverlightApplication1.csproj|ClientBin|False</SilverlightApplicationList>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <OldToolsVersion>4.0</OldToolsVersion>
@@ -90,6 +90,7 @@
       <SubType>Designer</SubType>
     </None>
     <Content Include="ClientBin\ScriptCommands.xml" />
+    <Content Include="ClientBin\SilverlightApplication1.xap" />
     <Content Include="ClientBin\SLExtensions.Player.xap" />
     <Content Include="ClientBin\SLExtensions.Showcase.xap" />
     <Content Include="player.html" />
@@ -102,6 +103,9 @@
     <Content Include="PostFileResult.aspx" />
     <Content Include="Showcase.aspx" />
     <Content Include="PostResult.aspx" />
+    <Content Include="Silverlight.js" />
+    <Content Include="SilverlightApplication1TestPage.aspx" />
+    <Content Include="SilverlightApplication1TestPage.html" />
     <Content Include="VerifyCaptcha.aspx" />
     <Content Include="Web.config" />
   </ItemGroup>

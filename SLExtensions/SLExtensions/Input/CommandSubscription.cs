@@ -43,6 +43,22 @@ namespace SLExtensions.Input
         {
             this.Element = element;
             this.Command = command;
+            this.Command.CanExecuteChanged += new EventHandler(Command_CanExecuteChanged);
+        }
+
+        void Command_CanExecuteChanged(object sender, EventArgs e)
+        {
+            Control c = this.Element as Control;
+            if (c != null)
+            {
+                var prm = CommandService.GetCommandParameter(this.Element);
+                ButtonBase bb;
+                if (prm == null && 
+                    (bb = c as ButtonBase) != null)
+                    prm = bb.CommandParameter;
+                    
+                c.IsEnabled = Command.CanExecute(prm);
+            }
         }
 
         #endregion Constructors

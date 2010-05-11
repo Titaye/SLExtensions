@@ -20,17 +20,7 @@ namespace SLExtensions.Input
     /// </summary>
     public class Command : ICommand
     {
-        #region Fields
-
-        private bool lastCanExecute = false;
-
-        #endregion Fields
-
         #region Constructors
-
-        public Command()
-        {
-        }
 
         public Command(Action executed)
         {
@@ -48,6 +38,18 @@ namespace SLExtensions.Input
             Executed += new EventHandler<ExecutedEventArgs>((snd, e) => executed(e.Parameter));
         }
 
+        public Command(Action<object> executed, Func<object, bool> canExecute)
+        {
+            if (executed == null)
+                throw new ArgumentNullException();
+            CanExecute += (snd, e) =>
+            {
+                if (canExecute != null)
+                    e.CanExecute = canExecute(e.Parameter);
+            };
+            Executed += (snd, e) => executed(e.Parameter);
+        }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Command"/> class.
         /// </summary>
@@ -56,7 +58,7 @@ namespace SLExtensions.Input
         {
             this.Name = commandName;
 
-            if (!CommandService.CommandCache.ContainsKey(commandName))
+            if (commandName != null && !CommandService.CommandCache.ContainsKey(commandName))
             {
                 CommandService.CommandCache.Add(commandName, this);
             }
@@ -71,7 +73,17 @@ namespace SLExtensions.Input
         /// </summary>
         public event EventHandler<CanExecuteEventArgs> CanExecute;
 
-        public event EventHandler CanExecuteChanged;
+        public event EventHandler CanExecuteChanged
+        {
+            add
+            {
+                CommandManager.RequerySuggested += value;
+            }
+            remove
+            {
+                CommandManager.RequerySuggested -= value;
+            }
+        }
 
         /// <summary>
         /// Occurs when the command is executed.
@@ -137,10 +149,6 @@ namespace SLExtensions.Input
                 result = e.CanExecute;
             }
 
-            if (lastCanExecute != result && CanExecuteChanged != null)
-            {
-                CanExecuteChanged(this, EventArgs.Empty);
-            }
             return result;
         }
 
@@ -149,11 +157,6 @@ namespace SLExtensions.Input
 
     public class Command<T> : ICommand
     {
-        #region Fields
-
-        private bool lastCanExecute = false;
-
-        #endregion Fields
 
         #region Constructors
 
@@ -168,6 +171,20 @@ namespace SLExtensions.Input
 
             Executed += (snd, e) => executed(e.Parameter);
         }
+
+        public Command(Action<T> executed, Func<T, bool> canExecute)
+        {
+            if (executed == null)
+                throw new ArgumentNullException();
+
+            CanExecute += (snd, e) =>
+            {
+                if (canExecute != null)
+                    e.CanExecute = canExecute(e.Parameter);
+            };
+            Executed += (snd, e) => executed(e.Parameter);
+        }
+
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Command"/> class.
@@ -207,7 +224,11 @@ namespace SLExtensions.Input
         /// </summary>
         public event EventHandler<CanExecuteEventArgs<T>> CanExecute;
 
-        public event EventHandler CanExecuteChanged;
+        public event EventHandler CanExecuteChanged
+        {
+            add { CommandManager.RequerySuggested += value; }
+            remove { CommandManager.RequerySuggested -= value; }
+        }
 
         /// <summary>
         /// Occurs when the command is executed.
@@ -283,10 +304,6 @@ namespace SLExtensions.Input
                 result = e.CanExecute;
             }
 
-            if (lastCanExecute != result && CanExecuteChanged != null)
-            {
-                CanExecuteChanged(this, EventArgs.Empty);
-            }
             return result;
         }
 

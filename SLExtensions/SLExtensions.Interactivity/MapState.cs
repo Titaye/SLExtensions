@@ -27,30 +27,6 @@
     {
         #region Fields
 
-        // Using a DependencyProperty as the backing store for AttachedValue.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty AttachedValueProperty = 
-            DependencyProperty.RegisterAttached("AttachedValue", typeof(object), typeof(MapState), new PropertyMetadata(AttachedValueChangedCallback));
-
-        /// <summary>
-        /// Property depedency property.
-        /// </summary>
-        public static readonly DependencyProperty PropertyProperty = 
-            DependencyProperty.Register(
-                "Property",
-                typeof(string),
-                typeof(MapState),
-                new PropertyMetadata((d, e) => ((MapState)d).OnPropertyChanged((string)e.OldValue, (string)e.NewValue)));
-
-        /// <summary>
-        /// Source depedency property.
-        /// </summary>
-        public static readonly DependencyProperty SourceProperty = 
-            DependencyProperty.Register(
-                "Source",
-                typeof(object),
-                typeof(MapState),
-                new PropertyMetadata((d, e) => ((MapState)d).OnSourceChanged((object)e.OldValue, (object)e.NewValue)));
-
         /// <summary>
         /// 
         /// </summary>
@@ -59,17 +35,14 @@
         /// <summary>
         /// Value depedency property.
         /// </summary>
-        public static readonly DependencyProperty ValueProperty = 
+        public static readonly DependencyProperty ValueProperty =
             DependencyProperty.Register(
                 "Value",
                 typeof(object),
                 typeof(MapState),
                 new PropertyMetadata((d, e) => ((MapState)d).OnValueChanged((object)e.OldValue, (object)e.NewValue)));
 
-        private BindingListener bindingListener;
-        private Binding boundValue;
         private bool isAttached = false;
-        private PropertyInfo propertyInfo = null;
 
         #endregion Fields
 
@@ -78,32 +51,12 @@
         public MapState()
         {
             Mappings = new List<MapStateMapping>();
-            bindingListener = new BindingListener();
-            bindingListener.ValueChanged += delegate { this.Value = bindingListener.Value; };
         }
 
         #endregion Constructors
 
         #region Properties
 
-        public Binding BoundValue
-        {
-            get { return this.boundValue; }
-            set
-            {
-                if (this.boundValue != value)
-                {
-                    this.boundValue = value;
-                    if (value == null)
-                        bindingListener.ClearValue(BindingListener.ValueProperty);
-                    else
-                    {
-                        bindingListener.EnsureBindingSource(AssociatedObject);
-                        bindingListener.SetBinding(BindingListener.ValueProperty, value);
-                    }
-                }
-            }
-        }
 
         public List<MapStateMapping> Mappings
         {
@@ -111,31 +64,6 @@
             private set;
         }
 
-        public string Property
-        {
-            get
-            {
-                return (string)GetValue(PropertyProperty);
-            }
-
-            set
-            {
-                SetValue(PropertyProperty, value);
-            }
-        }
-
-        public object Source
-        {
-            get
-            {
-                return (object)GetValue(SourceProperty);
-            }
-
-            set
-            {
-                SetValue(SourceProperty, value);
-            }
-        }
 
         /// <summary>
         /// True if transitions should be used for the state change.
@@ -170,8 +98,6 @@
         {
             base.OnAttached();
 
-            bindingListener.EnsureBindingSource(AssociatedObject);
-
             isAttached = true;
 
             // Launch control visual state refresh. If the associated control is not loaded, some exceptions can be thrown by the VisualStateManager
@@ -191,74 +117,12 @@
             }
         }
 
-        private static void AttachedValueChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            MapState ms = d as MapState;
-            if (ms == null)
-            {
-                BehaviorCollection col = System.Windows.Interactivity.Interaction.GetBehaviors(d);
-                if (col != null)
-                {
-                    ms = col.OfType<MapState>().FirstOrDefault();
-                }
-            }
 
-            if (ms != null)
-            {
-                ms.Value = e.NewValue;
-            }
-        }
 
         private void Element_Loaded(object sender, RoutedEventArgs e)
         {
             FrameworkElement element = (FrameworkElement)sender;
             element.Loaded -= new RoutedEventHandler(Element_Loaded);
-            RefreshState();
-        }
-
-        void notifyingObject_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName == Property)
-                RefreshState();
-        }
-
-        /// <summary>
-        /// handles the PropertyProperty changes.
-        /// </summary>
-        /// <param name="oldValue">The old value.</param>
-        /// <param name="newValue">The new value.</param>
-        private void OnPropertyChanged(string oldValue, string newValue)
-        {
-            if (Source == null)
-                propertyInfo = null;
-            else
-                propertyInfo = Source.GetType().GetProperty(newValue);
-
-            RefreshState();
-        }
-
-        /// <summary>
-        /// handles the SourceProperty changes.
-        /// </summary>
-        /// <param name="oldValue">The old value.</param>
-        /// <param name="newValue">The new value.</param>
-        private void OnSourceChanged(object oldValue, object newValue)
-        {
-            propertyInfo = null;
-            INotifyPropertyChanged notifyingObject = oldValue as INotifyPropertyChanged;
-            if (notifyingObject != null)
-            {
-                notifyingObject.PropertyChanged -= new PropertyChangedEventHandler(notifyingObject_PropertyChanged);
-            }
-            notifyingObject = newValue as INotifyPropertyChanged;
-            if (notifyingObject != null)
-            {
-                notifyingObject.PropertyChanged += new PropertyChangedEventHandler(notifyingObject_PropertyChanged);
-            }
-            if (newValue != null && !string.IsNullOrEmpty(Property))
-            {
-                propertyInfo = newValue.GetType().GetProperty(Property);
-            }
             RefreshState();
         }
 
@@ -281,15 +145,8 @@
                 return;
             }
 
-            object propValue;
-            if (Source != null && propertyInfo != null)
-            {
-                propValue = propertyInfo.GetValue(Source, null);
-            }
-            else
-            {
-                propValue = Value;
-            }
+
+            var propValue = Value;
 
             if (propValue == null)
             {

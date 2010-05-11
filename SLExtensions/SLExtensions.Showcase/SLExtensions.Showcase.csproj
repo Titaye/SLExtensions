@@ -40,7 +40,7 @@
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
     <IsWebBootstrapper>false</IsWebBootstrapper>
-    <ExpressionBlendVersion>3.0.1927.0</ExpressionBlendVersion>
+    <ExpressionBlendVersion>4.0.20408.0</ExpressionBlendVersion>
     <TargetFrameworkIdentifier>Silverlight</TargetFrameworkIdentifier>
     <SilverlightVersion>$(TargetFrameworkVersion)</SilverlightVersion>
     <PublishUrl>publish\</PublishUrl>
@@ -645,5 +645,5 @@
       </FlavorProperties>
     </VisualStudio>
   </ProjectExtensions>
-  <Import Project="$(MSBuildExtensionsPath)\Microsoft\Expression\Blend\3.0\Silverlight\Microsoft.Expression.Blend.Silverlight.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\Expression\Blend\Silverlight\v4.0\Microsoft.Expression.Blend.Silverlight.targets" />
 </Project>

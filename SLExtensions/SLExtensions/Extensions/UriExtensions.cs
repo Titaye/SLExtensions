@@ -12,6 +12,7 @@
     using System.Windows.Media;
     using System.Windows.Media.Animation;
     using System.Windows.Shapes;
+    using System.Windows.Browser;
 
     public static class UriExtensions
     {
@@ -29,7 +30,7 @@
 
             var r = from parts in uri.Query.TrimStart('?').Split(new[] { '&' }, StringSplitOptions.RemoveEmptyEntries)
                     let keyvalue = parts.Split(new[] { '=' }, 2)
-                    let values = keyvalue.Skip(1).ToArray()
+                    let values = keyvalue.Skip(1).Select(_ => HttpUtility.UrlDecode(_)).ToArray()
                     group values by keyvalue.First() into g
                     select g;
             foreach (var item in r.ToDictionary(g => g.Key, g => g.ToArray(), StringComparer.OrdinalIgnoreCase))
