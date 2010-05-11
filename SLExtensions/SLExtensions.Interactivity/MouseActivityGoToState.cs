@@ -18,7 +18,7 @@
     using System.Collections.Generic;
 
     [DefaultTrigger(typeof(UIElement), typeof(System.Windows.Interactivity.EventTrigger), new object[] { "MouseMove" })]
-    [ContentProperty("Exclusions")]
+    [ContentProperty("Parameters")]
     public class MouseActivityGoToState : TargetedTriggerAction<FrameworkElement>
     {
         private class mouseActivityEventHelper
@@ -167,7 +167,7 @@
         {
             timer = new DispatcherTimer();
             timer.Tick += new EventHandler(timer_Tick);
-            Exclusions = new List<MouseActivityExclusion>();
+            Parameters = new List<MouseActivityForceActiveElement>();
         }
 
         protected override void OnAttached()
@@ -362,9 +362,10 @@
         {
             if (!ForceShow)
             {
-                var excludedElements = (from ex in Exclusions
-                                        where ex.Element != null
-                                        select ex.Element).ToArray();
+                var excludedElements = (from ex in Parameters.OfType<MouseActivityForceActiveElement>()
+                                        let elem = this.Target.FindName(ex.ElementName)
+                                        where elem != null
+                                        select elem).ToArray();
                 if (excludedElements.Any()
                     && VisualTreeHelper.FindElementsInHostCoordinates(lastMousePosition, Application.Current.RootVisual).Any(_ => excludedElements.Contains(_)))
                 {
@@ -380,6 +381,7 @@
 
         #endregion Methods
 
-        public List<MouseActivityExclusion> Exclusions { get; set; }
+        public List<MouseActivityForceActiveElement> Parameters { get; set; }
+
     }
 }
