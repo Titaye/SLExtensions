@@ -59,10 +59,7 @@
             //}
             //videoItem.MarkerSources = markerSources.ToArray();
             videoItem.ItemType = "SmoothVideo";
-
-            var joinLive = element.GetBoolAttribute("joinlive");
-            if (joinLive.HasValue)
-                videoItem.JoinLive = joinLive.Value;
+            videoItem.JoinLive = ((bool?)element.Attribute("joinlive")).GetValueOrDefault(false);
 
             return true;
         }

@@ -19,9 +19,29 @@
 
     [DefaultTrigger(typeof(UIElement), typeof(System.Windows.Interactivity.EventTrigger), new object[] { "MouseMove" })]
     [ContentProperty("Parameters")]
-    public class MouseActivityGoToState : TargetedTriggerAction<FrameworkElement>
+    public class MouseActivityCommand : TargetedTriggerAction<FrameworkElement>
     {
         #region Fields
+
+        /// <summary>
+        /// ActivityCommandParameter depedency property.
+        /// </summary>
+        public static readonly DependencyProperty ActivityCommandParameterProperty = 
+            DependencyProperty.Register(
+                "ActivityCommandParameter",
+                typeof(object),
+                typeof(MouseActivityCommand),
+                new PropertyMetadata((d, e) => ((MouseActivityCommand)d).OnActivityCommandParameterChanged((object)e.OldValue, (object)e.NewValue)));
+
+        /// <summary>
+        /// ActivityCommand depedency property.
+        /// </summary>
+        public static readonly DependencyProperty ActivityCommandProperty = 
+            DependencyProperty.Register(
+                "ActivityCommand",
+                typeof(ICommand),
+                typeof(MouseActivityCommand),
+                new PropertyMetadata((d, e) => ((MouseActivityCommand)d).OnActivityCommandChanged((ICommand)e.OldValue, (ICommand)e.NewValue)));
 
         /// <summary>
         /// ForceShow depedency property.
@@ -30,18 +50,28 @@
             DependencyProperty.Register(
                 "ForceShow",
                 typeof(bool),
-                typeof(MouseActivityGoToState),
-                new PropertyMetadata((d, e) => ((MouseActivityGoToState)d).OnForceShowChanged((bool)e.OldValue, (bool)e.NewValue)));
+                typeof(MouseActivityCommand),
+                new PropertyMetadata((d, e) => ((MouseActivityCommand)d).OnForceShowChanged((bool)e.OldValue, (bool)e.NewValue)));
 
         /// <summary>
-        /// InactivityState depedency property.
+        /// InactivityCommandParameter depedency property.
         /// </summary>
-        public static readonly DependencyProperty InactivityStateProperty = 
+        public static readonly DependencyProperty InactivityCommandParameterProperty = 
             DependencyProperty.Register(
-                "InactivityState",
-                typeof(string),
-                typeof(MouseActivityGoToState),
-                null);
+                "InactivityCommandParameter",
+                typeof(object),
+                typeof(MouseActivityCommand),
+                new PropertyMetadata((d, e) => ((MouseActivityCommand)d).OnInactivityCommandParameterChanged((object)e.OldValue, (object)e.NewValue)));
+
+        /// <summary>
+        /// InactivityCommand depedency property.
+        /// </summary>
+        public static readonly DependencyProperty InactivityCommandProperty = 
+            DependencyProperty.Register(
+                "InactivityCommand",
+                typeof(ICommand),
+                typeof(MouseActivityCommand),
+                new PropertyMetadata((d, e) => ((MouseActivityCommand)d).OnInactivityCommandChanged((ICommand)e.OldValue, (ICommand)e.NewValue)));
 
         /// <summary>
         /// IsActive depedency property.
@@ -50,19 +80,12 @@
             DependencyProperty.Register(
                 "IsActive",
                 typeof(bool),
-                typeof(MouseActivityGoToState),
-                new PropertyMetadata((d, e) => ((MouseActivityGoToState)d).OnIsActiveChanged((bool)e.OldValue, (bool)e.NewValue)));
+                typeof(MouseActivityCommand),
+                new PropertyMetadata((d, e) => ((MouseActivityCommand)d).OnIsActiveChanged((bool)e.OldValue, (bool)e.NewValue)));
 
         /// <summary>
         /// State depedency property.
         /// </summary>
-        public static readonly DependencyProperty StateProperty = 
-            DependencyProperty.Register(
-                "State",
-                typeof(string),
-                typeof(MouseActivityGoToState),
-                null);
-
         /// <summary>
         /// Timeout depedency property.
         /// </summary>
@@ -70,8 +93,8 @@
             DependencyProperty.Register(
                 "Timeout",
                 typeof(TimeSpan),
-                typeof(MouseActivityGoToState),
-                new PropertyMetadata((d, e) => ((MouseActivityGoToState)d).OnTimeoutChanged((TimeSpan)e.OldValue, (TimeSpan)e.NewValue)));
+                typeof(MouseActivityCommand),
+                new PropertyMetadata((d, e) => ((MouseActivityCommand)d).OnTimeoutChanged((TimeSpan)e.OldValue, (TimeSpan)e.NewValue)));
 
         private Point lastMousePosition;
         private mouseActivityEventHelper mousePositionEventHelper;
@@ -81,7 +104,7 @@
 
         #region Constructors
 
-        public MouseActivityGoToState()
+        public MouseActivityCommand()
         {
             timer = new DispatcherTimer();
             timer.Tick += new EventHandler(timer_Tick);
@@ -100,6 +123,32 @@
 
         #region Properties
 
+        public ICommand ActivityCommand
+        {
+            get
+            {
+                return (ICommand)GetValue(ActivityCommandProperty);
+            }
+
+            set
+            {
+                SetValue(ActivityCommandProperty, value);
+            }
+        }
+
+        public object ActivityCommandParameter
+        {
+            get
+            {
+                return (object)GetValue(ActivityCommandParameterProperty);
+            }
+
+            set
+            {
+                SetValue(ActivityCommandParameterProperty, value);
+            }
+        }
+
         public bool ForceShow
         {
             get
@@ -113,16 +162,29 @@
             }
         }
 
-        public string InactivityState
+        public ICommand InactivityCommand
         {
             get
             {
-                return (string)GetValue(InactivityStateProperty);
+                return (ICommand)GetValue(InactivityCommandProperty);
             }
 
             set
             {
-                SetValue(InactivityStateProperty, value);
+                SetValue(InactivityCommandProperty, value);
+            }
+        }
+
+        public object InactivityCommandParameter
+        {
+            get
+            {
+                return (object)GetValue(InactivityCommandParameterProperty);
+            }
+
+            set
+            {
+                SetValue(InactivityCommandParameterProperty, value);
             }
         }
 
@@ -142,19 +204,6 @@
         public List<MouseActivityForceActiveElement> Parameters
         {
             get; set;
-        }
-
-        public string State
-        {
-            get
-            {
-                return (string)GetValue(StateProperty);
-            }
-
-            set
-            {
-                SetValue(StateProperty, value);
-            }
         }
 
         public TimeSpan Timeout
@@ -268,6 +317,25 @@
         }
 
         /// <summary>
+        /// handles the ActivityCommandProperty changes.
+        /// </summary>
+        /// <param name="oldValue">The old value.</param>
+        /// <param name="newValue">The new value.</param>
+        private void OnActivityCommandChanged(ICommand oldValue, ICommand newValue)
+        {
+            RefreshState();
+        }
+
+        /// <summary>
+        /// handles the ActivityCommandParameterProperty changes.
+        /// </summary>
+        /// <param name="oldValue">The old value.</param>
+        /// <param name="newValue">The new value.</param>
+        private void OnActivityCommandParameterChanged(object oldValue, object newValue)
+        {
+        }
+
+        /// <summary>
         /// handles the ForceShowProperty changes.
         /// </summary>
         /// <param name="oldValue">The old value.</param>
@@ -281,6 +349,25 @@
             }
             else
                 timer.Start();
+        }
+
+        /// <summary>
+        /// handles the InactivityCommandProperty changes.
+        /// </summary>
+        /// <param name="oldValue">The old value.</param>
+        /// <param name="newValue">The new value.</param>
+        private void OnInactivityCommandChanged(ICommand oldValue, ICommand newValue)
+        {
+            RefreshState();
+        }
+
+        /// <summary>
+        /// handles the InactivityCommandParameterProperty changes.
+        /// </summary>
+        /// <param name="oldValue">The old value.</param>
+        /// <param name="newValue">The new value.</param>
+        private void OnInactivityCommandParameterChanged(object oldValue, object newValue)
+        {
         }
 
         /// <summary>
@@ -324,11 +411,17 @@
                 {
                     if (IsActive)
                     {
-                        VisualStateManager.GoToState(stateTarget, State, true);
+                        if (ActivityCommand != null)
+                        {
+                            ActivityCommand.Execute(ActivityCommandParameter);
+                        }
                     }
                     else
                     {
-                        VisualStateManager.GoToState(stateTarget, InactivityState, true);
+                        if (InactivityCommand != null)
+                        {
+                            InactivityCommand.Execute(InactivityCommandParameter);
+                        }
                     }
                 }
             }
@@ -344,7 +437,7 @@
             if (!ForceShow)
             {
                 var excludedElements = (from ex in Parameters.OfType<MouseActivityForceActiveElement>()
-                                        let elem = ex.Element ?? this.Target.FindName(ex.ElementName)
+                                        let elem = this.Target.FindName(ex.ElementName)
                                         where elem != null
                                         select elem).ToArray();
                 if (excludedElements.Any()
@@ -374,7 +467,7 @@
 
             #region Constructors
 
-            public mouseActivityEventHelper(MouseActivityGoToState mouseActivity)
+            public mouseActivityEventHelper(MouseActivityCommand mouseActivity)
             {
                 this.mouseActivity = new WeakReference(mouseActivity);
                 Application.Current.RootVisual.MouseMove += new MouseEventHandler(RootVisual_MouseMove);
@@ -386,7 +479,7 @@
 
             void RootVisual_MouseMove(object sender, MouseEventArgs e)
             {
-                MouseActivityGoToState ma = mouseActivity.Target as MouseActivityGoToState;
+                MouseActivityCommand ma = mouseActivity.Target as MouseActivityCommand;
                 if (ma == null)
                 {
                     Application.Current.RootVisual.MouseMove -= new MouseEventHandler(RootVisual_MouseMove);

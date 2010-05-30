@@ -180,6 +180,8 @@
             if (stackPanel != null)
             {
                 stackPanel.ItemsCountChanged += new EventHandler(stackPanel_ItemsCountChanged);
+                stackPanel.TemplateDesiredSizeChanged += new EventHandler(stackPanel_TemplateDesiredSizeChanged);
+                stackPanel.SizeChanged += new SizeChangedEventHandler(stackPanel_SizeChanged);
             }
         }
 
@@ -230,6 +232,13 @@
         {
         }
 
+        private void RefreshScrollbarMaximum()
+        {
+            if (stackPanel == null || stackPanel.TemplateDesiredSize == null || stackPanel.TemplateDesiredSize.Value.Height == 0)
+                return;
+            scrollbar.Maximum = stackPanel.ItemsCount - (stackPanel.ActualHeight / stackPanel.TemplateDesiredSize.Value.Height);
+        }
+
         void scrollbar_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             if (stackPanel != null)
@@ -238,7 +247,17 @@
 
         void stackPanel_ItemsCountChanged(object sender, EventArgs e)
         {
-            scrollbar.Maximum = stackPanel.ItemsCount;
+            RefreshScrollbarMaximum();
+        }
+
+        void stackPanel_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            RefreshScrollbarMaximum();
+        }
+
+        void stackPanel_TemplateDesiredSizeChanged(object sender, EventArgs e)
+        {
+            RefreshScrollbarMaximum();
         }
 
         void VirtualizedListBox_Click(object sender, RoutedEventArgs e)

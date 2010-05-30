@@ -83,23 +83,27 @@
     <Reference Include="System.Windows.Browser" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Animation\AnimationWrapper.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Animation\MarginWrapper.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Animation\StoryboardCommand.cs" />
+    <Compile Include="Animation\StoryboardExtensionsCommands.cs" />
     <Compile Include="Clipper.cs" />
     <Compile Include="ColorPicker\ColorPicker.cs" />
     <Compile Include="ColorPicker\ColorSpace.cs" />
     <Compile Include="ColorPicker\SelectedColorEventArgs.cs" />
     <Compile Include="ControlExtensions\ContentPresenterExtensions.cs" />
-    <Compile Include="ControlExtensions\MarginExtensions.cs" />
     <Compile Include="ControlExtensions\SliderExtensions.cs" />
     <Compile Include="Data\XamlImageSourceConverter.cs" />
     <Compile Include="Layout\AnimatingFillPanel.cs" />
     <Compile Include="Layout\AnimatingTilePanel.cs" />
-    <Compile Include="Animation\AnimationWrapper.cs" />
     <Compile Include="Animation\GoToStateCommandParameter.cs" />
     <Compile Include="Animation\GoToStateCommandParameterTypeConverter.cs" />
     <Compile Include="Animation\HtmlAnimation.cs" />
     <Compile Include="Animation\HtmlAnimationPair.cs" />
-    <Compile Include="Animation\MarginWrapper.cs" />
-    <Compile Include="Animation\PropertyPath.cs" />
     <Compile Include="Animation\VisualState.cs" />
     <Compile Include="Animation\ZIndexWrapper.cs" />
     <Compile Include="ChangeTracker.cs" />

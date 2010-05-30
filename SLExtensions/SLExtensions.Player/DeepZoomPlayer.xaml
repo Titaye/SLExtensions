@@ -2591,18 +2591,25 @@
             </vsm:VisualStateGroup>
         </vsm:VisualStateManager.VisualStateGroups>
         <inter:Interaction.Behaviors>
-            <slint:MapState Source="{StaticResource controller}" Property="IsBuffering" >
-                <slint:MapStateMapping StateName="Buffering" Value="True"/>
-                <slint:MapStateMapping StateName="BufferReady" Value="False"/>
+            <slint:MapState Value="{Binding IsBuffering, Source={StaticResource controller}}">
+                <slint:MapStateMapping StateName="Buffering"
+                                       Value="True" />
+                <slint:MapStateMapping StateName="BufferReady"
+                                       Value="False" />
             </slint:MapState>
-            <slint:MapState Source="{StaticResource controller}" Property="PlayState" >
-                <slint:MapStateMapping StateName="Playing" Value="Playing"/>
-                <slint:MapStateMapping StateName="Paused" Value="Paused"/>
-                <slint:MapStateMapping StateName="Stopped" Value="Stopped"/>
+            <slint:MapState Value="{Binding PlayState, Source={StaticResource controller}}">
+                <slint:MapStateMapping StateName="Playing"
+                                       Value="Playing" />
+                <slint:MapStateMapping StateName="Paused"
+                                       Value="Paused" />
+                <slint:MapStateMapping StateName="Stopped"
+                                       Value="Stopped" />
             </slint:MapState>
-            <slint:MapState Source="{StaticResource controller}" Property="IsFullscreen" >
-                <slint:MapStateMapping StateName="Fullscreen" Value="True"/>
-                <slint:MapStateMapping StateName="Smallscreen" Value="False"/>
+            <slint:MapState Value="{Binding IsFullScree, Source={StaticResource controller}}">
+                <slint:MapStateMapping StateName="Fullscreen"
+                                       Value="True" />
+                <slint:MapStateMapping StateName="Smallscreen"
+                                       Value="False" />
             </slint:MapState>
 
         </inter:Interaction.Behaviors>
@@ -2640,8 +2647,6 @@
                     
                 </Border>
                 <Canvas HorizontalAlignment="Center" Width="Auto" Grid.Row="1" d:LayoutOverrides="Height"/>
-
-                <sleca:MarginWrapper x:Name="descriptionMarginWrapper" ElementName="gridDescription" MarginTop="55"/>
 
                 <TextBlock Text="{Binding Mode=TwoWay, Path=CurrentItem.Title, Source={StaticResource controller}}" x:Name="title"
 					TextWrapping="Wrap"

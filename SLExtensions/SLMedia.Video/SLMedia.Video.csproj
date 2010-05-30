@@ -94,16 +94,6 @@
     <Compile Include="XItemParserVideo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SLExtensions\SLExtensions.csproj">
-      <Project>{A6D5DC26-6631-4780-ADB9-87C1F5E405DD}</Project>
-      <Name>SLExtensions</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\SLMedia.Core\SLMedia.Core.csproj">
-      <Project>{AC559E1F-FEE6-4452-9047-D1A286B74C32}</Project>
-      <Name>SLMedia.Core</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
       <Visible>False</Visible>
       <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
@@ -127,6 +117,16 @@
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SLExtensions\SLExtensions.csproj">
+      <Project>{A6D5DC26-6631-4780-ADB9-87C1F5E405DD}</Project>
+      <Name>SLExtensions</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SLMedia.Core\SLMedia.Core.csproj">
+      <Project>{AC559E1F-FEE6-4452-9047-D1A286B74C32}</Project>
+      <Name>SLMedia.Core</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Silverlight\$(SilverlightVersion)\Microsoft.Silverlight.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -1,22 +1,23 @@
-﻿using System;
-using System.Net;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Ink;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Animation;
-using System.Windows.Shapes;
-using System.Windows.Data;
-using System.Windows.Media.Imaging;
-using System.IO;
-using SLExtensions.Data;
-using SLExtensions.Imaging;
-using System.Windows.Markup;
-
-namespace SLExtensions.Data
+﻿namespace SLExtensions.Data
 {
+    using System;
+    using System.IO;
+    using System.Net;
+    using System.Windows;
+    using System.Windows.Controls;
+    using System.Windows.Data;
+    using System.Windows.Documents;
+    using System.Windows.Ink;
+    using System.Windows.Input;
+    using System.Windows.Markup;
+    using System.Windows.Media;
+    using System.Windows.Media.Animation;
+    using System.Windows.Media.Imaging;
+    using System.Windows.Shapes;
+
+    using SLExtensions.Data;
+    using SLExtensions.Imaging;
+
     public class XamlImageSourceConverter : IValueConverter
     {
         #region Methods
@@ -70,6 +71,11 @@ namespace SLExtensions.Data
             return value;
         }
 
+        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+
         private void SetSourceFromXaml(BitmapImage brush, string xaml)
         {
             try
@@ -84,11 +90,6 @@ namespace SLExtensions.Data
             catch
             {
             }
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
-        {
-            throw new NotImplementedException();
         }
 
         #endregion Methods

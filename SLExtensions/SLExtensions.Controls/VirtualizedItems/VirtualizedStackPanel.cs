@@ -131,10 +131,23 @@ namespace SLExtensions.Controls
         /// </summary>
         private RectangleGeometry clipGeometry;
 
+        private Size? _templateDesiredSize;
+
         /// <summary>
         /// template desired size
         /// </summary>
-        private Size? templateDesiredSize;
+        private Size? templateDesiredSize
+        {
+            get { return _templateDesiredSize; }
+            set
+            {
+                if (_templateDesiredSize != value)
+                {
+                    _templateDesiredSize = value;
+                    OnTemplateDesiredSizeChanged();
+                }
+            }
+        }
 
         public Size? TemplateDesiredSize { get { return templateDesiredSize; } }
 
@@ -1009,6 +1022,17 @@ namespace SLExtensions.Controls
         }
 
         #endregion MarginAutoClipContent
+
+
+        public event EventHandler TemplateDesiredSizeChanged;
+
+        protected virtual void OnTemplateDesiredSizeChanged()
+        {
+            if (TemplateDesiredSizeChanged != null)
+            {
+                TemplateDesiredSizeChanged(this, EventArgs.Empty);
+            }
+        }
 
 
     }

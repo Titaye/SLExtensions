@@ -14,6 +14,7 @@
     using System.Windows.Documents;
     using System.Windows.Ink;
     using System.Windows.Input;
+    using System.Windows.Markup;
     using System.Windows.Media;
     using System.Windows.Media.Animation;
     using System.Windows.Media.Imaging;
@@ -25,6 +26,7 @@
     using SLExtensions.Collections.ObjectModel;
     using SLExtensions.Input;
 
+    [ContentProperty("Playlist")]
     public abstract class MediaController : NotifyingObject, IDisposable
     {
         #region Fields
@@ -33,7 +35,7 @@
         public static readonly DependencyProperty ContentPubProperty = 
             DependencyProperty.RegisterAttached("ContentPub", typeof(MediaController), typeof(MediaController), new PropertyMetadata(ContentPubChangedCallback));
 
-        private Dictionary<string, object> autoActivedMarkers = new Dictionary<string,object>();
+        private Dictionary<string, object> autoActivedMarkers = new Dictionary<string, object>();
         private bool autoPlay;
         private ContentControl contentPub;
         private IMediaItem currentItem;
@@ -52,6 +54,7 @@
         private bool isPopupFullscreen;
         private bool isPreviousEnabled;
         private IMediaItem lastSelectedItem;
+        private bool lockCurrentItem;
         private string mediaName;
         private IEnumerable<IMediaItem> nextItems;
         private ObservableCollection<IMediaItem> playlist;
@@ -61,7 +64,8 @@
         private IEnumerable<IMediaItem> previousItems;
         private List<ScriptCommandItem> scriptCommands;
         private string scriptCommandsUrl;
-        private int? selectedIndex;
+
+        //private int? selectedIndex;
         private DispatcherTimer timerTick;
         private double volume = 0.5;
         private bool wasFullscreenBeforePopup;
@@ -86,6 +90,8 @@
             SetMarkerSelectorUnactive.Executed += new EventHandler<ExecutedEventArgs>(SetMarkerSelectorUnactive_Executed);
             GoToPosition = new Command();
             GoToPosition.Executed += new EventHandler<ExecutedEventArgs>(GoToPosition_Executed);
+            PreviousItem = new Command(Previous, () => Playlist != null && CurrentItemIndex > 0);
+            NextItem = new Command(Next, () => Playlist != null && CurrentItemIndex < Playlist.Count - 1);
 
             AutoActivatedMarkers.Add(MarkerMetadata.Chapter, "");
         }
@@ -153,16 +159,54 @@
             get { return currentItem; }
             set
             {
-                if (currentItem != value)
+                if (lockCurrentItem)
+                    return;
+
+                lockCurrentItem = true;
+                try
                 {
-                    LastSelectedItem = currentItem;
-                    currentItem = value;
-                    OnPropertyChanged(this.GetPropertyName(n => n.CurrentItem));
-                    OnCurrentItemChanged();
+                    if (currentItem != value)
+                    {
+                        LastSelectedItem = currentItem;
+                        currentItem = value;
+                        OnPropertyChanged(this.GetPropertyName(n => n.CurrentItem));
+                        OnCurrentItemChanged();
+                        if (Playlist != null && CurrentItem != null)
+                        {
+                            CurrentItemIndex = Playlist.IndexOf(CurrentItem);
+                        }
+                        else
+                        {
+                            CurrentItemIndex = -1;
+                        }
+                    }
+                }
+                finally
+                {
+                    lockCurrentItem = false;
                 }
             }
         }
 
+        //public int SelectedIndex
+        //{
+        //    get { return selectedIndex.GetValueOrDefault(-1); }
+        //    set
+        //    {
+        //        if (Playlist == null || value < 0
+        //            || value >= Playlist.Count)
+        //        {
+        //            value = -1;
+        //        }
+        //        if (selectedIndex != value)
+        //        {
+        //            selectedIndex = value;
+        //            OnPropertyChanged(this.GetPropertyName(n => n.SelectedIndex));
+        //        }
+        //        if (value != -1)
+        //            CurrentItem = Playlist[value];
+        //    }
+        //}
         public int CurrentItemIndex
         {
             get { return currentItemIndex; }
@@ -193,6 +237,7 @@
                     }
 
                     OnPropertyChanged(this.GetPropertyName(n => n.CurrentItemIndex));
+                    CommandManager.InvalidateRequerySuggested();
                 }
             }
         }
@@ -241,7 +286,8 @@
 
         public Command GoToPosition
         {
-            get; private set;
+            get;
+            private set;
         }
 
         [ScriptableMemberAttribute]
@@ -399,6 +445,12 @@
             }
         }
 
+        public ICommand NextItem
+        {
+            get;
+            private set;
+        }
+
         public IEnumerable<IMediaItem> NextItems
         {
             get { return nextItems; }
@@ -420,13 +472,19 @@
             {
                 if (playlist != value)
                 {
+                    if (playlist != null)
+                    {
+                        playlist.CollectionChanged -= new System.Collections.Specialized.NotifyCollectionChangedEventHandler(playlist_CollectionChanged);
+                    }
+
                     playlist = value;
                     OnPropertyChanged(this.GetPropertyName(n => n.Playlist));
 
                     if (playlist != null)
                     {
-                        SelectedIndex = -1;
+                        CurrentItemIndex = -1;
                         Next();
+                        playlist.CollectionChanged += new System.Collections.Specialized.NotifyCollectionChangedEventHandler(playlist_CollectionChanged);
                     }
 
                     RefreshNexPrevious();
@@ -491,6 +549,12 @@
             }
         }
 
+        public ICommand PreviousItem
+        {
+            get;
+            private set;
+        }
+
         public IEnumerable<IMediaItem> PreviousItems
         {
             get { return previousItems; }
@@ -538,35 +602,16 @@
             }
         }
 
-        public int SelectedIndex
-        {
-            get { return selectedIndex.GetValueOrDefault(-1); }
-            set
-            {
-                if (Playlist == null || value < 0
-                    || value >= Playlist.Count)
-                {
-                    value = -1;
-                }
-
-                if (selectedIndex != value)
-                {
-                    selectedIndex = value;
-                    OnPropertyChanged(this.GetPropertyName(n => n.SelectedIndex));
-                }
-                if (value != -1)
-                    CurrentItem = Playlist[value];
-            }
-        }
-
         public Command SetMarkerSelectorActive
         {
-            get; private set;
+            get;
+            private set;
         }
 
         public Command SetMarkerSelectorUnactive
         {
-            get; private set;
+            get;
+            private set;
         }
 
         [ScriptableMemberAttribute]
@@ -926,6 +971,11 @@
             Playlist = new ObservableCollection<IMediaItem>(((PlaylistSource)sender).Playlist);
         }
 
+        void playlist_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            RefreshSelection();
+        }
+
         private void RefreshNexPrevious()
         {
             bool nextIsEnabled = false;
@@ -962,6 +1012,12 @@
             IsNextEnabled = nextIsEnabled;
         }
 
+        private void RefreshSelection()
+        {
+            if (Playlist != null && Playlist.Count > 0 && CurrentItemIndex == -1)
+                CurrentItemIndex = 0;
+        }
+
         private void SetMarkers()
         {
             var item = CurrentItem;
@@ -992,7 +1048,7 @@
         void SetMarkerSelectorActive_Executed(object sender, ExecutedEventArgs e)
         {
             var prm = e.Parameter as MarkerSelectorCommandParameter;
-            if (prm != null && CurrentItem != null && CurrentItem.MarkerSelectors !=null)
+            if (prm != null && CurrentItem != null && CurrentItem.MarkerSelectors != null)
             {
                 var markerSelectorsForType = (CurrentItem.MarkerSelectors.Where(s => s.Metadata != null && s.Metadata.ContainsKey(prm.Key))).ToList();
 

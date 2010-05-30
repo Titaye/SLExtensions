@@ -85,12 +85,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ClippingBorder.cs" />
+    <Compile Include="MouseActivityGoToState.cs" />
     <Compile Include="GoToState.cs" />
     <Compile Include="Localize.cs" />
     <Compile Include="MapState.cs" />
     <Compile Include="MapStateMapping.cs" />
     <Compile Include="MouseActivityForceActiveElement.cs" />
-    <Compile Include="MouseActivityGoToState.cs" />
+    <Compile Include="MouseActivityCommand.cs" />
     <Compile Include="MouseWheelScrollBehavior.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RaiseCommand.cs" />

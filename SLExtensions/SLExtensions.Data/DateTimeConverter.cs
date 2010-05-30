@@ -2,6 +2,7 @@
 {
     using System;
     using System.Diagnostics;
+    using System.Globalization;
     using System.Net;
     using System.Windows;
     using System.Windows.Controls;
@@ -30,27 +31,27 @@
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
             DateTime dateTime;
-              if (value is DateTime)
-              {
-            dateTime = (DateTime)value;
-
-            // if the parameter isn't used or isn't a string,
-            // just convert to a short datetime
-            IFormatProvider format = culture.GetFormat(targetType) as IFormatProvider;
-            if (parameter == null || !(parameter is String))
+            if (value is DateTime)
             {
-              return dateTime.ToString("d", format);
-            }
-            else
-            {
-              // Attempt to get the format provider for the culture specified
-              return dateTime.ToString((string)parameter, format);
-            }
-              }
+                dateTime = (DateTime)value;
 
-              // Can't do anything with it so jsut return the value
-              Debug.WriteLine("Failed to convert DateTime to string, value is not a DateTime value.");
-              return value;
+                // if the parameter isn't used or isn't a string,
+                // just convert to a short datetime
+                IFormatProvider format = CultureInfo.CurrentCulture.GetFormat(targetType) as IFormatProvider;
+                if (parameter == null || !(parameter is String))
+                {
+                    return dateTime.ToString("d", format);
+                }
+                else
+                {
+                    // Attempt to get the format provider for the culture specified
+                    return dateTime.ToString((string)parameter, format);
+                }
+            }
+
+            // Can't do anything with it so jsut return the value
+            Debug.WriteLine("Failed to convert DateTime to string, value is not a DateTime value.");
+            return value;
         }
 
         /// <summary>
@@ -66,22 +67,22 @@
         public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
             // if its not a date time we can't convert it.
-              if (targetType != typeof(DateTime) && targetType != typeof(DateTime?))
-              {
-            Debug.WriteLine("Failed to convert back to DateTime, invalid target type specified");
-            return value;
-              }
+            if (targetType != typeof(DateTime) && targetType != typeof(DateTime?))
+            {
+                Debug.WriteLine("Failed to convert back to DateTime, invalid target type specified");
+                return value;
+            }
 
-              // Attempt to parse the DateTime
-              DateTime date;
-              if (!DateTime.TryParse(value as string, out date))
-              {
-            Debug.WriteLine("Failed to convert back to DateTime, failed to parse string.");
-            return value;
-              }
+            // Attempt to parse the DateTime
+            DateTime date;
+            if (!DateTime.TryParse(value as string, out date))
+            {
+                Debug.WriteLine("Failed to convert back to DateTime, failed to parse string.");
+                return value;
+            }
 
-              // We converted it so return it
-              return date;
+            // We converted it so return it
+            return date;
         }
 
         #endregion Methods

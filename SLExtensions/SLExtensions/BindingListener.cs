@@ -1,17 +1,18 @@
 ﻿namespace SLExtensions
 {
     using System;
+    using System.ComponentModel;
     using System.Net;
     using System.Windows;
     using System.Windows.Controls;
+    using System.Windows.Data;
     using System.Windows.Documents;
     using System.Windows.Ink;
     using System.Windows.Input;
     using System.Windows.Media;
     using System.Windows.Media.Animation;
     using System.Windows.Shapes;
-    using System.Windows.Data;
-    using System.ComponentModel;
+
     using SLExtensions.ComponentModel;
 
     public class BindingListener : FrameworkElement
@@ -21,12 +22,15 @@
         /// <summary>
         /// Value depedency property.
         /// </summary>
-        public static readonly DependencyProperty ValueProperty =
+        public static readonly DependencyProperty ValueProperty = 
             DependencyProperty.Register(
                 "Value",
                 typeof(object),
                 typeof(BindingListener),
                 new PropertyMetadata((d, e) => ((BindingListener)d).OnValueChanged((object)e.OldValue, (object)e.NewValue)));
+
+        private static readonly DependencyProperty BindingHelperProperty = 
+            DependencyProperty.RegisterAttached("BindingHelper", typeof(FrameworkElement), typeof(BindingListener), null);
 
         #endregion Fields
 
@@ -63,22 +67,8 @@
 
         #region Methods
 
-        /// <summary>
-        /// handles the ValueProperty changes.
-        /// </summary>
-        /// <param name="oldValue">The old value.</param>
-        /// <param name="newValue">The new value.</param>
-        private void OnValueChanged(object oldValue, object newValue)
-        {
-            if (ValueChanged != null)
-            {
-                ValueChanged(this, new PropertyValueChangedEventArgs(oldValue, newValue));
-            }
-        }
-
         public void EnsureBindingSource(FrameworkElement source)
         {
-
             if (source == null)
             {
                 ClearValue(DataContextProperty);
@@ -130,10 +120,18 @@
             //}
         }
 
-        private static readonly DependencyProperty BindingHelperProperty =
-            DependencyProperty.RegisterAttached("BindingHelper", typeof(FrameworkElement), typeof(BindingListener), null);
-
-
+        /// <summary>
+        /// handles the ValueProperty changes.
+        /// </summary>
+        /// <param name="oldValue">The old value.</param>
+        /// <param name="newValue">The new value.</param>
+        private void OnValueChanged(object oldValue, object newValue)
+        {
+            if (ValueChanged != null)
+            {
+                ValueChanged(this, new PropertyValueChangedEventArgs(oldValue, newValue));
+            }
+        }
 
         #endregion Methods
     }

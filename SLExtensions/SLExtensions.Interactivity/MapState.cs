@@ -35,7 +35,7 @@
         /// <summary>
         /// Value depedency property.
         /// </summary>
-        public static readonly DependencyProperty ValueProperty =
+        public static readonly DependencyProperty ValueProperty = 
             DependencyProperty.Register(
                 "Value",
                 typeof(object),
@@ -57,13 +57,11 @@
 
         #region Properties
 
-
         public List<MapStateMapping> Mappings
         {
             get;
             private set;
         }
-
 
         /// <summary>
         /// True if transitions should be used for the state change.
@@ -117,8 +115,6 @@
             }
         }
 
-
-
         private void Element_Loaded(object sender, RoutedEventArgs e)
         {
             FrameworkElement element = (FrameworkElement)sender;
@@ -144,7 +140,6 @@
             {
                 return;
             }
-
 
             var propValue = Value;
 

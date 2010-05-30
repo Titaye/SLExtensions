@@ -20,7 +20,7 @@
     </SccAuxPath>
     <SccProvider>
     </SccProvider>
-    <SilverlightApplicationList>{997C0F08-47C4-4027-88A4-1BCE1E65D1D4}|..\SLExtensions.Showcase\SLExtensions.Showcase.csproj|ClientBin|False,{66D58D46-3966-4DD9-94F5-75A051CBC881}|..\SLExtensions.Player\SLExtensions.Player.csproj|ClientBin|False,{3C830469-3D22-45FE-B59F-F7396E98A202}|..\SilverlightApplication1\SilverlightApplication1.csproj|ClientBin|False</SilverlightApplicationList>
+    <SilverlightApplicationList>{997C0F08-47C4-4027-88A4-1BCE1E65D1D4}|..\SLExtensions.Showcase\SLExtensions.Showcase.csproj|ClientBin|False,{66D58D46-3966-4DD9-94F5-75A051CBC881}|..\SLExtensions.Player\SLExtensions.Player.csproj|ClientBin|False</SilverlightApplicationList>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <OldToolsVersion>4.0</OldToolsVersion>

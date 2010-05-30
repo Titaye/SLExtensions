@@ -1641,7 +1641,7 @@
 
         public static SolidColorBrush ToBrush(this Color color)
         {
-           return new SolidColorBrush(color);
+            return new SolidColorBrush(color);
         }
 
         #endregion Methods

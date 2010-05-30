@@ -1,8 +1,4 @@
-﻿// <copyright file="MarginWrapper.cs" company="Ucaya">
-// Distributed under Microsoft Public License (Ms-PL)
-// </copyright>
-// <author>Thierry Bouquain</author>
-namespace SLExtensions.Controls.Animation
+﻿namespace SLExtensions.Controls.Animation
 {
     using System;
     using System.Net;
@@ -15,712 +11,362 @@ namespace SLExtensions.Controls.Animation
     using System.Windows.Media.Animation;
     using System.Windows.Shapes;
 
-    /// <summary>
-    /// Class wrapper for animating a Margin property with a storyboard.
-    /// </summary>
-    public class MarginWrapper : Panel
+    public class MarginWrapper
     {
         #region Fields
 
-        /// <summary>
-        /// MarginBottomPercent depedency property.
-        /// </summary>
-        public static readonly DependencyProperty MarginBottomPercentProperty = 
-            DependencyProperty.Register(
-                "MarginBottomPercent",
-                typeof(double),
-                typeof(MarginWrapper),
-                new PropertyMetadata((d, e) => ((MarginWrapper)d).OnMarginBottomPercentChanged((double)e.OldValue, (double)e.NewValue)));
+        // Using a DependencyProperty as the backing store for MarginBottom.  This enables animation, styling, binding, etc...
+        private static readonly DependencyProperty marginBottomProperty = 
+            DependencyProperty.RegisterAttached("MarginBottom", typeof(double), typeof(MarginWrapper), new PropertyMetadata(double.NaN, MarginChangedCallback));
 
-        /// <summary>
-        /// MarginBottom depedency property.
-        /// </summary>
-        public static readonly DependencyProperty MarginBottomProperty = 
-            DependencyProperty.Register(
-                "MarginBottom",
-                typeof(double),
-                typeof(MarginWrapper),
-                new PropertyMetadata((d, e) => ((MarginWrapper)d).OnMarginBottomChanged((double)e.OldValue, (double)e.NewValue)));
+        // Using a DependencyProperty as the backing store for MarginHorizontalPercentShift.  This enables animation, styling, binding, etc...
+        private static readonly DependencyProperty marginHorizontalPercentShiftProperty = 
+            DependencyProperty.RegisterAttached("MarginHorizontalPercentShift", typeof(double), typeof(MarginWrapper), new PropertyMetadata(double.NaN, MarginChangedCallback));
 
-        /// <summary>
-        /// MarginHorizontalPercentShift depedency property.
-        /// </summary>
-        public static readonly DependencyProperty MarginHorizontalPercentShiftProperty = 
-            DependencyProperty.Register(
-                "MarginHorizontalPercentShift",
-                typeof(double),
-                typeof(MarginWrapper),
-                new PropertyMetadata((d, e) => ((MarginWrapper)d).OnMarginHorizontalPercentShiftChanged((double)e.OldValue, (double)e.NewValue)));
+        // Using a DependencyProperty as the backing store for MarginHorizontalShift.  This enables animation, styling, binding, etc...
+        private static readonly DependencyProperty marginHorizontalShiftProperty = 
+            DependencyProperty.RegisterAttached("MarginHorizontalShift", typeof(double), typeof(MarginWrapper), new PropertyMetadata(double.NaN, MarginChangedCallback));
 
-        /// <summary>
-        /// MarginHorizontalShift depedency property.
-        /// </summary>
-        public static readonly DependencyProperty MarginHorizontalShiftProperty = 
-            DependencyProperty.Register(
-                "MarginHorizontalShift",
-                typeof(double),
-                typeof(MarginWrapper),
-                new PropertyMetadata((d, e) => ((MarginWrapper)d).OnMarginHorizontalShiftChanged((double)e.OldValue, (double)e.NewValue)));
+        // Using a DependencyProperty as the backing store for MarginLeft.  This enables animation, styling, binding, etc...
+        private static readonly DependencyProperty marginLeftProperty = 
+            DependencyProperty.RegisterAttached("MarginLeft", typeof(double), typeof(MarginWrapper), new PropertyMetadata(double.NaN, MarginChangedCallback));
 
-        /// <summary>
-        /// MarginLeftPercent depedency property.
-        /// </summary>
-        public static readonly DependencyProperty MarginLeftPercentProperty = 
-            DependencyProperty.Register(
-                "MarginLeftPercent",
-                typeof(double),
-                typeof(MarginWrapper),
-                new PropertyMetadata((d, e) => ((MarginWrapper)d).OnMarginLeftPercentChanged((double)e.OldValue, (double)e.NewValue)));
+        // Using a DependencyProperty as the backing store for MarginPercentBottom.  This enables animation, styling, binding, etc...
+        private static readonly DependencyProperty marginPercentBottomProperty = 
+            DependencyProperty.RegisterAttached("MarginPercentBottom", typeof(double), typeof(MarginWrapper), new PropertyMetadata(double.NaN, MarginChangedCallback));
 
-        /// <summary>
-        /// MarginLeft depedency property.
-        /// </summary>
-        public static readonly DependencyProperty MarginLeftProperty = 
-            DependencyProperty.Register(
-                "MarginLeft",
-                typeof(double),
-                typeof(MarginWrapper),
-                new PropertyMetadata((d, e) => ((MarginWrapper)d).OnMarginLeftChanged((double)e.OldValue, (double)e.NewValue)));
+        // Using a DependencyProperty as the backing store for MarginPercentLeft.  This enables animation, styling, binding, etc...
+        private static readonly DependencyProperty marginPercentLeftProperty = 
+            DependencyProperty.RegisterAttached("MarginPercentLeft", typeof(double), typeof(MarginWrapper), new PropertyMetadata(double.NaN, MarginChangedCallback));
 
-        /// <summary>
-        /// MarginRightPercent depedency property.
-        /// </summary>
-        public static readonly DependencyProperty MarginRightPercentProperty = 
-            DependencyProperty.Register(
-                "MarginRightPercent",
-                typeof(double),
-                typeof(MarginWrapper),
-                new PropertyMetadata((d, e) => ((MarginWrapper)d).OnMarginRightPercentChanged((double)e.OldValue, (double)e.NewValue)));
+        // Using a DependencyProperty as the backing store for MarginPercentRight.  This enables animation, styling, binding, etc...
+        private static readonly DependencyProperty marginPercentRightProperty = 
+            DependencyProperty.RegisterAttached("MarginPercentRight", typeof(double), typeof(MarginWrapper), new PropertyMetadata(double.NaN, MarginChangedCallback));
 
-        /// <summary>
-        /// MarginRight depedency property.
-        /// </summary>
-        public static readonly DependencyProperty MarginRightProperty = 
-            DependencyProperty.Register(
-                "MarginRight",
-                typeof(double),
-                typeof(MarginWrapper),
-                new PropertyMetadata((d, e) => ((MarginWrapper)d).OnMarginRightChanged((double)e.OldValue, (double)e.NewValue)));
+        // Using a DependencyProperty as the backing store for MarginPercentTop.  This enables animation, styling, binding, etc...
+        private static readonly DependencyProperty marginPercentTopProperty = 
+            DependencyProperty.RegisterAttached("MarginPercentTop", typeof(double), typeof(MarginWrapper), new PropertyMetadata(double.NaN, MarginChangedCallback));
 
-        /// <summary>
-        /// MarginTopPercent depedency property.
-        /// </summary>
-        public static readonly DependencyProperty MarginTopPercentProperty = 
-            DependencyProperty.Register(
-                "MarginTopPercent",
-                typeof(double),
-                typeof(MarginWrapper),
-                new PropertyMetadata((d, e) => ((MarginWrapper)d).OnMarginTopPercentChanged((double)e.OldValue, (double)e.NewValue)));
+        // Using a DependencyProperty as the backing store for MarginRight.  This enables animation, styling, binding, etc...
+        private static readonly DependencyProperty marginRightProperty = 
+            DependencyProperty.RegisterAttached("MarginRight", typeof(double), typeof(MarginWrapper), new PropertyMetadata(double.NaN, MarginChangedCallback));
 
-        /// <summary>
-        /// MarginTop depedency property.
-        /// </summary>
-        public static readonly DependencyProperty MarginTopProperty = 
-            DependencyProperty.Register(
-                "MarginTop",
-                typeof(double),
-                typeof(MarginWrapper),
-                new PropertyMetadata((d, e) => ((MarginWrapper)d).OnMarginTopChanged((double)e.OldValue, (double)e.NewValue)));
+        // Using a DependencyProperty as the backing store for MarginTop.  This enables animation, styling, binding, etc...
+        private static readonly DependencyProperty marginTopProperty = 
+            DependencyProperty.RegisterAttached("MarginTop", typeof(double), typeof(MarginWrapper), new PropertyMetadata(double.NaN, MarginChangedCallback));
 
-        /// <summary>
-        /// MarginVerticalPercentShift depedency property.
-        /// </summary>
-        public static readonly DependencyProperty MarginVerticalPercentShiftProperty = 
-            DependencyProperty.Register(
-                "MarginVerticalPercentShift",
-                typeof(double),
-                typeof(MarginWrapper),
-                new PropertyMetadata((d, e) => ((MarginWrapper)d).OnMarginVerticalPercentShiftChanged((double)e.OldValue, (double)e.NewValue)));
+        // Using a DependencyProperty as the backing store for MarginVerticalPercentShift.  This enables animation, styling, binding, etc...
+        private static readonly DependencyProperty marginVerticalPercentShiftProperty = 
+            DependencyProperty.RegisterAttached("MarginVerticalPercentShift", typeof(double), typeof(MarginWrapper), new PropertyMetadata(double.NaN, MarginChangedCallback));
 
-        /// <summary>
-        /// MarginVerticalShift depedency property.
-        /// </summary>
-        public static readonly DependencyProperty MarginVerticalShiftProperty = 
-            DependencyProperty.Register(
-                "MarginVerticalShift",
-                typeof(double),
-                typeof(MarginWrapper),
-                new PropertyMetadata((d, e) => ((MarginWrapper)d).OnMarginVerticalShiftChanged((double)e.OldValue, (double)e.NewValue)));
-
-        private bool initialized = false;
+        // Using a DependencyProperty as the backing store for MarginVerticalShift.  This enables animation, styling, binding, etc...
+        private static readonly DependencyProperty marginVerticalShiftProperty = 
+            DependencyProperty.RegisterAttached("MarginVerticalShift", typeof(double), typeof(MarginWrapper), new PropertyMetadata(double.NaN, MarginChangedCallback));
 
         #endregion Fields
 
-        #region Constructors
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="MarginWrapper"/> class.
-        /// </summary>
-        public MarginWrapper()
-        {
-            // Hide this control. It's just a wrapper and does not need to be shown in the GUI
-            this.Visibility = Visibility.Collapsed;
-            this.Loaded += this.MarginWrapper_Loaded;
-            MarginBottom = double.NaN;
-            MarginBottomPercent = double.NaN;
-            MarginHorizontalPercentShift = double.NaN;
-            MarginHorizontalShift = double.NaN;
-            MarginLeft = double.NaN;
-            MarginLeftPercent = double.NaN;
-            MarginRight = double.NaN;
-            MarginRightPercent = double.NaN;
-            MarginTop = double.NaN;
-            MarginTopPercent = double.NaN;
-            MarginVerticalPercentShift = double.NaN;
-            MarginVerticalShift = double.NaN;
-        }
-
-        #endregion Constructors
-
         #region Properties
 
-        /// <summary>
-        /// The FrameworkElement that will have its margins animated
-        /// </summary>
-        public FrameworkElement Element
+        public static DependencyProperty MarginBottomProperty
         {
-            get;
-            set;
+            get { return marginBottomProperty; }
         }
 
-        /// <summary>
-        /// Gets or sets the name of the FrameworkElement to have its margin animated.
-        /// </summary>
-        /// <value>The name of the element.</value>
-        public string ElementName
+        public static DependencyProperty MarginHorizontalPercentShiftProperty
         {
-            get;
-            set;
+            get { return marginHorizontalPercentShiftProperty; }
         }
 
-        public bool ForceOnLoad
+        public static DependencyProperty MarginHorizontalShiftProperty
         {
-            get; set;
+            get { return marginHorizontalShiftProperty; }
         }
 
-        /// <summary>
-        /// Gets or sets the bottom margin.
-        /// </summary>
-        /// <value>The bottom margin.</value>
-        public double MarginBottom
+        public static DependencyProperty MarginLeftProperty
         {
-            get
-            {
-                return (double)GetValue(MarginBottomProperty);
-            }
-
-            set
-            {
-                SetValue(MarginBottomProperty, value);
-            }
+            get { return marginLeftProperty; }
         }
 
-        public double MarginBottomPercent
+        public static DependencyProperty MarginPercentBottomProperty
         {
-            get
-            {
-                return (double)GetValue(MarginBottomPercentProperty);
-            }
-
-            set
-            {
-                SetValue(MarginBottomPercentProperty, value);
-            }
+            get { return marginPercentBottomProperty; }
         }
 
-        public double MarginHorizontalPercentShift
+        public static DependencyProperty MarginPercentLeftProperty
         {
-            get
-            {
-                return (double)GetValue(MarginHorizontalPercentShiftProperty);
-            }
-
-            set
-            {
-                SetValue(MarginHorizontalPercentShiftProperty, value);
-            }
+            get { return marginPercentLeftProperty; }
         }
 
-        public double MarginHorizontalShift
+        public static DependencyProperty MarginPercentRightProperty
         {
-            get
-            {
-                return (double)GetValue(MarginHorizontalShiftProperty);
-            }
-
-            set
-            {
-                SetValue(MarginHorizontalShiftProperty, value);
-            }
+            get { return marginPercentRightProperty; }
         }
 
-        /// <summary>
-        /// Gets or sets the left margin.
-        /// </summary>
-        /// <value>The left margin.</value>
-        public double MarginLeft
+        public static DependencyProperty MarginPercentTopProperty
         {
-            get
-            {
-                return (double)GetValue(MarginLeftProperty);
-            }
-
-            set
-            {
-                SetValue(MarginLeftProperty, value);
-            }
+            get { return marginPercentTopProperty; }
         }
 
-        public double MarginLeftPercent
+        public static DependencyProperty MarginRightProperty
         {
-            get
-            {
-                return (double)GetValue(MarginLeftPercentProperty);
-            }
-
-            set
-            {
-                SetValue(MarginLeftPercentProperty, value);
-            }
+            get { return marginRightProperty; }
         }
 
-        /// <summary>
-        /// Gets or sets the right margin.
-        /// </summary>
-        /// <value>The right margin.</value>
-        public double MarginRight
+        public static DependencyProperty MarginTopProperty
         {
-            get
-            {
-                return (double)GetValue(MarginRightProperty);
-            }
-
-            set
-            {
-                SetValue(MarginRightProperty, value);
-            }
+            get { return marginTopProperty; }
         }
 
-        public double MarginRightPercent
+        public static DependencyProperty MarginVerticalPercentShiftProperty
         {
-            get
-            {
-                return (double)GetValue(MarginRightPercentProperty);
-            }
-
-            set
-            {
-                SetValue(MarginRightPercentProperty, value);
-            }
+            get { return marginVerticalPercentShiftProperty; }
         }
 
-        /// <summary>
-        /// Gets or sets the top margin.
-        /// </summary>
-        /// <value>The top margin.</value>
-        public double MarginTop
+        public static DependencyProperty MarginVerticalShiftProperty
         {
-            get
-            {
-                return (double)GetValue(MarginTopProperty);
-            }
-
-            set
-            {
-                SetValue(MarginTopProperty, value);
-            }
-        }
-
-        public double MarginTopPercent
-        {
-            get
-            {
-                return (double)GetValue(MarginTopPercentProperty);
-            }
-
-            set
-            {
-                SetValue(MarginTopPercentProperty, value);
-            }
-        }
-
-        public double MarginVerticalPercentShift
-        {
-            get
-            {
-                return (double)GetValue(MarginVerticalPercentShiftProperty);
-            }
-
-            set
-            {
-                SetValue(MarginVerticalPercentShiftProperty, value);
-            }
-        }
-
-        public double MarginVerticalShift
-        {
-            get
-            {
-                return (double)GetValue(MarginVerticalShiftProperty);
-            }
-
-            set
-            {
-                SetValue(MarginVerticalShiftProperty, value);
-            }
+            get { return marginVerticalShiftProperty; }
         }
 
         #endregion Properties
 
         #region Methods
 
-        void Element_SizeChanged(object sender, SizeChangedEventArgs e)
+        public static double GetMarginBottom(DependencyObject obj)
         {
-            RefreshPercentMargins();
+            return (double)obj.GetValue(MarginBottomProperty);
         }
 
-        /// <summary>
-        /// Ensures the FrameworkElement is found.
-        /// </summary>
-        private void EnsureElement()
+        public static double GetMarginHorizontalPercentShift(DependencyObject obj)
         {
-            if (string.IsNullOrEmpty(ElementName))
-                return;
+            return (double)obj.GetValue(MarginHorizontalPercentShiftProperty);
+        }
 
-            if (this.Element == null)
+        public static double GetMarginHorizontalShift(DependencyObject obj)
+        {
+            return (double)obj.GetValue(MarginHorizontalShiftProperty);
+        }
+
+        public static double GetMarginLeft(DependencyObject obj)
+        {
+            return (double)obj.GetValue(MarginLeftProperty);
+        }
+
+        public static double GetMarginPercentBottom(DependencyObject obj)
+        {
+            return (double)obj.GetValue(MarginPercentBottomProperty);
+        }
+
+        public static double GetMarginPercentLeft(DependencyObject obj)
+        {
+            return (double)obj.GetValue(MarginPercentLeftProperty);
+        }
+
+        public static double GetMarginPercentRight(DependencyObject obj)
+        {
+            return (double)obj.GetValue(MarginPercentRightProperty);
+        }
+
+        public static double GetMarginPercentTop(DependencyObject obj)
+        {
+            return (double)obj.GetValue(MarginPercentTopProperty);
+        }
+
+        public static double GetMarginRight(DependencyObject obj)
+        {
+            return (double)obj.GetValue(MarginRightProperty);
+        }
+
+        public static double GetMarginTop(DependencyObject obj)
+        {
+            return (double)obj.GetValue(MarginTopProperty);
+        }
+
+        public static double GetMarginVerticalPercentShift(DependencyObject obj)
+        {
+            return (double)obj.GetValue(MarginVerticalPercentShiftProperty);
+        }
+
+        public static double GetMarginVerticalShift(DependencyObject obj)
+        {
+            return (double)obj.GetValue(MarginVerticalShiftProperty);
+        }
+
+        public static void SetMarginBottom(DependencyObject obj, double value)
+        {
+            obj.SetValue(MarginBottomProperty, value);
+        }
+
+        public static void SetMarginHorizontalPercentShift(DependencyObject obj, double value)
+        {
+            obj.SetValue(MarginHorizontalPercentShiftProperty, value);
+        }
+
+        public static void SetMarginHorizontalShift(DependencyObject obj, double value)
+        {
+            obj.SetValue(MarginHorizontalShiftProperty, value);
+        }
+
+        public static void SetMarginLeft(DependencyObject obj, double value)
+        {
+            obj.SetValue(MarginLeftProperty, value);
+        }
+
+        public static void SetMarginPercentBottom(DependencyObject obj, double value)
+        {
+            obj.SetValue(MarginPercentBottomProperty, value);
+        }
+
+        public static void SetMarginPercentLeft(DependencyObject obj, double value)
+        {
+            obj.SetValue(MarginPercentLeftProperty, value);
+        }
+
+        public static void SetMarginPercentRight(DependencyObject obj, double value)
+        {
+            obj.SetValue(MarginPercentRightProperty, value);
+        }
+
+        public static void SetMarginPercentTop(DependencyObject obj, double value)
+        {
+            obj.SetValue(MarginPercentTopProperty, value);
+        }
+
+        public static void SetMarginRight(DependencyObject obj, double value)
+        {
+            obj.SetValue(MarginRightProperty, value);
+        }
+
+        public static void SetMarginTop(DependencyObject obj, double value)
+        {
+            obj.SetValue(MarginTopProperty, value);
+        }
+
+        public static void SetMarginVerticalPercentShift(DependencyObject obj, double value)
+        {
+            obj.SetValue(MarginVerticalPercentShiftProperty, value);
+        }
+
+        public static void SetMarginVerticalShift(DependencyObject obj, double value)
+        {
+            obj.SetValue(MarginVerticalShiftProperty, value);
+        }
+
+        private static void ApplyMargin(FrameworkElement frameworkElement)
+        {
+            Thickness margin = frameworkElement.Margin;
+
+            var left = GetMarginLeft(frameworkElement);
+            if (!double.IsNaN(left))
+                margin.Left = left;
+
+            var top = GetMarginTop(frameworkElement);
+            if (!double.IsNaN(top))
+                margin.Top = top;
+
+            var right = GetMarginRight(frameworkElement);
+            if (!double.IsNaN(right))
+                margin.Right = right;
+
+            var bottom = GetMarginBottom(frameworkElement);
+            if (!double.IsNaN(bottom))
+                margin.Bottom = bottom;
+
+            var verticalShift = GetMarginVerticalShift(frameworkElement);
+            if (!double.IsNaN(verticalShift))
             {
-                this.Element = this.FindName(this.ElementName) as FrameworkElement;
+                margin.Top = verticalShift;
+                margin.Bottom = -verticalShift;
             }
 
-            if (!this.initialized && this.Element != null)
+            var horizontalShift = GetMarginHorizontalShift(frameworkElement);
+            if (!double.IsNaN(horizontalShift))
             {
-                this.initialized = true;
-
-                if (!double.IsNaN(MarginBottom))
-                    OnMarginBottomChanged(double.NaN, MarginBottom);
-
-                if (!double.IsNaN(MarginHorizontalShift))
-                    OnMarginHorizontalShiftChanged(double.NaN, MarginHorizontalShift);
-
-                if (!double.IsNaN(MarginLeft))
-                    OnMarginLeftChanged(double.NaN, MarginLeft);
-
-                if (!double.IsNaN(MarginRight))
-                    OnMarginRightChanged(double.NaN, MarginRight);
-
-                if (!double.IsNaN(MarginTop))
-                    OnMarginTopChanged(double.NaN, MarginTop);
-
-                if (!double.IsNaN(MarginVerticalShift))
-                    OnMarginVerticalShiftChanged(double.NaN, MarginVerticalShift);
-
-                RefreshPercentMargins();
-
-                this.Element.SizeChanged += new SizeChangedEventHandler(Element_SizeChanged);
-
+                margin.Left = horizontalShift;
+                margin.Right = -horizontalShift;
             }
-        }
 
-        /// <summary>
-        /// Handles the Loaded event of the MarginWrapper control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.Windows.RoutedEventArgs"/> instance containing the event data.</param>
-        private void MarginWrapper_Loaded(object sender, RoutedEventArgs e)
-        {
-            this.EnsureElement();
-            RefreshPercentMargins();
-        }
-
-        /// <summary>
-        /// handles the MarginBottomProperty changes.
-        /// </summary>
-        /// <param name="oldValue">The old value.</param>
-        /// <param name="newValue">The new value.</param>
-        private void OnMarginBottomChanged(double oldValue, double newValue)
-        {
-            this.EnsureElement();
-            if (this.Element != null)
+            if (frameworkElement.ActualHeight != 0
+                && frameworkElement.ActualWidth != 0)
             {
-
-                Thickness margin = this.Element.Margin;
-
-                margin.Bottom = newValue;
-                this.Element.Margin = margin;
-            }
-        }
-
-        /// <summary>
-        /// handles the MarginBottomPercentProperty changes.
-        /// </summary>
-        /// <param name="oldValue">The old value.</param>
-        /// <param name="newValue">The new value.</param>
-        private void OnMarginBottomPercentChanged(double oldValue, double newValue)
-        {
-            this.EnsureElement();
-            if (this.Element != null)
-            {
-                FrameworkElement parentElement = this.Element.Parent as FrameworkElement;
-                if (parentElement == null)
+                var pcleft = GetMarginPercentLeft(frameworkElement);
+                if (!double.IsNaN(pcleft))
                 {
-                    return;
+                    left = frameworkElement.ActualWidth * pcleft;
+                    margin.Left = left;
                 }
 
-                Thickness margin = this.Element.Margin;
-
-                margin.Bottom = parentElement.ActualHeight * newValue;
-                this.Element.Margin = margin;
-            }
-        }
-
-        /// <summary>
-        /// handles the MarginHorizontalPercentShiftProperty changes.
-        /// </summary>
-        /// <param name="oldValue">The old value.</param>
-        /// <param name="newValue">The new value.</param>
-        private void OnMarginHorizontalPercentShiftChanged(double oldValue, double newValue)
-        {
-            this.EnsureElement();
-            if (this.Element != null)
-            {
-                FrameworkElement parentElement = this.Element.Parent as FrameworkElement;
-                if (parentElement == null)
+                var pctop = GetMarginPercentTop(frameworkElement);
+                if (!double.IsNaN(pctop))
                 {
-                    return;
+                    top = frameworkElement.ActualHeight * pctop;
+                    margin.Top = top;
                 }
 
-                Thickness margin = this.Element.Margin;
-                double newMarginLeft = parentElement.ActualWidth * newValue;
-                double delta = newMarginLeft - margin.Left;
-                margin.Left = newMarginLeft;
-                margin.Right -= delta;
-                this.Element.Margin = margin;
-            }
-        }
-
-        /// <summary>
-        /// handles the MarginHorizontalShiftProperty changes.
-        /// </summary>
-        /// <param name="oldValue">The old value.</param>
-        /// <param name="newValue">The new value.</param>
-        private void OnMarginHorizontalShiftChanged(double oldValue, double newValue)
-        {
-            this.EnsureElement();
-            if (this.Element != null)
-            {
-                FrameworkElement parentElement = this.Element.Parent as FrameworkElement;
-                if (parentElement == null)
+                var pcright = GetMarginPercentRight(frameworkElement);
+                if (!double.IsNaN(pcright))
                 {
-                    return;
+                    right = frameworkElement.ActualWidth * pcright;
+                    margin.Right = right;
                 }
 
-                if (double.IsNaN(oldValue))
-                    oldValue = 0;
-
-                double delta = newValue - oldValue;
-                Thickness margin = this.Element.Margin;
-                margin.Left = newValue;
-                margin.Right -= delta;
-                this.Element.Margin = margin;
-            }
-        }
-
-        /// <summary>
-        /// handles the MarginLeftProperty changes.
-        /// </summary>
-        /// <param name="oldValue">The old value.</param>
-        /// <param name="newValue">The new value.</param>
-        private void OnMarginLeftChanged(double oldValue, double newValue)
-        {
-            this.EnsureElement();
-            if (this.Element != null)
-            {
-
-                Thickness margin = this.Element.Margin;
-                margin.Left = newValue;
-                this.Element.Margin = margin;
-            }
-        }
-
-        /// <summary>
-        /// handles the MarginLeftPercentProperty changes.
-        /// </summary>
-        /// <param name="oldValue">The old value.</param>
-        /// <param name="newValue">The new value.</param>
-        private void OnMarginLeftPercentChanged(double oldValue, double newValue)
-        {
-            this.EnsureElement();
-            if (this.Element != null)
-            {
-                FrameworkElement parentElement = this.Element.Parent as FrameworkElement;
-                if (parentElement == null)
+                var pcbottom = GetMarginPercentBottom(frameworkElement);
+                if (!double.IsNaN(pcbottom))
                 {
-                    return;
+                    bottom = frameworkElement.ActualHeight * pcbottom;
+                    margin.Bottom = pcbottom;
                 }
 
-                Thickness margin = this.Element.Margin;
-
-                margin.Left = parentElement.ActualWidth * newValue;
-                this.Element.Margin = margin;
-            }
-        }
-
-        /// <summary>
-        /// handles the MarginRightProperty changes.
-        /// </summary>
-        /// <param name="oldValue">The old value.</param>
-        /// <param name="newValue">The new value.</param>
-        private void OnMarginRightChanged(double oldValue, double newValue)
-        {
-            this.EnsureElement();
-            if (this.Element != null)
-            {
-
-                Thickness margin = this.Element.Margin;
-
-                margin.Right = newValue;
-                this.Element.Margin = margin;
-            }
-        }
-
-        /// <summary>
-        /// handles the MarginRightPercentProperty changes.
-        /// </summary>
-        /// <param name="oldValue">The old value.</param>
-        /// <param name="newValue">The new value.</param>
-        private void OnMarginRightPercentChanged(double oldValue, double newValue)
-        {
-            this.EnsureElement();
-            if (this.Element != null)
-            {
-                FrameworkElement parentElement = this.Element.Parent as FrameworkElement;
-                if (parentElement == null)
+                var verticalPercentShift = GetMarginVerticalPercentShift(frameworkElement);
+                if (!double.IsNaN(verticalPercentShift))
                 {
-                    return;
+                    verticalShift = frameworkElement.ActualWidth * verticalPercentShift;
+                    margin.Top = verticalShift;
+                    margin.Bottom = -verticalShift;
                 }
 
-                Thickness margin = this.Element.Margin;
-
-                margin.Right = parentElement.ActualWidth * newValue;
-                this.Element.Margin = margin;
-            }
-        }
-
-        /// <summary>
-        /// handles the MarginTopProperty changes.
-        /// </summary>
-        /// <param name="oldValue">The old value.</param>
-        /// <param name="newValue">The new value.</param>
-        private void OnMarginTopChanged(double oldValue, double newValue)
-        {
-            this.EnsureElement();
-            if (this.Element != null)
-            {
-
-                Thickness margin = this.Element.Margin;
-
-                margin.Top = newValue;
-                this.Element.Margin = margin;
-            }
-        }
-
-        /// <summary>
-        /// handles the MarginTopPercentProperty changes.
-        /// </summary>
-        /// <param name="oldValue">The old value.</param>
-        /// <param name="newValue">The new value.</param>
-        private void OnMarginTopPercentChanged(double oldValue, double newValue)
-        {
-            this.EnsureElement();
-            if (this.Element != null)
-            {
-                FrameworkElement parentElement = this.Element.Parent as FrameworkElement;
-                if (parentElement == null)
+                var horizontalPercentShift = GetMarginHorizontalPercentShift(frameworkElement);
+                if (!double.IsNaN(horizontalPercentShift))
                 {
-                    return;
+                    horizontalShift = frameworkElement.ActualWidth * horizontalPercentShift;
+                    margin.Left = horizontalShift;
+                    margin.Right = -horizontalShift;
                 }
-
-                Thickness margin = this.Element.Margin;
-
-                margin.Top = parentElement.ActualHeight * newValue;
-                this.Element.Margin = margin;
             }
+
+            frameworkElement.Margin = margin;
         }
 
-        /// <summary>
-        /// handles the MarginVerticalPercentShiftProperty changes.
-        /// </summary>
-        /// <param name="oldValue">The old value.</param>
-        /// <param name="newValue">The new value.</param>
-        private void OnMarginVerticalPercentShiftChanged(double oldValue, double newValue)
+        static void fe_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            this.EnsureElement();
-            if (this.Element != null)
-            {
-                FrameworkElement parentElement = this.Element.Parent as FrameworkElement;
-                if (parentElement == null)
-                {
-                    return;
-                }
-
-                Thickness margin = this.Element.Margin;
-                double newMarginTop = parentElement.ActualHeight * newValue;
-                double delta = newMarginTop - margin.Top;
-                margin.Top = newMarginTop;
-                margin.Bottom -= delta;
-                this.Element.Margin = margin;
-            }
+            ApplyMargin((FrameworkElement)sender);
         }
 
-        /// <summary>
-        /// handles the MarginVerticalShiftProperty changes.
-        /// </summary>
-        /// <param name="oldValue">The old value.</param>
-        /// <param name="newValue">The new value.</param>
-        private void OnMarginVerticalShiftChanged(double oldValue, double newValue)
+        private static void MarginChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            this.EnsureElement();
-            if (this.Element != null)
-            {
-                FrameworkElement parentElement = this.Element.Parent as FrameworkElement;
-                if (parentElement == null)
-                {
-                    return;
-                }
-
-                if (double.IsNaN(oldValue))
-                    oldValue = 0;
-
-                double delta = newValue - oldValue;
-
-                Thickness margin = this.Element.Margin;
-                margin.Top = newValue;
-                margin.Bottom -= delta;
-                this.Element.Margin = margin;
-            }
-        }
-
-        private void RefreshPercentMargins()
-        {
-            if (!double.IsNaN(MarginBottomPercent))
-                OnMarginBottomPercentChanged(double.NaN, MarginBottomPercent);
-
-            if (!double.IsNaN(MarginHorizontalPercentShift))
-                OnMarginHorizontalPercentShiftChanged(double.NaN, MarginHorizontalPercentShift);
-
-            if (!double.IsNaN(MarginLeftPercent))
-                OnMarginLeftPercentChanged(double.NaN, MarginLeftPercent);
-
-            if (!double.IsNaN(MarginRightPercent))
-                OnMarginRightPercentChanged(double.NaN, MarginRightPercent);
-
-            if (!double.IsNaN(MarginTopPercent))
-                OnMarginTopPercentChanged(double.NaN, MarginTopPercent);
-
-            if (!double.IsNaN(MarginVerticalPercentShift))
-                OnMarginVerticalPercentShiftChanged(double.NaN, MarginVerticalPercentShift);
+            var fe = d as FrameworkElement;
+            ApplyMargin(fe);
+            if (fe != null)
+                fe.SizeChanged += new SizeChangedEventHandler(fe_SizeChanged);
         }
 
         #endregion Methods
+
+        #region Other
+
+        //////////////////////////////////////////
+        //        MarginBottom = double.NaN;
+        //MarginBottomPercent = double.NaN;
+        //MarginHorizontalPercentShift = double.NaN;
+        //MarginHorizontalShift = double.NaN;
+        //MarginLeft = double.NaN;
+        //MarginLeftPercent = double.NaN;
+        //MarginRight = double.NaN;
+        //MarginRightPercent = double.NaN;
+        //MarginTop = double.NaN;
+        //MarginTopPercent = double.NaN;
+        //MarginVerticalPercentShift = double.NaN;
+        //MarginVerticalShift = double.NaN;
+
+        #endregion Other
     }
 }

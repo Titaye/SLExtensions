@@ -31,4 +31,16 @@
 
         #endregion Properties
     }
+
+    public static class DataEventArgs
+    {
+        #region Methods
+
+        public static DataEventArgs<T> Create<T>(T data)
+        {
+            return new DataEventArgs<T>(data);
+        }
+
+        #endregion Methods
+    }
 }

@@ -57,26 +57,28 @@
 
         void gridDescription_MouseEnter(object sender, MouseEventArgs e)
         {
-            Storyboard sb = new Storyboard();
-            DoubleAnimation anim = new DoubleAnimation();
-            sb.Children.Add(anim);
-            Storyboard.SetTarget(anim, descriptionMarginWrapper);
-            Storyboard.SetTargetProperty(anim, new PropertyPath("(MarginWrapper.MarginTop)"));
-            anim.To = Math.Min(descriptionDesignMargin.Top, (descriptionDesignMargin.Top - description.ActualHeight));
-            anim.Duration = new Duration(TimeSpan.FromMilliseconds(200));
-            sb.Begin();
+            //TODO:
+            //Storyboard sb = new Storyboard();
+            //DoubleAnimation anim = new DoubleAnimation();
+            //sb.Children.Add(anim);
+            //Storyboard.SetTarget(anim, descriptionMarginWrapper);
+            //Storyboard.SetTargetProperty(anim, new PropertyPath("(MarginWrapper.MarginTop)"));
+            //anim.To = Math.Min(descriptionDesignMargin.Top, (descriptionDesignMargin.Top - description.ActualHeight));
+            //anim.Duration = new Duration(TimeSpan.FromMilliseconds(200));
+            //sb.Begin();
         }
 
         void gridDescription_MouseLeave(object sender, MouseEventArgs e)
         {
-            Storyboard sb = new Storyboard();
-            DoubleAnimation anim = new DoubleAnimation();
-            sb.Children.Add(anim);
-            Storyboard.SetTarget(anim, descriptionMarginWrapper);
-            Storyboard.SetTargetProperty(anim, new PropertyPath("(MarginWrapper.MarginTop)"));
-            anim.To = descriptionDesignMargin.Top;
-            anim.Duration = new Duration(TimeSpan.FromMilliseconds(200));
-            sb.Begin();
+            //TODO:
+            //Storyboard sb = new Storyboard();
+            //DoubleAnimation anim = new DoubleAnimation();
+            //sb.Children.Add(anim);
+            //Storyboard.SetTarget(anim, descriptionMarginWrapper);
+            //Storyboard.SetTargetProperty(anim, new PropertyPath("(MarginWrapper.MarginTop)"));
+            //anim.To = descriptionDesignMargin.Top;
+            //anim.Duration = new Duration(TimeSpan.FromMilliseconds(200));
+            //sb.Begin();
         }
 
         private void Image_ImageFailed(object sender, ExceptionRoutedEventArgs e)

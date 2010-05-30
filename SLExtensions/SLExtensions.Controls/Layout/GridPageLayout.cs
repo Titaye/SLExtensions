@@ -25,6 +25,10 @@
                 typeof(GridPageLayout),
                 new PropertyMetadata(1d, (d, e) => ((GridPageLayout)d).OnColumnCountChanged((double)e.OldValue, (double)e.NewValue)));
 
+        // Using a DependencyProperty as the backing store for Column.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty ColumnProperty = 
+            DependencyProperty.RegisterAttached("Column", typeof(int), typeof(GridPageLayout), new PropertyMetadata(ColumnChangedCallback));
+
         /// <summary>
         /// Orientation depedency property.
         /// </summary>
@@ -44,6 +48,10 @@
                 typeof(double),
                 typeof(GridPageLayout),
                 new PropertyMetadata((d, e) => ((GridPageLayout)d).OnPageHeightChanged((double)e.OldValue, (double)e.NewValue)));
+
+        // Using a DependencyProperty as the backing store for PageIndex.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty PageIndexProperty = 
+            DependencyProperty.RegisterAttached("PageIndex", typeof(int), typeof(GridPageLayout), new PropertyMetadata(PageIndexChangedCallback));
 
         /// <summary>
         /// PageOrientation depedency property.
@@ -74,6 +82,10 @@
                 typeof(double),
                 typeof(GridPageLayout),
                 new PropertyMetadata(double.NaN, (d, e) => ((GridPageLayout)d).OnRowCountChanged((double)e.OldValue, (double)e.NewValue)));
+
+        // Using a DependencyProperty as the backing store for Row.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty RowProperty = 
+            DependencyProperty.RegisterAttached("Row", typeof(int), typeof(GridPageLayout), new PropertyMetadata(RowChangedCallback));
 
         #endregion Fields
 
@@ -173,6 +185,36 @@
 
         #region Methods
 
+        public static int GetColumn(DependencyObject obj)
+        {
+            return (int)obj.GetValue(ColumnProperty);
+        }
+
+        public static int GetPageIndex(DependencyObject obj)
+        {
+            return (int)obj.GetValue(PageIndexProperty);
+        }
+
+        public static int GetRow(DependencyObject obj)
+        {
+            return (int)obj.GetValue(RowProperty);
+        }
+
+        public static void SetColumn(DependencyObject obj, int value)
+        {
+            obj.SetValue(ColumnProperty, value);
+        }
+
+        public static void SetPageIndex(DependencyObject obj, int value)
+        {
+            obj.SetValue(PageIndexProperty, value);
+        }
+
+        public static void SetRow(DependencyObject obj, int value)
+        {
+            obj.SetValue(RowProperty, value);
+        }
+
         protected override Size ArrangeOverride(Size finalSize)
         {
             if (ColumnCount <= 0 || RowCount <= 0)
@@ -247,6 +289,9 @@
 
                 int columnIdx = Orientation == Orientation.Horizontal ? (i % pageItemCount) % columnCount : (i % pageItemCount) / rowCount;
                 int rowIdx = Orientation == Orientation.Horizontal ? (i % pageItemCount) / columnCount : (i % pageItemCount) % rowCount;
+                SetColumn(fe, columnIdx);
+                SetRow(fe, rowIdx);
+                SetPageIndex(fe, pageIndex);
 
                 double pageOffsetX = PageOrientation == Orientation.Horizontal ? pageWidth * pageIndex : 0;
                 double pageOffsetY = PageOrientation == Orientation.Horizontal ? 0 : pageHeight * pageIndex;
@@ -263,8 +308,8 @@
 
         protected override Size MeasureOverride(Size availableSize)
         {
-            if (ColumnCount <= 0 || RowCount <= 0)
-                return availableSize;
+            if (ColumnCount <= 0 || RowCount <= 0 || Children.Count == 0)
+                return Size.Empty;
 
             double pageWidth = PageWidth;
             double pageHeight = PageHeight;
@@ -337,6 +382,18 @@
             else
                 return new Size(pageWidth, Math.Min(nbPages * pageHeight, availableSize.Height));
             //return availableSize;
+        }
+
+        private static void ColumnChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+        }
+
+        private static void PageIndexChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+        }
+
+        private static void RowChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
         }
 
         /// <summary>

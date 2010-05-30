@@ -22,38 +22,10 @@ namespace SLExtensions.Input
     {
         #region Constructors
 
-        public Command(Action executed)
+        public Command()
         {
-            if (executed == null)
-                throw new ArgumentNullException();
-
-            Executed += new EventHandler<ExecutedEventArgs>((snd, e) => executed());
         }
 
-        public Command(Action<object> executed)
-        {
-            if (executed == null)
-                throw new ArgumentNullException();
-
-            Executed += new EventHandler<ExecutedEventArgs>((snd, e) => executed(e.Parameter));
-        }
-
-        public Command(Action<object> executed, Func<object, bool> canExecute)
-        {
-            if (executed == null)
-                throw new ArgumentNullException();
-            CanExecute += (snd, e) =>
-            {
-                if (canExecute != null)
-                    e.CanExecute = canExecute(e.Parameter);
-            };
-            Executed += (snd, e) => executed(e.Parameter);
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Command"/> class.
-        /// </summary>
-        /// <param name="commandName">The command name used for retreiving command in Xaml.</param>
         public Command(string commandName)
         {
             this.Name = commandName;
@@ -62,6 +34,38 @@ namespace SLExtensions.Input
             {
                 CommandService.CommandCache.Add(commandName, this);
             }
+        }
+
+        public Command(Action executed = null, Func<bool> canExecute = null, string commandName = null)
+            : this(commandName)
+        {
+            if (canExecute != null)
+            {
+                CanExecute += (snd, e) =>
+                {
+                    if (canExecute != null)
+                        e.CanExecute = canExecute();
+                };
+            }
+
+            if (executed != null)
+                Executed += (snd, e) => executed();
+        }
+
+        public Command(Action<object> executed = null, Func<object, bool> canExecute = null, string commandName = null)
+            : this(commandName)
+        {
+            if (canExecute != null)
+            {
+                CanExecute += (snd, e) =>
+                {
+                    if (canExecute != null)
+                        e.CanExecute = canExecute(e.Parameter);
+                };
+            }
+
+            if (executed != null)
+                Executed += (snd, e) => executed(e.Parameter);
         }
 
         #endregion Constructors
@@ -157,34 +161,27 @@ namespace SLExtensions.Input
 
     public class Command<T> : ICommand
     {
-
         #region Constructors
 
         public Command()
         {
         }
 
-        public Command(Action<T> executed)
+        public Command(Action<T> executed = null, Func<T, bool> canExecute = null, string commandName = null)
+            : this(commandName)
         {
-            if (executed == null)
-                throw new ArgumentNullException();
-
-            Executed += (snd, e) => executed(e.Parameter);
-        }
-
-        public Command(Action<T> executed, Func<T, bool> canExecute)
-        {
-            if (executed == null)
-                throw new ArgumentNullException();
-
-            CanExecute += (snd, e) =>
+            if (canExecute != null)
             {
-                if (canExecute != null)
-                    e.CanExecute = canExecute(e.Parameter);
-            };
-            Executed += (snd, e) => executed(e.Parameter);
-        }
+                CanExecute += (snd, e) =>
+                {
+                    if (canExecute != null)
+                        e.CanExecute = canExecute(e.Parameter);
+                };
+            }
 
+            if (executed != null)
+                Executed += (snd, e) => executed(e.Parameter);
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Command"/> class.
@@ -194,25 +191,10 @@ namespace SLExtensions.Input
         {
             this.Name = commandName;
 
-            if (!CommandService.CommandCache.ContainsKey(commandName))
+            if (commandName != null && !CommandService.CommandCache.ContainsKey(commandName))
             {
                 CommandService.CommandCache.Add(commandName, this);
             }
-        }
-
-        public Command(string commandName, Action<T> executed)
-        {
-            this.Name = commandName;
-
-            if (!CommandService.CommandCache.ContainsKey(commandName))
-            {
-                CommandService.CommandCache.Add(commandName, this);
-            }
-
-            if (executed == null)
-                throw new ArgumentNullException();
-
-            Executed += (snd, e) => executed(e.Parameter);
         }
 
         #endregion Constructors

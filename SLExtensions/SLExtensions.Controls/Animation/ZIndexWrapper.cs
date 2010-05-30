@@ -16,21 +16,35 @@
         #region Fields
 
         // Using a DependencyProperty as the backing store for ZIndex.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty ZIndexProperty = 
+        private static readonly DependencyProperty zindexProperty = 
             DependencyProperty.RegisterAttached("ZIndex", typeof(double), typeof(ZIndexWrapper), new PropertyMetadata(ZIndexChangedCallback));
 
         #endregion Fields
+
+        #region Properties
+
+        public static PropertyPath ZIndexPP
+        {
+            get { return new PropertyPath(zindexProperty); }
+        }
+
+        public static DependencyProperty ZIndexProperty
+        {
+            get { return zindexProperty; }
+        }
+
+        #endregion Properties
 
         #region Methods
 
         public static double GetZIndex(DependencyObject obj)
         {
-            return (double)obj.GetValue(ZIndexProperty);
+            return (double)obj.GetValue(zindexProperty);
         }
 
         public static void SetZIndex(DependencyObject obj, double value)
         {
-            obj.SetValue(ZIndexProperty, value);
+            obj.SetValue(zindexProperty, value);
         }
 
         private static void ZIndexChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)

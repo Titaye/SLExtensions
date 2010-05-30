@@ -109,18 +109,25 @@
             </vsm:VisualStateGroup>
         </vsm:VisualStateManager.VisualStateGroups>
         <inter:Interaction.Behaviors>
-            <slint:MapState Source="{StaticResource controller}" Property="IsBuffering" >
-                <slint:MapStateMapping StateName="Buffering" Value="True"/>
-                <slint:MapStateMapping StateName="BufferReady" Value="False"/>
+            <slint:MapState Value="{Binding IsBuffering, Source={StaticResource controller}}">
+                <slint:MapStateMapping StateName="Buffering"
+                                       Value="True" />
+                <slint:MapStateMapping StateName="BufferReady"
+                                       Value="False" />
             </slint:MapState>
-            <slint:MapState Source="{StaticResource controller}" Property="PlayState" >
-                <slint:MapStateMapping StateName="Playing" Value="Playing"/>
-                <slint:MapStateMapping StateName="Paused" Value="Paused"/>
-                <slint:MapStateMapping StateName="Stopped" Value="Stopped"/>
+            <slint:MapState Value="{Binding PlayState, Source={StaticResource controller}}">
+                <slint:MapStateMapping StateName="Playing"
+                                       Value="Playing" />
+                <slint:MapStateMapping StateName="Paused"
+                                       Value="Paused" />
+                <slint:MapStateMapping StateName="Stopped"
+                                       Value="Stopped" />
             </slint:MapState>
-            <slint:MapState Source="{StaticResource controller}" Property="IsFullscreen" >
-                <slint:MapStateMapping StateName="Fullscreen" Value="True"/>
-                <slint:MapStateMapping StateName="Smallscreen" Value="False"/>
+            <slint:MapState Value="{Binding IsFullScree, Source={StaticResource controller}}">
+                <slint:MapStateMapping StateName="Fullscreen"
+                                       Value="True" />
+                <slint:MapStateMapping StateName="Smallscreen"
+                                       Value="False" />
             </slint:MapState>
 
         </inter:Interaction.Behaviors>
@@ -254,8 +261,6 @@
 
                 </Grid>
 
-                <sleca:MarginWrapper x:Name="descriptionMarginWrapper" ElementName="gridDescription" MarginTop="55"/>
-
                 <TextBlock Text="{Binding Mode=TwoWay, Path=CurrentItem.Title, Source={StaticResource controller}}" x:Name="title"
 					TextWrapping="Wrap"
 					FontSize="12" Margin="5,0,274,0.833" VerticalAlignment="Bottom" Grid.Row="1" RenderTransformOrigin="0.5,0.5" Height="22.167">
@@ -269,7 +274,8 @@
 					</TextBlock.RenderTransform>
                 </TextBlock>
                 <ContentControl VerticalAlignment="Bottom" Height="150" mediaCore:MediaController.ContentPub="{StaticResource controller}" />
-            </Grid>        </Border>
+            </Grid>
+        </Border>
         <Border BorderThickness="1,1,1,1" BorderBrush="Black" CornerRadius="20" Grid.Row="2" x:Name="borderPlaylist" >
             <Border.Background>
                 <LinearGradientBrush StartPoint="1,0.5" EndPoint="0,0.5">
@@ -281,7 +287,9 @@
             </Border.Background>
 
             <ListBox Margin="5,10,10,10" ItemsPanel="{StaticResource ItemsPanelTemplatePlaylist}" Style="{StaticResource ListBoxStylePlaylist}" x:Name="Playlist" 
-                     ItemTemplate="{StaticResource DataTemplatePlaylist}"                      ItemContainerStyle="{StaticResource ListBoxItemStylePlaylist}"                     ItemsSource="{Binding Playlist, Source={StaticResource controller}}" 
+                     ItemTemplate="{StaticResource DataTemplatePlaylist}" 
+                     ItemContainerStyle="{StaticResource ListBoxItemStylePlaylist}"
+                     ItemsSource="{Binding Playlist, Source={StaticResource controller}}" 
 				     SelectedItem="{Binding CurrentItem, Mode=TwoWay, Source={StaticResource controller}}"/>
         </Border>
 

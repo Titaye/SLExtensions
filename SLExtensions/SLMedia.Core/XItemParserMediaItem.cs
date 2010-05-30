@@ -24,16 +24,16 @@
             if (item == null)
                 throw new ArgumentNullException("item");
 
-            item.Description = element.GetAttribute("description");
-            item.Title = element.GetAttribute("title");
-            item.Thumbnail = element.GetAttribute("thumbnail");
-            item.Source = element.GetAttribute("source");
+            item.Description = (string)element.Attribute("description");
+            item.Title = (string)element.Attribute("title");
+            item.Thumbnail = (string)element.Attribute("thumbnail");
+            item.Source = (string)element.Attribute("source");
 
             List<IMarkerSource> markerSources = new List<IMarkerSource>();
             foreach (var caption in element.Elements("captions").Elements("caption"))
             {
-                var src = caption.GetAttribute("source");
-                var language = caption.GetAttribute("language");
+                var src = (string)caption.Attribute("source");
+                var language = (string)caption.Attribute("language");
                 Dictionary<string, object> metadata = new Dictionary<string, object>();
 
                 if (!string.IsNullOrEmpty(language))
@@ -56,14 +56,14 @@
                 foreach (var chapter in chapters.Elements("chapter"))
                 {
                     MarkerThumbnail marker = new MarkerThumbnail();
-                    TimeSpan start;
-                    if (TimeSpan.TryParse(chapter.GetAttribute("start"), out start))
+                    var start = (TimeSpan?)chapter.Attribute("start");
+                    if (start.HasValue)
                     {
-                        marker.Position = start;
+                        marker.Position = start.Value;
                         chapterSelector.Markers.Add(marker);
                     }
-                    marker.Content = chapter.GetAttribute("title");
-                    var thumb = chapter.GetAttribute("thumbnail");
+                    marker.Content = (string)chapter.Attribute("title");
+                    var thumb = (string)chapter.Attribute("thumbnail");
                     Uri uriThumbnail;
                     if (!string.IsNullOrEmpty(thumb) && Uri.TryCreate(thumb, UriKind.RelativeOrAbsolute, out uriThumbnail))
                         marker.Thumbnail = uriThumbnail;

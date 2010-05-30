@@ -1,4 +1,4 @@
-﻿namespace SLExtensions.Controls.ControlExtensions
+﻿namespace SLExtensions.Controls
 {
     using System;
     using System.Net;

@@ -35,7 +35,7 @@
 
             var audioTracks = (from ats in element.Elements("audioTracks")
                                from at in ats.Elements("audioTrack")
-                               select new AudioTrack { Title = at.GetAttribute("title") }).ToArray();
+                               select new AudioTrack { Title = (string)at.Attribute("title") }).ToArray();
 
             for (int i = 0; i < audioTracks.Length; i++)
             {
