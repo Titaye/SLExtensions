@@ -13,6 +13,7 @@
     using System.Windows.Shapes;
 
     using SLExtensions;
+    using System.Windows.Browser;
 
     public class MarkerSelector : NotifyingObject, IMarkerSelector
     {
@@ -93,6 +94,7 @@
             }
         }
 
+        [ScriptableMember]
         public IList<IMarker> Markers
         {
             get { return this.markers; }

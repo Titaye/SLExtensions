@@ -100,11 +100,11 @@
                 slideShowTimer.Stop();
         }
 
-        protected override void OnCurrentItemChanged()
+        protected override void OnCurrentItemChanged(IMediaItem oldValue, IMediaItem newValue)
         {
             RefreshDisplayPictureSource();
 
-            base.OnCurrentItemChanged();
+            base.OnCurrentItemChanged(oldValue, newValue);
         }
 
         protected override void OnDurationChanged()

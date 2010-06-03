@@ -96,6 +96,8 @@
     <Compile Include="ColorPicker\ColorSpace.cs" />
     <Compile Include="ColorPicker\SelectedColorEventArgs.cs" />
     <Compile Include="ControlExtensions\ContentPresenterExtensions.cs" />
+    <Compile Include="ControlExtensions\DependencyPropertyExtensions.cs" />
+    <Compile Include="ControlExtensions\ScrollBarExtensions.cs" />
     <Compile Include="ControlExtensions\SliderExtensions.cs" />
     <Compile Include="Data\XamlImageSourceConverter.cs" />
     <Compile Include="Layout\AnimatingFillPanel.cs" />

@@ -55,8 +55,6 @@
 
         private void Application_Startup(object sender, StartupEventArgs e)
         {
-            MouseInactivityCommand.Initialize();
-
             FrameworkElement currentPlayer = null;
             string queryString = HtmlPage.Document.DocumentUri.Query;
             queryParameters = new Dictionary<string, IEnumerable<string>>();

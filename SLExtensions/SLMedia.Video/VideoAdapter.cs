@@ -13,6 +13,7 @@
     using System.Windows.Shapes;
 
     using SLExtensions;
+    using System.Windows.Data;
 
     public abstract class VideoAdapter : NotifyingObject, IDisposable
     {
@@ -22,7 +23,6 @@
         private int audioStreamIndex;
         private AudioTrack audioTrack;
         private object content;
-        private VideoController controller;
         private int naturalVideoHeight;
         private int naturalVideoWidth;
 
@@ -83,6 +83,9 @@
             }
         }
 
+        //public virtual Binding SourceBinding { get; set; }
+        //public virtual DependencyProperty SourceBindingProperty { get; set; }
+
         public AudioTrack AudioTrack
         {
             get { return this.audioTrack; }
@@ -100,15 +103,15 @@
                         AudioStreamIndex = 0;
                     }
 
-                    if(this.audioTrack != null)
+                    if (this.audioTrack != null)
                     {
                         this.audioTrack.IsActive = true;
-                        VideoItem vi = controller.CurrentItem as VideoItem;
+                        VideoItem vi = CurrentItem as VideoItem;
                         if (vi != null)
                         {
                             foreach (var at in vi.AudioTracks)
                             {
-                                if(at != this.audioTrack)
+                                if (at != this.audioTrack)
                                     at.IsActive = false;
                             }
                         }
@@ -126,26 +129,21 @@
 
         public object Content
         {
-            get { return this.content; }
+            get
+            {
+                if (this.content == null)
+                {
+                    this.Content = CreateDisplayControl();
+                    OnDisplayControlCreated();
+                }
+                return this.content;
+            }
             protected set
             {
                 if (this.content != value)
                 {
                     this.content = value;
                     this.OnPropertyChanged(this.GetPropertyName(n => n.Content));
-                }
-            }
-        }
-
-        public virtual VideoController Controller
-        {
-            get { return this.controller; }
-            set
-            {
-                if (this.controller != value)
-                {
-                    this.controller = value;
-                    this.OnPropertyChanged(this.GetPropertyName(n => n.Controller));
                 }
             }
         }
@@ -201,14 +199,10 @@
             }
         }
 
-        public bool OverrideMediaElement
-        {
-            get; protected set;
-        }
-
         public abstract TimeSpan Position
         {
-            get; set;
+            get;
+            set;
         }
 
         public abstract double RenderedFramesPerSecond
@@ -221,35 +215,102 @@
             get;
         }
 
+        public abstract bool CanPause
+        {
+            get;
+        }
+
+        public abstract bool CanSeek
+        {
+            get;
+        }
+
+        public bool ReuseDisplayControl { get; set; }
+
+        private IVideoItem currentItem;
+        public IVideoItem CurrentItem
+        {
+            get { return this.currentItem; }
+            set
+            {
+                if (this.currentItem != value)
+                {
+                    this.currentItem = value;
+                    this.RaisePropertyChanged(n => n.CurrentItem);
+                }
+            }
+        }
+
+
+        private VideoController controller;
+        public VideoController Controller
+        {
+            get { return this.controller; }
+            set
+            {
+                if (this.controller != value)
+                {
+                    this.controller = value;
+                    this.RaisePropertyChanged(n => n.Controller);
+                }
+            }
+        }
+
+
         #endregion Properties
 
-        #region Methods
+        #region Methods        
 
-        public virtual void Adapt(VideoController videoController)
-        {
-            Content = CreateDisplayControl();
-            Controller = videoController;
-        }
+        //public virtual void Adapt(VideoController videoController)
+        //{
+        //    if (!ReuseDisplayControl || Content == null)
+        //    {
+        //        Content = CreateDisplayControl();
+        //        OnDisplayControlCreated();
+        //    }
+
+        //    Controller = videoController;
+        //}
 
         public virtual void Dispose()
         {
             Stop();
-            Controller = null;
-            Content = null;
+            if (!ReuseDisplayControl)
+            {
+                DisposeDisplayControl();
+                Content = null;
+            }
+            //Controller = null;
         }
 
         public abstract void Pause();
 
         public abstract void Play();
 
-        public void Release()
-        {
-            Dispose();
-        }
-
         public abstract void Stop();
 
         protected abstract object CreateDisplayControl();
+        protected abstract void DisposeDisplayControl();
+
+        public event EventHandler DisplayControlCreated;
+
+        protected virtual void OnDisplayControlCreated()
+        {
+            if (DisplayControlCreated != null)
+            {
+                DisplayControlCreated(this, EventArgs.Empty);
+            }
+        }
+
+        public event EventHandler DisplayControlDisposed;
+
+        protected virtual void OnDisplayControlDisposed()
+        {
+            if (DisplayControlDisposed != null)
+            {
+                DisplayControlDisposed(this, EventArgs.Empty);
+            }
+        }
 
         protected virtual void OnBufferingProgressChanged(object sender, RoutedEventArgs e)
         {
@@ -285,15 +346,18 @@
         {
             SetAudioTrackFromStreamIndex(AudioStreamIndex);
 
+            this.RaisePropertyChanged(_ => _.CanPause);
+            this.RaisePropertyChanged(_ => _.CanSeek);
+
             if (MediaOpened != null)
                 MediaOpened(sender, e);
         }
 
         private void SetAudioTrackFromStreamIndex(int value)
         {
-            if (Controller != null && Controller.CurrentItem != null)
+            if (CurrentItem != null)
             {
-                VideoItem videoItem = Controller.CurrentItem as VideoItem;
+                VideoItem videoItem = CurrentItem as VideoItem;
                 if (videoItem != null && videoItem.AudioTracks != null)
                 {
                     var track = (from at in videoItem.AudioTracks

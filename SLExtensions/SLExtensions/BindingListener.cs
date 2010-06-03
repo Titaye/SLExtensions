@@ -134,5 +134,17 @@
         }
 
         #endregion Methods
+
+        public void Bind(Binding binding)
+        {
+            if (binding == null)
+            {
+                ClearValue(ValueProperty);
+            }
+            else
+            {
+                SetBinding(ValueProperty, binding);
+            }
+        }
     }
 }

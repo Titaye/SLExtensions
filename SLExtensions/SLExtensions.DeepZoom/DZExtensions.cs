@@ -18,27 +18,27 @@
         #region Fields
 
         // Using a DependencyProperty as the backing store for ArrangeOnFirstMotionFinished.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty ArrangeOnFirstMotionFinishedProperty = 
+        public static readonly DependencyProperty ArrangeOnFirstMotionFinishedProperty =
             DependencyProperty.RegisterAttached("ArrangeOnFirstMotionFinished", typeof(bool), typeof(DZExtensions), new PropertyMetadata(ArrangeOnFirstMotionFinishedChangedCallback));
 
         // Using a DependencyProperty as the backing store for Context.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty ContextProperty = 
+        public static readonly DependencyProperty ContextProperty =
             DependencyProperty.RegisterAttached("Context", typeof(DZContext), typeof(DZExtensions), null);
 
         // Using a DependencyProperty as the backing store for IsMousePanEnabled.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty IsMousePanEnabledProperty = 
+        public static readonly DependencyProperty IsMousePanEnabledProperty =
             DependencyProperty.RegisterAttached("IsMousePanEnabled", typeof(bool), typeof(DZExtensions), new PropertyMetadata(IsMousePanEnabledChangedCallback));
 
         // Using a DependencyProperty as the backing store for IsMouseWheelEnabled.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty IsMouseWheelEnabledProperty = 
+        public static readonly DependencyProperty IsMouseWheelEnabledProperty =
             DependencyProperty.RegisterAttached("IsMouseWheelEnabled", typeof(bool), typeof(DZExtensions), new PropertyMetadata(IsMouseWheelEnabledChangedCallback));
 
-        // Using a DependencyProperty as the backing store for IsZoomForceEnabled.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty IsZoomForceEnabledProperty = 
-            DependencyProperty.RegisterAttached("IsZoomForceEnabled", typeof(bool), typeof(DZExtensions), new PropertyMetadata(IsZoomForceEnabledChangedCallback));
+        //// Using a DependencyProperty as the backing store for IsZoomForceEnabled.  This enables animation, styling, binding, etc...
+        //public static readonly DependencyProperty IsZoomForceEnabledProperty =
+        //    DependencyProperty.RegisterAttached("IsZoomForceEnabled", typeof(bool), typeof(DZExtensions), new PropertyMetadata(IsZoomForceEnabledChangedCallback));
 
         // Using a DependencyProperty as the backing store for IsZoomOnClickEnabled.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty IsZoomOnClickEnabledProperty = 
+        public static readonly DependencyProperty IsZoomOnClickEnabledProperty =
             DependencyProperty.RegisterAttached("IsZoomOnClickEnabled", typeof(bool), typeof(DZExtensions), new PropertyMetadata(IsZoomOnClickEnabledChangedCallback));
 
         #endregion Fields
@@ -261,10 +261,10 @@
             return (bool)obj.GetValue(IsMouseWheelEnabledProperty);
         }
 
-        public static bool GetIsZoomForceEnabled(DependencyObject obj)
-        {
-            return (bool)obj.GetValue(IsZoomForceEnabledProperty);
-        }
+        //public static bool GetIsZoomForceEnabled(DependencyObject obj)
+        //{
+        //    return (bool)obj.GetValue(IsZoomForceEnabledProperty);
+        //}
 
         public static bool GetIsZoomOnClickEnabled(DependencyObject obj)
         {
@@ -347,10 +347,10 @@
             obj.SetValue(IsMouseWheelEnabledProperty, value);
         }
 
-        public static void SetIsZoomForceEnabled(DependencyObject obj, bool value)
-        {
-            obj.SetValue(IsZoomForceEnabledProperty, value);
-        }
+        //public static void SetIsZoomForceEnabled(DependencyObject obj, bool value)
+        //{
+        //    obj.SetValue(IsZoomForceEnabledProperty, value);
+        //}
 
         public static void SetIsZoomOnClickEnabled(DependencyObject obj, bool value)
         {
@@ -376,18 +376,29 @@
             return -1;
         }
 
-        public static void Zoom(this MultiScaleImage msi, double zoom, Point pointToZoom)
-        {
-            Zoom(msi, zoom, pointToZoom, false);
-        }
+        //public static void Zoom(this MultiScaleImage msi, double zoom, Point pointToZoom)
+        //{
+        //    Zoom(msi, zoom, pointToZoom, false);
+        //}
 
-        public static void Zoom(this MultiScaleImage msi, double zoom, Point pointToZoom, bool force)
+        public static void Zoom(this MultiScaleImage msi, double zoom, Point pointToZoom)//, bool force)
         {
-            if (force || ((zoom >= 1.0 && msi.ViewportWidth > 0.05) || (zoom < 1.0 && msi.ViewportWidth < 2)))
+            var ctxt = msi.EnsureContext();
+            if (zoom >= 1.0)
             {
-                Point logicalPoint = msi.ElementToLogicalPoint(pointToZoom);
-                msi.ZoomAboutLogicalPoint(zoom, logicalPoint.X, logicalPoint.Y);
+                zoom = Math.Min(zoom, ctxt.TargetViewportWidth / ctxt.MinViewportWidth);
             }
+            else
+            {
+                zoom = Math.Max(zoom, ctxt.TargetViewportWidth / ctxt.MaxViewportWidth);
+            }
+
+            ctxt.TargetViewportWidth = ctxt.TargetViewportWidth / zoom;
+            //if (force || ((zoom >= 1.0 && msi.ViewportWidth > ctxt.MinViewportWidth) || (zoom < 1.0 && msi.ViewportWidth < ctxt.MaxViewportWidth)))
+            //{
+            Point logicalPoint = msi.ElementToLogicalPoint(pointToZoom);
+            msi.ZoomAboutLogicalPoint(zoom, logicalPoint.X, logicalPoint.Y);
+            //}
         }
 
         public static void ZoomAndCenterImage(this MultiScaleImage msi, int subImageIndex, double zoomFactor)
@@ -520,15 +531,15 @@
             context.IsMouseWheelEnabled = (bool)e.NewValue;
         }
 
-        private static void IsZoomForceEnabledChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            MultiScaleImage msi = d as MultiScaleImage;
-            if (msi == null)
-                return;
+        //private static void IsZoomForceEnabledChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        //{
+        //    MultiScaleImage msi = d as MultiScaleImage;
+        //    if (msi == null)
+        //        return;
 
-            DZContext context = msi.EnsureContext();
-            context.IsZoomForceEnabled = (bool)e.NewValue;
-        }
+        //    DZContext context = msi.EnsureContext();
+        //    context.IsZoomForceEnabled = (bool)e.NewValue;
+        //}
 
         private static void IsZoomOnClickEnabledChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
@@ -541,5 +552,58 @@
         }
 
         #endregion Methods
+
+
+
+
+        public static double GetMinViewportWidth(DependencyObject obj)
+        {
+            return (double)obj.GetValue(MinViewportWidthProperty);
+        }
+
+        public static void SetMinViewportWidth(DependencyObject obj, double value)
+        {
+            obj.SetValue(MinViewportWidthProperty, value);
+        }
+
+        // Using a DependencyProperty as the backing store for MinViewportWidth.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty MinViewportWidthProperty =
+            DependencyProperty.RegisterAttached("MinViewportWidth", typeof(double), typeof(DZExtensions), new PropertyMetadata(MinViewportWidthChangedCallback));
+
+        private static void MinViewportWidthChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            MultiScaleImage msi = d as MultiScaleImage;
+            if (msi == null)
+                return;
+
+            DZContext context = msi.EnsureContext();
+            context.MinViewportWidth = (double)e.NewValue;
+        }
+
+
+
+        public static double GetMaxViewportWidth(DependencyObject obj)
+        {
+            return (double)obj.GetValue(MaxViewportWidthProperty);
+        }
+
+        public static void SetMaxViewportWidth(DependencyObject obj, double value)
+        {
+            obj.SetValue(MaxViewportWidthProperty, value);
+        }
+
+        // Using a DependencyProperty as the backing store for MaxViewportWidth.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty MaxViewportWidthProperty =
+            DependencyProperty.RegisterAttached("MaxViewportWidth", typeof(double), typeof(DZExtensions), new PropertyMetadata(MaxViewportWidthChangedCallback));
+
+        private static void MaxViewportWidthChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            MultiScaleImage msi = d as MultiScaleImage;
+            if (msi == null)
+                return;
+
+            DZContext context = msi.EnsureContext();
+            context.MaxViewportWidth = (double)e.NewValue;
+        }
     }
 }

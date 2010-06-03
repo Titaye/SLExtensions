@@ -12,7 +12,9 @@
     using System.Windows.Shapes;
 
     using SLExtensions;
+    using System.Windows.Browser;
 
+    [ScriptableType]
     public class Marker : NotifyingObject, IMarker
     {
         #region Fields
@@ -23,11 +25,13 @@
 
         #region Properties
 
+        [ScriptableMember]
         public Duration Duration
         {
             get; set;
         }
 
+        [ScriptableMember]
         public bool IsActive
         {
             get { return this.isActive; }
@@ -41,6 +45,7 @@
             }
         }
 
+        [ScriptableMember]
         public TimeSpan Position
         {
             get; set;

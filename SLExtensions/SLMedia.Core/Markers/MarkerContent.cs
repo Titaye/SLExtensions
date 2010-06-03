@@ -10,11 +10,13 @@
     using System.Windows.Media;
     using System.Windows.Media.Animation;
     using System.Windows.Shapes;
+    using System.Windows.Browser;
 
+    [ScriptableType]
     public class MarkerContent : Marker
     {
         #region Properties
-
+        [ScriptableMember]
         public string Content
         {
             get; set;

@@ -42,7 +42,7 @@
                 return ((int)value == 0) ? false : true;
             }
 
-            if (value is IEnumerable)
+            if (!(value is string) && (value is IEnumerable))
             {
                 var iter = ((IEnumerable)value).GetEnumerator();
                 return iter.MoveNext();

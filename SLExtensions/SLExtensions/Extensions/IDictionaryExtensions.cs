@@ -16,6 +16,18 @@
     {
         #region Methods
 
+        public static List<T> Add<U, T>(this IDictionary<U, List<T>> dic, U key, T value)
+        {
+            List<T> list;
+            if (!dic.TryGetValue(key, out list))
+            {
+                list = new List<T>();
+                dic.Add(key, list);
+            }
+            list.Add(value);
+            return list;
+        }
+
         /// <summary>
         /// Try to get a value from the dictionary
         /// </summary>

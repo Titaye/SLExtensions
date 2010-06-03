@@ -27,7 +27,8 @@
 
         public VideoItem()
         {
-            VideoAdapter = new MediaElementVideoAdapter();
+            //VideoAdapter = MediaElementVideoAdapter.Instance;
+            //VideoAdapter = new MediaElementVideoAdapter();
         }
 
         #endregion Constructors
@@ -47,10 +48,24 @@
             }
         }
 
+        private VideoAdapter videoAdapter;
         public VideoAdapter VideoAdapter
         {
-            get;
-            protected set;
+            get { return this.videoAdapter; }
+            set
+            {
+                if (this.videoAdapter != value)
+                {
+                    this.videoAdapter = value;
+                    this.RaisePropertyChanged(n => n.VideoAdapter);
+                }
+            }
+        }
+
+        public virtual VideoAdapter GetVideoAdapter(VideoAdapter adapter)
+        {
+            VideoAdapter = new MediaElementVideoAdapter();
+            return VideoAdapter;
         }
 
         #endregion Properties

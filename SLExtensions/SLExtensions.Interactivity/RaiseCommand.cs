@@ -22,16 +22,6 @@
         #region Fields
 
         /// <summary>
-        /// CommandName depedency property.
-        /// </summary>
-        public static readonly DependencyProperty CommandNameProperty = 
-            DependencyProperty.Register(
-                "CommandName",
-                typeof(string),
-                typeof(RaiseCommand),
-                null);
-
-        /// <summary>
         /// CommandParameter depedency property.
         /// </summary>
         public static readonly DependencyProperty CommandParameterProperty = 
@@ -39,7 +29,17 @@
                 "CommandParameter",
                 typeof(object),
                 typeof(RaiseCommand),
-                null);
+                new PropertyMetadata((d, e) => ((RaiseCommand)d).OnCommandParameterChanged((object)e.OldValue, (object)e.NewValue)));
+
+        /// <summary>
+        /// Command depedency property.
+        /// </summary>
+        public static readonly DependencyProperty CommandProperty = 
+            DependencyProperty.Register(
+                "Command",
+                typeof(ICommand),
+                typeof(RaiseCommand),
+                new PropertyMetadata((d, e) => ((RaiseCommand)d).OnCommandChanged((ICommand)e.OldValue, (ICommand)e.NewValue)));
 
         /// <summary>
         /// Key depedency property.
@@ -51,56 +51,28 @@
                 typeof(RaiseCommand),
                 new PropertyMetadata(Key.Enter));
 
-        private BindingListener bindingListenerCommand;
-        private BindingListener bindingListenerCommandParameter;
-        private ICommand command;
-        private Binding commandBinding;
-        private Binding commandParameterBinding;
-
         #endregion Fields
 
         #region Constructors
 
         public RaiseCommand()
         {
-            bindingListenerCommand = new BindingListener();
-            bindingListenerCommand.ValueChanged += delegate { this.command = bindingListenerCommand.Value as ICommand; };
-            bindingListenerCommandParameter = new BindingListener();
-            bindingListenerCommandParameter.ValueChanged += delegate { this.CommandParameter = bindingListenerCommandParameter.Value; };
         }
 
         #endregion Constructors
 
         #region Properties
 
-        public Binding CommandBinding
-        {
-            get { return this.commandBinding; }
-            set
-            {
-                if (this.commandBinding != value)
-                {
-                    this.commandBinding = value;
-                    if (value == null)
-                        bindingListenerCommand.ClearValue(BindingListener.ValueProperty);
-                    else
-                        bindingListenerCommand.SetBinding(BindingListener.ValueProperty, value);
-
-                    bindingListenerCommand.EnsureBindingSource(Target);
-                }
-            }
-        }
-
-        public string CommandName
+        public ICommand Command
         {
             get
             {
-                return (string)GetValue(CommandNameProperty);
+                return (ICommand)GetValue(CommandProperty);
             }
 
             set
             {
-                SetValue(CommandNameProperty, value);
+                SetValue(CommandProperty, value);
             }
         }
 
@@ -114,25 +86,6 @@
             set
             {
                 SetValue(CommandParameterProperty, value);
-            }
-        }
-
-        public Binding CommandParameterBinding
-        {
-            get { return this.commandParameterBinding; }
-            set
-            {
-                if (this.commandParameterBinding != value)
-                {
-                    this.commandParameterBinding = value;
-
-                    if (value == null)
-                        bindingListenerCommandParameter.ClearValue(BindingListener.ValueProperty);
-                    else
-                        bindingListenerCommandParameter.SetBinding(BindingListener.ValueProperty, value);
-
-                    bindingListenerCommandParameter.EnsureBindingSource(Target);
-                }
             }
         }
 
@@ -160,23 +113,31 @@
                 return;
             }
 
-            var cmd = this.command;
-            if (cmd == null)
-            {
-                cmd = SLExtensions.Input.CommandService.FindCommand(CommandName);
-            }
-
+            var cmd = this.Command;
             if (cmd != null)
             {
-                cmd.Execute(CommandParameter);
+                cmd.Execute(this.CommandParameter);
             }
         }
 
-        protected override void OnTargetChanged(FrameworkElement oldTarget, FrameworkElement newTarget)
+        /// <summary>
+        /// handles the CommandProperty changes.
+        /// </summary>
+        /// <param name="oldValue">The old value.</param>
+        /// <param name="newValue">The new value.</param>
+        private void OnCommandChanged(ICommand oldValue, ICommand newValue)
         {
-            base.OnTargetChanged(oldTarget, newTarget);
-            bindingListenerCommand.EnsureBindingSource(newTarget);
-            bindingListenerCommandParameter.EnsureBindingSource(newTarget);
+            Invoke(null);
+        }
+
+        /// <summary>
+        /// handles the CommandParameterProperty changes.
+        /// </summary>
+        /// <param name="oldValue">The old value.</param>
+        /// <param name="newValue">The new value.</param>
+        private void OnCommandParameterChanged(object oldValue, object newValue)
+        {
+            Invoke(null);
         }
 
         #endregion Methods

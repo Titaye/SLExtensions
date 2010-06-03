@@ -25,6 +25,7 @@
     using SLExtensions;
     using SLExtensions.Collections.ObjectModel;
     using SLExtensions.Input;
+    using SLExtensions.ComponentModel;
 
     [ContentProperty("Playlist")]
     public abstract class MediaController : NotifyingObject, IDisposable
@@ -35,7 +36,7 @@
         public static readonly DependencyProperty ContentPubProperty = 
             DependencyProperty.RegisterAttached("ContentPub", typeof(MediaController), typeof(MediaController), new PropertyMetadata(ContentPubChangedCallback));
 
-        private Dictionary<string, object> autoActivedMarkers = new Dictionary<string, object>();
+        private Dictionary<string, object> autoActivedMarkers = new Dictionary<string,object>();
         private bool autoPlay;
         private ContentControl contentPub;
         private IMediaItem currentItem;
@@ -98,10 +99,37 @@
 
         #endregion Constructors
 
+        #region [ Commands ]
+
+
+        public Command GoToPosition
+        {
+            get;
+            private set;
+        }
+
+        public Command SetMarkerSelectorActive
+        {
+            get;
+            private set;
+        }
+
+        public Command SetMarkerSelectorUnactive
+        {
+            get;
+            private set;
+        }
+
+        #endregion [ Commands ]
+
         #region Events
 
-        [ScriptableMemberAttribute]
-        public event EventHandler CurrentItemChanged;
+        [ScriptableMember]
+        public event EventHandler<PropertyValueChangedEventArgs<IMediaItem>> CurrentItemChanged;
+
+        
+        [ScriptableMember]
+        public event EventHandler<PropertyValueChangedEventArgs<IMediaItem>> CurrentItemChanging;
 
         public event RoutedPropertyChangedEventHandler<TimeSpan> PositionChanged;
 
@@ -124,6 +152,7 @@
             }
         }
 
+        [ScriptableMember]
         public bool AutoPlay
         {
             get { return this.autoPlay; }
@@ -137,7 +166,7 @@
             }
         }
 
-        [ScriptableMemberAttribute]
+        [ScriptableMember]
         public ContentControl ContentPub
         {
             get
@@ -153,7 +182,7 @@
             }
         }
 
-        [ScriptableMemberAttribute]
+        [ScriptableMember]
         public IMediaItem CurrentItem
         {
             get { return currentItem; }
@@ -167,10 +196,12 @@
                 {
                     if (currentItem != value)
                     {
+                        var lastItem = currentItem;
+                        OnCurrentItemChanging(lastItem, value);
                         LastSelectedItem = currentItem;
                         currentItem = value;
-                        OnPropertyChanged(this.GetPropertyName(n => n.CurrentItem));
-                        OnCurrentItemChanged();
+                        OnCurrentItemChanged(lastItem, value);
+
                         if (Playlist != null && CurrentItem != null)
                         {
                             CurrentItemIndex = Playlist.IndexOf(CurrentItem);
@@ -179,6 +210,7 @@
                         {
                             CurrentItemIndex = -1;
                         }
+                        OnPropertyChanged(this.GetPropertyName(n => n.CurrentItem));
                     }
                 }
                 finally
@@ -188,25 +220,7 @@
             }
         }
 
-        //public int SelectedIndex
-        //{
-        //    get { return selectedIndex.GetValueOrDefault(-1); }
-        //    set
-        //    {
-        //        if (Playlist == null || value < 0
-        //            || value >= Playlist.Count)
-        //        {
-        //            value = -1;
-        //        }
-        //        if (selectedIndex != value)
-        //        {
-        //            selectedIndex = value;
-        //            OnPropertyChanged(this.GetPropertyName(n => n.SelectedIndex));
-        //        }
-        //        if (value != -1)
-        //            CurrentItem = Playlist[value];
-        //    }
-        //}
+        [ScriptableMember]
         public int CurrentItemIndex
         {
             get { return currentItemIndex; }
@@ -242,7 +256,7 @@
             }
         }
 
-        [ScriptableMemberAttribute]
+        [ScriptableMember]
         public double DownloadProgress
         {
             get { return downloadProgress; }
@@ -256,7 +270,7 @@
             }
         }
 
-        [ScriptableMemberAttribute]
+        [ScriptableMember]
         public Duration Duration
         {
             get { return duration; }
@@ -284,13 +298,7 @@
             }
         }
 
-        public Command GoToPosition
-        {
-            get;
-            private set;
-        }
-
-        [ScriptableMemberAttribute]
+        [ScriptableMember]
         public bool IsChaining
         {
             get { return isChaining; }
@@ -304,7 +312,7 @@
             }
         }
 
-        [ScriptableMemberAttribute]
+        [ScriptableMember]
         public bool IsDownloading
         {
             get { return isDownloading; }
@@ -318,7 +326,7 @@
             }
         }
 
-        [ScriptableMemberAttribute]
+        [ScriptableMember]
         public bool IsFullscreen
         {
             get { return isFullscreen; }
@@ -335,7 +343,7 @@
             }
         }
 
-        [ScriptableMemberAttribute]
+        [ScriptableMember]
         public bool IsMuted
         {
             get { return isMuted; }
@@ -349,7 +357,7 @@
             }
         }
 
-        [ScriptableMemberAttribute]
+        [ScriptableMember]
         public bool IsNextEnabled
         {
             get { return isNextEnabled; }
@@ -363,7 +371,7 @@
             }
         }
 
-        [ScriptableMemberAttribute]
+        [ScriptableMember]
         public bool IsPlaying
         {
             get { return isPlaying; }
@@ -378,7 +386,7 @@
             }
         }
 
-        [ScriptableMemberAttribute]
+        [ScriptableMember]
         public bool IsPopupFullscreen
         {
             get { return isPopupFullscreen; }
@@ -404,7 +412,7 @@
             }
         }
 
-        [ScriptableMemberAttribute]
+        [ScriptableMember]
         public bool IsPreviousEnabled
         {
             get { return isPreviousEnabled; }
@@ -418,7 +426,7 @@
             }
         }
 
-        [ScriptableMemberAttribute]
+        [ScriptableMember]
         public IMediaItem LastSelectedItem
         {
             get { return lastSelectedItem; }
@@ -464,7 +472,7 @@
             }
         }
 
-        [ScriptableMemberAttribute]
+        [ScriptableMember]
         public ObservableCollection<IMediaItem> Playlist
         {
             get { return playlist; }
@@ -487,12 +495,12 @@
                         playlist.CollectionChanged += new System.Collections.Specialized.NotifyCollectionChangedEventHandler(playlist_CollectionChanged);
                     }
 
-                    RefreshNexPrevious();
+                    RefreshNextPrevious();
                 }
             }
         }
 
-        [ScriptableMemberAttribute]
+        [ScriptableMember]
         public IPlaylistSource PlaylistSource
         {
             get { return playlistSource; }
@@ -517,7 +525,7 @@
             }
         }
 
-        [ScriptableMemberAttribute]
+        [ScriptableMember]
         public PlayStates PlayState
         {
             get { return playState; }
@@ -532,7 +540,7 @@
             }
         }
 
-        [ScriptableMemberAttribute]
+        [ScriptableMember]
         public virtual TimeSpan Position
         {
             get { return position; }
@@ -568,7 +576,7 @@
             }
         }
 
-        [ScriptableMemberAttribute]
+        [ScriptableMember]
         public List<ScriptCommandItem> ScriptCommands
         {
             get { return scriptCommands; }
@@ -582,7 +590,7 @@
             }
         }
 
-        [ScriptableMemberAttribute]
+        [ScriptableMember]
         public string ScriptCommandsUrl
         {
             get { return scriptCommandsUrl; }
@@ -602,19 +610,7 @@
             }
         }
 
-        public Command SetMarkerSelectorActive
-        {
-            get;
-            private set;
-        }
-
-        public Command SetMarkerSelectorUnactive
-        {
-            get;
-            private set;
-        }
-
-        [ScriptableMemberAttribute]
+        [ScriptableMember]
         public double Volume
         {
             get { return volume; }
@@ -632,6 +628,7 @@
         {
             get { return fullscreenPopup; }
         }
+
 
         #endregion Properties
 
@@ -653,13 +650,13 @@
             Playlist.Add(item);
         }
 
-        [ScriptableMemberAttribute]
+        [ScriptableMember]
         public Category CreateCategory()
         {
             return new Category();
         }
 
-        [ScriptableMemberAttribute]
+        [ScriptableMember]
         public MediaItem CreateMediaItem()
         {
             return new MediaItem();
@@ -677,7 +674,7 @@
             Playlist.Insert(index, item);
         }
 
-        [ScriptableMemberAttribute]
+        [ScriptableMember]
         public virtual void Next()
         {
             if (Playlist == null)
@@ -693,16 +690,21 @@
                 return;
 
             if (index >= 0 && index < Playlist.Count)
-                CurrentItem = Playlist[index];
+                PlayItem(Playlist[index]);
         }
 
         [ScriptableMember]
         public void PlayItem(MediaItem item)
         {
+            PlayItem((IMediaItem)item);
+        }
+
+        public virtual void PlayItem(IMediaItem item)
+        {
             CurrentItem = item;
         }
 
-        [ScriptableMemberAttribute]
+        [ScriptableMember]
         public virtual void Previous()
         {
             if (Playlist == null)
@@ -712,13 +714,13 @@
         }
 
         [ScriptableMember]
-        public void RevoveItem(MediaItem item)
+        public void RemoveItem(IMediaItem item)
         {
             Playlist.Remove(item);
         }
 
         [ScriptableMember]
-        public void RevoveItemAt(int index)
+        public void RemoveItemAt(int index)
         {
             Playlist.RemoveAt(index);
         }
@@ -863,12 +865,20 @@
                 timerTick.Stop();
         }
 
-        protected virtual void OnCurrentItemChanged()
+        protected virtual void OnCurrentItemChanging(IMediaItem oldValue, IMediaItem newValue)
+        {
+            if (CurrentItemChanging != null)
+            {
+                CurrentItemChanging(this, PropertyValueChangedEventArgs.Create(oldValue, newValue));
+            }
+        }
+
+        protected virtual void OnCurrentItemChanged(IMediaItem oldValue, IMediaItem newValue)
         {
             IsDownloading = false;
             DownloadProgress = 1;
 
-            RefreshNexPrevious();
+            RefreshNextPrevious();
 
             if (CurrentItem != null)
             {
@@ -877,7 +887,7 @@
 
             if (CurrentItemChanged != null)
             {
-                CurrentItemChanged(this, EventArgs.Empty);
+                CurrentItemChanged(this, PropertyValueChangedEventArgs.Create(oldValue, newValue));
             }
         }
 
@@ -976,7 +986,7 @@
             RefreshSelection();
         }
 
-        private void RefreshNexPrevious()
+        private void RefreshNextPrevious()
         {
             bool nextIsEnabled = false;
             bool prevIsEnabled = false;

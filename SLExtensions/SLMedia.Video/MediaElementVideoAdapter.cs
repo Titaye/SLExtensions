@@ -23,6 +23,11 @@
 
         #endregion Fields
 
+        public MediaElementVideoAdapter()
+        {
+            SourceBinding = new System.Windows.Data.Binding("CurrentItem.SourceUri") { Source = this };
+        }
+
         #region Properties
 
         public override double BufferingProgress
@@ -137,11 +142,62 @@
             }
         }
 
+        public override bool CanPause
+        {
+            get
+            {
+                if (mediaElement != null)
+                {
+                    return mediaElement.CanPause;
+                }
+                return false;
+            }
+        }
+
+        public override bool CanSeek
+        {
+            get
+            {
+                if (mediaElement != null)
+                {
+                    return mediaElement.CanSeek;
+                }
+                return false;
+            }
+        }
+
         #endregion Properties
+
+        private System.Windows.Data.Binding sourceBinding;
+        public virtual System.Windows.Data.Binding SourceBinding
+        {
+            get
+            {
+                return sourceBinding;
+            }
+            set
+            {
+                sourceBinding = value;
+                AssignSourceBinding();
+            }
+        }
+
+        protected void AssignSourceBinding()
+        {
+            if (mediaElement != null)
+            {
+                mediaElement.ClearValue(MediaElement.SourceProperty);
+                if (SourceBinding != null)
+                {
+                    mediaElement.SetBinding(MediaElement.SourceProperty, SourceBinding);
+                }
+            }
+        }
+
 
         #region Methods
 
-        public override void Dispose()
+        protected override void DisposeDisplayControl()
         {
             if (mediaElement != null)
             {
@@ -158,14 +214,13 @@
                 mediaElement.ClearValue(MediaElement.AudioStreamIndexProperty);
             }
             mediaElement = null;
-            base.Dispose();
         }
 
         public override void Pause()
         {
             if (mediaElement != null)
             {
-                if(mediaElement.CanPause)
+                if (mediaElement.CanPause)
                     mediaElement.Pause();
                 else
                 {
@@ -201,12 +256,16 @@
             mediaElement.MediaEnded += OnMediaEnded;
             mediaElement.MediaFailed += new EventHandler<ExceptionRoutedEventArgs>(mediaElement_MediaFailed);
 
-            mediaElement.SetBinding(MediaElement.SourceProperty, new System.Windows.Data.Binding("Controller.CurrentItem.SourceUri") { Source = this });
+
+            if (SourceBinding != null)
+                mediaElement.SetBinding(MediaElement.SourceProperty, SourceBinding);
+
             mediaElement.SetBinding(MediaElement.IsMutedProperty, new System.Windows.Data.Binding("Controller.IsMuted") { Source = this });
             mediaElement.SetBinding(MediaElement.VolumeProperty, new System.Windows.Data.Binding("Controller.Volume") { Source = this });
             mediaElement.SetBinding(MediaElement.AutoPlayProperty, new System.Windows.Data.Binding("Controller.AutoPlay") { Source = this });
 
             mediaElement.SetBinding(MediaElement.AudioStreamIndexProperty, new System.Windows.Data.Binding("AudioStreamIndex") { Source = this });
+            OnDisplayControlCreated();
 
             return mediaElement;
         }

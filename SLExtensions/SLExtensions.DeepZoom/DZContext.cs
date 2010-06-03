@@ -27,6 +27,9 @@
 
         public DZContext(MultiScaleImage msi)
         {
+            TargetViewportWidth = 1;
+            MinViewportWidth = .05;
+            MaxViewportWidth = 2;
             Owner = msi;
             Owner.UseSprings = false;
             Owner.ViewportChanged += new RoutedEventHandler(Owner_ViewportChanged);
@@ -94,9 +97,9 @@
 
                 e.Handled = true;
                 if (e.Delta > 0)
-                    msi.Zoom(1.2, context.LastMousePosition, context.IsZoomForceEnabled);
+                    msi.Zoom(1.2, context.LastMousePosition); //, context.IsZoomForceEnabled);
                 else
-                    msi.Zoom(0.8, context.LastMousePosition, context.IsZoomForceEnabled);
+                    msi.Zoom(0.8, context.LastMousePosition); //, context.IsZoomForceEnabled);
 
                 context.ClickedImageIndex = -1;
             };
@@ -239,11 +242,11 @@
             set;
         }
 
-        public bool IsZoomForceEnabled
-        {
-            get;
-            set;
-        }
+        //public bool IsZoomForceEnabled
+        //{
+        //    get;
+        //    set;
+        //}
 
         public bool IsZoomOnClickEnabled
         {
@@ -263,6 +266,10 @@
             private set;
         }
 
+        public double MinViewportWidth { get; set; }
+        public double MaxViewportWidth { get; set; }
+
+        public double TargetViewportWidth { get; set; }
         #endregion Properties
 
         #region Methods
@@ -285,6 +292,7 @@
 
         void ArrangeOnFirstMotionFinished_MotionFinished(object sender, RoutedEventArgs e)
         {
+            TargetViewportWidth = Owner.ViewportWidth;
             if (needArrangeOnFistMotion)
             {
                 needArrangeOnFistMotion = false;

@@ -84,8 +84,9 @@
                 }
             }
         }
-
-        public object ExtendedProperties
+        
+        [ScriptableMember]
+        public virtual object ExtendedProperties
         {
             get { return extendedProperties; }
             set
@@ -146,7 +147,7 @@
         }
 
         [ScriptableMember]
-        public string Source
+        public virtual string Source
         {
             get { return source; }
             set
@@ -165,7 +166,7 @@
             get
             {
                 Uri uri;
-                if (Uri.TryCreate(Source, UriKind.RelativeOrAbsolute, out uri))
+                if (!string.IsNullOrEmpty(Source) && Uri.TryCreate(Source, UriKind.RelativeOrAbsolute, out uri))
                     return uri;
                 return null;
             }
@@ -274,13 +275,13 @@
         }
 
         [ScriptableMember]
-        public void RevoveCategory(Category category)
+        public void RemoveCategory(Category category)
         {
             Categories.Remove(category);
         }
 
         [ScriptableMember]
-        public void RevoveCategoryAt(int index)
+        public void RemoveCategoryAt(int index)
         {
             Categories.RemoveAt(index);
         }

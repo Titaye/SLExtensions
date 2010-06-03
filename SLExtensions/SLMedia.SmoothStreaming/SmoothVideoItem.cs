@@ -14,7 +14,7 @@
     using SLMedia.Core;
     using SLMedia.Video;
 
-    public class SmoothVideoItem : VideoItem
+    public class SmoothVideoItem : VideoItem, ISmoothVideoItem
     {
         #region Constructors
 

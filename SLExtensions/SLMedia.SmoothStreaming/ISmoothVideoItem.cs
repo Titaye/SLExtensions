@@ -1,4 +1,4 @@
-﻿namespace SLMedia.Video
+﻿namespace SLMedia.SmoothStreaming
 {
     using System;
     using System.Net;
@@ -11,17 +11,15 @@
     using System.Windows.Media.Animation;
     using System.Windows.Shapes;
 
-    public interface IVideoItem
+    public interface ISmoothVideoItem
     {
-        //#region Properties
+        #region Properties
 
-        //VideoAdapter VideoAdapter
-        //{
-        //    get;
-        //}
+        bool JoinLive
+        {
+            get;
+        }
 
-        //#endregion Properties
-
-        VideoAdapter GetVideoAdapter(VideoAdapter videoAdapter);
+        #endregion Properties
     }
 }

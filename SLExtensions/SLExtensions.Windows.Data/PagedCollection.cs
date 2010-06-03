@@ -42,8 +42,11 @@
             this.asyncLoadPage = asyncLoadPage;
             this.TotalItemCount = totalItemCount;
             pageIndex = 0;
+
+            var page = firstPage != null ? firstPage.ToList() : null;
+            this.PageSize = page != null ? page.Count : 0;
+            this.Page = page;
             CanChangePage = true;
-            this.Page = firstPage != null ? firstPage.ToList() : null;
         }
 
         #endregion Constructors
@@ -160,12 +163,18 @@
             set
             {
                 if (this.pageSize != value)
-                {
+                {                    
+                    var itemPosition = this.pageSize * this.pageIndex;
                     this.pageSize = value;
                     this.RaisePropertyChanged(n => n.PageSize);
                     this.RaisePropertyChanged(n => n.PageCount);
                     this.RaisePropertyChanged(n => n.CanMoveNext);
                     this.RaisePropertyChanged(n => n.CanMovePrevious);
+                    if (CanChangePage)
+                    {
+                        var pageIndex = (int)Math.Floor(itemPosition / PageSize);
+                        MoveToPage(pageIndex);
+                    }
                 }
             }
         }

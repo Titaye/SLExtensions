@@ -90,7 +90,6 @@
       <SubType>Designer</SubType>
     </None>
     <Content Include="ClientBin\ScriptCommands.xml" />
-    <Content Include="ClientBin\SilverlightApplication1.xap" />
     <Content Include="ClientBin\SLExtensions.Player.xap" />
     <Content Include="ClientBin\SLExtensions.Showcase.xap" />
     <Content Include="player.html" />

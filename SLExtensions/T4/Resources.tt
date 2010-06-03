@@ -1,0 +1,125 @@
+﻿<#@ template  debug="true" hostSpecific="true" #>
+<#@ output extension=".cs" #>
+<#@ Assembly Name="System.Core.dll" #>
+<#@ Assembly Name="System.Xml.dll" #>
+<#@ Assembly Name="System.Xml.Linq.dll" #>
+<#@ Assembly Name="System.Windows.Forms.dll" #>
+<#@ Assembly Name="EnvDTE"#>
+<#@ import namespace="System" #>
+<#@ import namespace="System.IO" #>
+<#@ import namespace="System.Diagnostics" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Xml" #>
+<#@ import namespace="System.Xml.Linq" #>
+<#@ import namespace="System.Collections" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="EnvDTE" #>
+<#
+	var file = Path.GetFileNameWithoutExtension(this.Host.TemplateFile);
+   	string resxFileName = file + ".resx";
+	string resxFilePath = Path.Combine(Path.GetDirectoryName(this.Host.TemplateFile), resxFileName);
+
+	var hostServiceProvider = (IServiceProvider)this.Host; 
+	var dte = (EnvDTE.DTE)hostServiceProvider.GetService(typeof(EnvDTE.DTE));
+	var projectItem = dte.Solution.FindProjectItem(this.Host.TemplateFile);
+	var ns = GetDefaultNamespace(projectItem);
+	var doc = XDocument.Load(resxFilePath);
+#>
+
+namespace <#= ns #> {
+	using System;
+
+	[global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+	public partial class <#=file#> : System.ComponentModel.INotifyPropertyChanged
+	{
+		public <#=file#>()
+		{
+			this.resourceCulture = System.Threading.Thread.CurrentThread.CurrentCulture;
+		}
+		
+		private static global::System.Resources.ResourceManager resourceMan;
+        private global::System.Globalization.CultureInfo resourceCulture;
+		
+		public static <#= ns #>.<#=file#> instance;
+		public static <#= ns #>.<#=file#> Instance { get{ 
+			if(instance == null)
+				instance = new <#=file#>();
+			return instance;
+			} 
+		}
+
+		public static global::System.Resources.ResourceManager ResourceManager {
+            get {
+                if (object.ReferenceEquals(resourceMan, null)) {
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("<#= ns #>.<#= file #>", typeof(<#= file #>).Assembly);
+                    resourceMan = temp;
+                }
+                return resourceMan;
+            }
+        }
+		
+		<#
+		foreach(var d in doc.Element("root").Elements("data"))
+		{#>
+
+		public string <#= (string)d.Attribute("name") #> { get{ return ResourceManager.GetString("<#= (string)d.Attribute("name") #>"); } }
+		<#
+		}	
+		#>
+		
+		public global::System.Globalization.CultureInfo ResourceCulture
+		{
+			get{ return resourceCulture; }
+			set 
+			{ 
+				resourceCulture = value;
+				Refresh();
+			}
+		}
+		
+		public event global::System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+		
+		public void Refresh()
+		{
+<#foreach(var d in doc.Element("root").Elements("data")){#>	
+			OnPropertyChanged("<#= (string)d.Attribute("name") #>");
+<#}#>
+			
+		}
+		
+		protected virtual void OnPropertyChanged(string propertyName)
+        {
+            if (this.PropertyChanged != null)
+                this.PropertyChanged(this, new global::System.ComponentModel.PropertyChangedEventArgs(propertyName));
+        }
+	}
+}
+
+<#+
+	/// <summary>
+	/// Gets default namespace for generated code.
+	/// </summary>
+	public string GetDefaultNamespace(EnvDTE.ProjectItem projectItem)
+	{
+			string rootNS = "";
+			foreach (EnvDTE.Property property in projectItem.ContainingProject.Properties)
+			{
+				if (property.Name == "RootNamespace")
+				{
+					rootNS = (string)property.Value;
+				}
+			}
+			
+			System.Collections.Generic.List<string> namespaces = new System.Collections.Generic.List<string>();
+			EnvDTE.ProjectItem parent = projectItem.Collection.Parent as EnvDTE.ProjectItem;
+			while (parent != null)
+			{
+				namespaces.Insert(0, parent.Name.Replace(" ", string.Empty));
+				parent = parent.Collection.Parent as EnvDTE.ProjectItem;
+			}
+
+			namespaces.Insert(0, rootNS);
+			return string.Join(".", namespaces.ToArray());		
+	}
+
+#>

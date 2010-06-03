@@ -91,6 +91,7 @@
   <ItemGroup>
     <Compile Include="Interactivity\MediaTriggerAction.cs" />
     <Compile Include="Interactivity\SmoothStreamingActions.cs" />
+    <Compile Include="ISmoothVideoItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SmoothStreamingVideoAdapter.cs" />
     <Compile Include="SmoothVideoItem.cs" />

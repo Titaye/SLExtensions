@@ -58,6 +58,37 @@
 
         #region Properties
 
+        private bool canPause;
+        [ScriptableMember]
+        public bool CanPause
+        {
+            get { return this.canPause; }
+            set
+            {
+                if (this.canPause != value)
+                {
+                    this.canPause = value;
+                    this.RaisePropertyChanged(n => n.CanPause);
+                }
+            }
+        }
+
+        private bool canSeek;
+        [ScriptableMember]
+        public bool CanSeek
+        {
+            get { return this.canSeek; }
+            set
+            {
+                if (this.canSeek != value)
+                {
+                    this.canSeek = value;
+                    this.RaisePropertyChanged(n => n.CanSeek);
+                }
+            }
+        }
+
+        [ScriptableMember]
         public double BufferingProgress
         {
             get { return bufferingProgress; }
@@ -105,6 +136,7 @@
             }
         }
 
+        [ScriptableMember]
         public virtual bool IsBuffering
         {
             get { return isBuffering; }
@@ -150,6 +182,7 @@
                         this.videoAdapter.DownloadProgressChanged -= new RoutedEventHandler(videoAdapter_DownloadProgressChanged);
                         this.videoAdapter.MediaOpened -= new RoutedEventHandler(videoAdapter_MediaOpened);
                         this.videoAdapter.MediaEnded -= new RoutedEventHandler(videoAdapter_MediaEnded);
+                        this.videoAdapter.MediaFailed -= new EventHandler<ExceptionRoutedEventArgs>(videoAdapter_MediaFailed);
                     }
 
                     this.videoAdapter = value;
@@ -161,6 +194,7 @@
                         this.videoAdapter.DownloadProgressChanged += new RoutedEventHandler(videoAdapter_DownloadProgressChanged);
                         this.videoAdapter.MediaOpened += new RoutedEventHandler(videoAdapter_MediaOpened);
                         this.videoAdapter.MediaEnded += new RoutedEventHandler(videoAdapter_MediaEnded);
+                        this.videoAdapter.MediaFailed += new EventHandler<ExceptionRoutedEventArgs>(videoAdapter_MediaFailed);
                     }
                     RefreshStates();
                     this.OnPropertyChanged(this.GetPropertyName(n => n.VideoAdapter));
@@ -186,6 +220,7 @@
 
         #region Methods
 
+        [ScriptableMember]
         public void Play(string source)
         {
             VideoItem vi = new VideoItem() { Source = source };
@@ -200,35 +235,57 @@
             SetPlayStateToVideoAdapter();
         }
 
-        protected override void OnCurrentItemChanged()
+        protected virtual VideoAdapter GetVideoAdapter(IVideoItem videoItem)
+        {
+            var va = videoItem.GetVideoAdapter(this.VideoAdapter);
+            va.CurrentItem = videoItem;
+            va.Controller = this;
+            return va;
+        }
+
+        protected virtual void ReleaseVideoAdapter(VideoAdapter videoAdapter)
+        {
+            if (VideoAdapter.Controller == null)
+                VideoAdapter.Controller = null;
+
+            VideoAdapter.CurrentItem = null;
+            VideoAdapter.Dispose();
+        }
+
+        protected override void OnCurrentItemChanged(IMediaItem oldItem, IMediaItem newItem)
         {
             Start = TimeSpan.Zero;
             End = TimeSpan.Zero;
 
+            CanPause = false;
+            CanSeek = false;
+
             VideoAdapter newAdapter = null;
-            IVideoItem videoItem = CurrentItem as IVideoItem;
+            IVideoItem videoItem = newItem as IVideoItem;
             if (videoItem != null)
             {
-                newAdapter = videoItem.VideoAdapter;
+                newAdapter = GetVideoAdapter(videoItem);
             }
 
             if (VideoAdapter != null
                 && VideoAdapter != newAdapter)
             {
-                VideoAdapter.Release();
+                ReleaseVideoAdapter(VideoAdapter);
             }
 
-            if (newAdapter != null)
-            {
-                newAdapter.Controller = this;
-            }
+            //if (newAdapter != null)
+            //{
+            //    newAdapter.Controller = this;
+            //}
+
             VideoAdapter = newAdapter;
-            if (VideoAdapter != null)
-            {
-                VideoAdapter.Adapt(this);
-            }
+            //if (VideoAdapter != null)
+            //{
+            //    VideoAdapter.Adapt(this);
+            //}
 
-            base.OnCurrentItemChanged();
+            base.OnCurrentItemChanged(oldItem, newItem);
+            
         }
 
         protected override void OnPositionChanged(TimeSpan oldValue, TimeSpan newValue)
@@ -316,6 +373,12 @@
 
         private void RefreshMediaElementState()
         {
+            if (VideoAdapter == null)
+            {
+                PlayState = PlayStates.Stopped;
+                return;
+            }
+
             if (VideoAdapter.CurrentState == MediaElementState.Buffering)
             {
                 IsBuffering = true;
@@ -414,8 +477,15 @@
                 IsDownloading = false;
         }
 
+        void videoAdapter_MediaFailed(object sender, ExceptionRoutedEventArgs e)
+        {
+            OnMediaFailed();
+        }
+
         void videoAdapter_MediaEnded(object sender, RoutedEventArgs e)
         {
+            OnMediaEnded();
+
             if (IsChaining)
             {
                 Next();
@@ -430,6 +500,44 @@
                 End = Start.Add(VideoAdapter.Duration.TimeSpan);
             }
             Duration = VideoAdapter.Duration;
+
+            CanPause = VideoAdapter.CanPause;
+            CanSeek = VideoAdapter.CanSeek;
+
+            OnMediaOpened();
+        }
+
+        [ScriptableMember]
+        public event EventHandler MediaOpened;
+
+        protected virtual void OnMediaOpened()
+        {
+            if (MediaOpened != null)
+            {
+                MediaOpened(this, EventArgs.Empty);
+            }
+        }
+
+        [ScriptableMember]
+        public event EventHandler MediaEnded;
+
+        protected virtual void OnMediaEnded()
+        {
+            if (MediaEnded != null)
+            {
+                MediaEnded(this, EventArgs.Empty);
+            }
+        }
+
+        [ScriptableMember]
+        public event EventHandler MediaFailed;
+
+        protected virtual void OnMediaFailed()
+        {
+            if (MediaFailed != null)
+            {
+                MediaFailed(this, EventArgs.Empty);
+            }
         }
 
         void wcLoadContentLink_DownloadStringCompleted(object sender, DownloadStringCompletedEventArgs e)

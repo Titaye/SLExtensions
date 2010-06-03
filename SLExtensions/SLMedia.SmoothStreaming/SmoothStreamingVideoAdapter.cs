@@ -43,6 +43,8 @@
         public SmoothStreamingVideoAdapter()
         {
             GoToLiveCommand = new Command(new Action(GoToLive));
+            SourceBinding = new System.Windows.Data.Binding("CurrentItem.SourceUri") { Source = this };
+            SourceBindingProperty = SmoothStreamingMediaElement.SmoothStreamingSourceProperty;
         }
 
         #endregion Constructors
@@ -134,7 +136,10 @@
         {
             get
             {
-                if (mediaElement != null)
+                if (mediaElement != null &&
+                    (mediaElement.CurrentState == SmoothStreamingMediaElementState.Playing
+                    || mediaElement.CurrentState == SmoothStreamingMediaElementState.Paused)
+                    )
                 {
                     return mediaElement.Duration;
                 }
@@ -154,7 +159,8 @@
 
         public ICommand GoToLiveCommand
         {
-            get; private set;
+            get;
+            private set;
         }
 
         public bool IsLive
@@ -236,9 +242,33 @@
         {
             get
             {
-                if(mediaElement != null)
+                if (mediaElement != null)
                     return mediaElement.StartPosition;
                 return TimeSpan.Zero;
+            }
+        }
+
+        public override bool CanPause
+        {
+            get
+            {
+                if (mediaElement != null)
+                {
+                    return mediaElement.CanPause;
+                }
+                return false;
+            }
+        }
+
+        public override bool CanSeek
+        {
+            get
+            {
+                if (mediaElement != null)
+                {
+                    return mediaElement.CanSeek;
+                }
+                return false;
             }
         }
 
@@ -246,7 +276,7 @@
 
         #region Methods
 
-        public override void Dispose()
+        protected override void DisposeDisplayControl()
         {
             if (mediaElement != null)
             {
@@ -256,13 +286,19 @@
                 mediaElement.MediaOpened -= OnMediaOpened;
                 mediaElement.MediaEnded -= OnMediaEnded;
 
-                mediaElement.ClearValue(SmoothStreamingMediaElement.SourceProperty);
+                ClearSourceBinding();
+
                 mediaElement.ClearValue(SmoothStreamingMediaElement.IsMutedProperty);
                 mediaElement.ClearValue(SmoothStreamingMediaElement.VolumeProperty);
                 mediaElement.ClearValue(SmoothStreamingMediaElement.AutoPlayProperty);
             }
             mediaElement = null;
-            base.Dispose();
+        }
+
+        protected void ClearSourceBinding()
+        {
+            if (mediaElement != null && assignedSourceProperty != null)
+                mediaElement.ClearValue(assignedSourceProperty);
         }
 
         public void GoToLive()
@@ -304,9 +340,58 @@
             }
         }
 
+        private System.Windows.Data.Binding sourceBinding;
+        public virtual System.Windows.Data.Binding SourceBinding
+        {
+            get
+            {
+                return sourceBinding;
+            }
+            set
+            {
+                sourceBinding = value;
+                AssignSourceBinding();
+            }
+        }
+
+        protected void AssignSourceBinding()
+        {
+            if (mediaElement != null)
+            {
+                if (assignedSourceProperty != null)
+                    mediaElement.ClearValue(assignedSourceProperty);
+
+                if (SourceBinding != null && SourceBindingProperty != null)
+                {
+                    assignedSourceProperty = SourceBindingProperty;
+                    mediaElement.SetBinding(assignedSourceProperty, SourceBinding);
+                }
+            }
+        }
+
+        private DependencyProperty sourceBindingProperty;
+        public virtual DependencyProperty SourceBindingProperty
+        {
+            get
+            {
+                return sourceBindingProperty;
+            }
+            set
+            {
+                sourceBindingProperty = value;
+                AssignSourceBinding();
+            }
+        }
+
+        protected DependencyProperty assignedSourceProperty;
+
+        protected virtual SmoothStreamingMediaElement CreateMediaElement()
+        {
+            return new SmoothStreamingMediaElement();
+        }
         protected override object CreateDisplayControl()
         {
-            mediaElement = new SmoothStreamingMediaElement();
+            mediaElement = CreateMediaElement();
             mediaElement.EnableGPUAcceleration = true;
             mediaElement.CurrentStateChanged += mediaElement_CurrentStateChanged;
             mediaElement.BufferingProgressChanged += mediaElement_BufferingProgressChanged;
@@ -317,19 +402,21 @@
             mediaElement.DownloadTrackChanged += new EventHandler<TrackChangedEventArgs>(mediaElement_DownloadTrackChanged);
             mediaElement.DurationExtended += new EventHandler<DurationExtendedEventArgs>(mediaElement_DurationExtended);
             mediaElement.PlaybackTrackChanged += new EventHandler<TrackChangedEventArgs>(mediaElement_PlaybackTrackChanged);
-            SmoothVideoItem svi = Controller.CurrentItem as SmoothVideoItem;
+            ISmoothVideoItem svi = CurrentItem as ISmoothVideoItem;
             if (svi != null && svi.JoinLive)
             {
                 mediaElement.LivePlaybackStartPosition = PlaybackStartPosition.End;
             }
 
-            mediaElement.SetBinding(SmoothStreamingMediaElement.SmoothStreamingSourceProperty, new System.Windows.Data.Binding("Controller.CurrentItem.SourceUri") { Source = this });
+            AssignSourceBinding();
+
             mediaElement.SetBinding(SmoothStreamingMediaElement.IsMutedProperty, new System.Windows.Data.Binding("Controller.IsMuted") { Source = this });
             mediaElement.SetBinding(SmoothStreamingMediaElement.VolumeProperty, new System.Windows.Data.Binding("Controller.Volume") { Source = this });
             mediaElement.SetBinding(SmoothStreamingMediaElement.AutoPlayProperty, new System.Windows.Data.Binding("Controller.AutoPlay") { Source = this });
 
             return mediaElement;
         }
+
 
         protected override void OnMediaEnded(object sender, RoutedEventArgs e)
         {
@@ -349,10 +436,10 @@
             IsLive = MediaElement.IsLive;
 
             var info = mediaElement.GetStreamInfoForStreamType("video");
-            if(info != null)
+            if (info != null)
             {
                 Bitrates = (from i in info.SelectedTracks
-                           select i.Bitrate).ToArray();
+                            select i.Bitrate).ToArray();
 
             }
             //Bitrates

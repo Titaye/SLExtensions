@@ -36,5 +36,40 @@
         }
 
         #endregion Properties
+
+        public static PropertyValueChangedEventArgs<T> Create<T>(T oldValue, T newValue)
+        {
+            return new PropertyValueChangedEventArgs<T>(oldValue, newValue);
+        }
+    }
+
+    public class PropertyValueChangedEventArgs<T> : EventArgs
+    {
+        #region Constructors
+
+        public PropertyValueChangedEventArgs(T oldValue, T newValue)
+        {
+            this.OldValue = oldValue;
+            this.NewValue = newValue;
+        }
+
+        #endregion Constructors
+
+        #region Properties
+
+        public T NewValue
+        {
+            get;
+            private set;
+        }
+
+        public T OldValue
+        {
+            get;
+            private set;
+        }
+
+        #endregion Properties
+
     }
 }
